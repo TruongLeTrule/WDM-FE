@@ -8,6 +8,13 @@
   box-sizing: border-box;
 }
 
+button,
+input {
+  outline: none;
+  border: none;
+  background-color: transparent;
+}
+
 html {
   font-size: 100%;
 } /*16px*/

@@ -1,10 +1,5 @@
-import {
-  FaHotel,
-  FaConciergeBell,
-  FaChartLine,
-  FaUtensils,
-  FaUser,
-} from 'react-icons/fa';
+import { FaHotel, FaConciergeBell, FaUtensils, FaUser } from 'react-icons/fa';
+import { FaChartSimple } from 'react-icons/fa6';
 
 const links = [
   {
@@ -20,7 +15,7 @@ const links = [
   {
     text: 'report',
     path: 'report',
-    icon: <FaChartLine />,
+    icon: <FaChartSimple />,
   },
   {
     text: 'food&Service',

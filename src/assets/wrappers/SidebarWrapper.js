@@ -10,15 +10,16 @@ const Wrapper = styled.aside`
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 3.2rem 0;
+    margin: 2rem 0;
   }
   .nav-links {
     margin-top: 4rem;
     display: flex;
     flex-direction: column;
-    gap: 2.2rem;
+    row-gap: 1.8rem;
   }
   .nav-link {
+    padding: 0.5rem 0;
     position: relative;
     display: flex;
     align-items: center;
@@ -31,11 +32,11 @@ const Wrapper = styled.aside`
       color: #000;
       margin-right: 1rem;
     }
-    transition: all 0.25s ease;
+    transition: all 0.2s ease;
   }
   .nav-link:hover {
     color: var(--primary);
-    opacity: 0.75;
+    opacity: 0.6;
     .icon {
       color: var(--primary);
     }
@@ -44,12 +45,12 @@ const Wrapper = styled.aside`
     position: absolute;
     bottom: 0;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translateX(-50%);
     text-align: center;
-    .role-icon {
+    .icon {
       font-size: 1.5em;
     }
-    .role-text {
+    .text {
       margin-top: 0.3rem;
       display: block;
       text-transform: capitalize;

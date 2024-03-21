@@ -7,8 +7,6 @@ const Wrapper = styled.section`
   }
   .dashboard-page {
     width: 100%;
-    margin: 0 auto;
-    /* padding: 5rem; */
   }
 `;
 export default Wrapper;

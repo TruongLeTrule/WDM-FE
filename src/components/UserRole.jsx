@@ -3,8 +3,8 @@ import { FaUserTie } from 'react-icons/fa';
 const UserRole = () => {
   return (
     <div>
-      <FaUserTie className="role-icon" />
-      <span className="role-text">admin</span>
+      <FaUserTie className="icon" />
+      <span className="text">admin</span>
     </div>
   );
 };
