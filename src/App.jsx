@@ -38,7 +38,7 @@ const router = createBrowserRouter([
             element: <Report />,
           },
           {
-            path: 'foodandservice',
+            path: 'food-service',
             element: <FoodAndService />,
           },
           {
