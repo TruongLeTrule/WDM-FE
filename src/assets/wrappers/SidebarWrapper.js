@@ -3,17 +3,17 @@ import styled from 'styled-components';
 const Wrapper = styled.aside`
   position: relative;
   background-color: var(--white);
-  height: 100vh;
+  height: var(--section-height);
   padding: 0 2.6rem 0 2.3rem;
   border-right: 1px solid var(--grey-200);
   header {
+    height: var(--header-height);
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 2rem 0;
   }
   .nav-links {
-    margin-top: 4rem;
+    margin-top: 1.5rem;
     display: flex;
     flex-direction: column;
     row-gap: 1.8rem;

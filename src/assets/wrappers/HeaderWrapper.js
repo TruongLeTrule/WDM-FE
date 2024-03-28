@@ -1,10 +1,11 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.header`
+  height: var(--header-height);
+  padding: 0 4rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.5rem 4rem;
   background-color: var(--white);
   border-bottom: 1px solid var(--grey-200);
   h1 {

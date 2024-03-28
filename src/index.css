@@ -45,7 +45,8 @@ html {
   --small-text: 0.875rem;
   --extra-small-text: 0.7em;
   /* rest of the vars */
-
+  --section-height: 100vh;
+  --header-height: 12vh;
   --border-radius: 0.25rem;
   --letter-spacing: 1px;
   --transition: 0.3s ease-in-out all;
@@ -255,24 +256,4 @@ button:disabled {
   border-radius: 50%;
   border-top-color: var(--primary);
   animation: spinner 0.6s linear infinite;
-}
-
-/* title */
-
-.title {
-  text-align: center;
-}
-
-.title-underline {
-  background: var(--primary);
-  width: 7rem;
-  height: 0.25rem;
-  margin: 0 auto;
-  margin-top: 1rem;
-}
-
-.container {
-  width: var(--fluid-width);
-  max-width: var(--max-width);
-  margin: 0 auto;
 }

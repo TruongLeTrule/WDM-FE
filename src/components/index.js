@@ -7,3 +7,4 @@ export { default as UserRole } from './UserRole';
 // Page components
 export { default as Header } from './Header';
 export { default as SearchBox } from './SearchBox';
+export { default as Table } from './Table';

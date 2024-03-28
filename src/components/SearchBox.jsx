@@ -7,10 +7,13 @@ const SearchBox = () => {
   const handleFormClick = () => {
     inputRef.current.focus();
   };
+
   return (
     <Wrapper onClick={handleFormClick}>
-      <FaMagnifyingGlass className="icon" />
-      <input ref={inputRef} type="text" placeholder="search" />
+      <form>
+        <FaMagnifyingGlass className="icon" />
+        <input ref={inputRef} type="text" placeholder="search" />
+      </form>
     </Wrapper>
   );
 };
