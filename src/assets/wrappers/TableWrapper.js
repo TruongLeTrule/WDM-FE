@@ -15,6 +15,9 @@ const Wrapper = styled.div`
     color: var(--grey-400);
     font-weight: 400;
     padding-bottom: 1.1rem;
+    .sort-icon {
+      margin-left: 5px;
+    }
   }
   td {
     text-align: center;

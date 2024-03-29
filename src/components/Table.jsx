@@ -1,18 +1,23 @@
 import { useTable, useSortBy, usePagination } from 'react-table';
-import { FaAngleLeft, FaAngleRight } from 'react-icons/fa';
+import {
+  FaAngleLeft,
+  FaAngleRight,
+  FaAngleDown,
+  FaAngleUp,
+} from 'react-icons/fa';
 import Wrapper from '../assets/wrappers/TableWrapper';
 
 const Table = ({ columns, data }) => {
   const {
     getTableProps,
     getTableBodyProps,
+    prepareRow,
     headerGroups,
     page,
-    canNextPage,
-    canPreviousPage,
-    prepareRow,
     nextPage,
+    canNextPage,
     previousPage,
+    canPreviousPage,
     state: { pageIndex },
     pageCount,
   } = useTable({ columns, data }, useSortBy, usePagination);
@@ -26,6 +31,11 @@ const Table = ({ columns, data }) => {
               {headerGroup.headers.map((column) => (
                 <th {...column.getHeaderProps(column.getSortByToggleProps())}>
                   {column.render('Header')}
+                  {column.isSorted && (
+                    <span className="sort-icon">
+                      {column.isSortedDesc ? <FaAngleDown /> : <FaAngleUp />}
+                    </span>
+                  )}
                 </th>
               ))}
             </tr>
