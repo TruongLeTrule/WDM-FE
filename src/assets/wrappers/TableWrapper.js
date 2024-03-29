@@ -11,6 +11,12 @@ const Wrapper = styled.div`
   tr:last-child {
     border-bottom: none;
   }
+  tbody {
+    tr:hover {
+      background-color: var(--grey-100);
+      cursor: pointer;
+    }
+  }
   th {
     color: var(--grey-400);
     font-weight: 400;
@@ -23,6 +29,8 @@ const Wrapper = styled.div`
     text-align: center;
     padding: 1rem 0;
     text-transform: capitalize;
+    font-size: 1rem;
+    color: var(--black);
   }
   .page-group {
     position: absolute;
