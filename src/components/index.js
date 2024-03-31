@@ -8,3 +8,4 @@ export { default as UserRole } from './UserRole';
 export { default as Header } from './Header';
 export { default as SearchBox } from './SearchBox';
 export { default as Table } from './Table';
+export { default as Modal } from './Modal';
