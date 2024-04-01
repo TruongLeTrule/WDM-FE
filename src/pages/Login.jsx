@@ -5,7 +5,7 @@ const Login = () => {
 
     <LoginPage>
       <LoginForm onSubmit={(e) => {
-        
+        console.log("hello")
       }} >
         <div className="image">
           <img src={Wedding} alt="" />
