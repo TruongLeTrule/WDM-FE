@@ -12,7 +12,7 @@ const orderList = [
     shift: 'morning',
     date: '21-05-2024',
     totalTable: 100,
-    status: 'paid',
+    status: 'deposit',
   },
   {
     id: '#2',
@@ -22,7 +22,7 @@ const orderList = [
     shift: 'morning',
     date: '21-05-2024',
     totalTable: 100,
-    status: 'paid',
+    status: 'deposit',
   },
   {
     id: '#3',
@@ -32,7 +32,7 @@ const orderList = [
     shift: 'morning',
     date: '21-05-2024',
     totalTable: 100,
-    status: 'paid',
+    status: 'deposit',
   },
   {
     id: '#4',
@@ -42,7 +42,7 @@ const orderList = [
     shift: 'morning',
     date: '21-05-2024',
     totalTable: 100,
-    status: 'paid',
+    status: 'deposit',
   },
   {
     id: '#5',
@@ -52,7 +52,7 @@ const orderList = [
     shift: 'morning',
     date: '21-05-2024',
     totalTable: 100,
-    status: 'paid',
+    status: 'deposit',
   },
   {
     id: '#6',
@@ -201,7 +201,7 @@ const Order = () => {
       <Header />
       <main>
         <div className="container">
-          <Table data={data} columns={columns} />
+          <Table data={data} columns={columns} canClick />
         </div>
       </main>
     </Wrapper>

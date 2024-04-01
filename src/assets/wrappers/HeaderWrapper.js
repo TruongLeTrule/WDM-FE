@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 const Wrapper = styled.header`
   height: var(--header-height);
-  padding: 0 4rem;
+  padding: 0 2.5rem;
   display: flex;
   justify-content: space-between;
   align-items: center;

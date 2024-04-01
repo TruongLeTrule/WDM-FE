@@ -12,7 +12,7 @@ const Wrapper = styled.div`
     border-bottom: none;
   }
   tbody {
-    tr:hover {
+    tr.can-click:hover {
       background-color: var(--grey-100);
       cursor: pointer;
     }
@@ -31,6 +31,12 @@ const Wrapper = styled.div`
     text-transform: capitalize;
     font-size: 1rem;
     color: var(--black);
+  }
+  .paid {
+    color: var(--green-dark);
+  }
+  .deposit {
+    color: var(--red-dark);
   }
   .page-group {
     position: absolute;
