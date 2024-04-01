@@ -2,8 +2,11 @@ import styled from "styled-components";
 import Wedding from "../assets/images/image";
 const Login = () => {
   return (
+
     <LoginPage>
-      <LoginForm action="login.php" method="post">
+      <LoginForm onSubmit={(e) => {
+        
+      }} >
         <div className="image">
           <img src={Wedding} alt="" />
         </div>
