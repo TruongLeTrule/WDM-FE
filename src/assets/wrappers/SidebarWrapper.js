@@ -1,11 +1,8 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.aside`
-  :root {
-  --custom-color: #fbff; 
-  }
   position: relative;
-  background-color: var(--custom-color);
+  background-color: var(--white);
   height: var(--section-height);
   padding: 0 2.6rem 0 2.3rem;
   border-right: 1px solid var(--grey-200);

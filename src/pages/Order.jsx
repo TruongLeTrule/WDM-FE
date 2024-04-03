@@ -1,7 +1,7 @@
 import { createContext, useContext, useMemo, useState } from 'react';
 import Wrapper from '../assets/wrappers/OrderWrapper';
 import { Header, Table } from '../components';
-import { OrderInfoModal } from '../components/Order';
+import { EditOrderInfoModal, OrderInfoModal } from '../components/Order';
 
 const orderDate = new Date();
 const occurDate = new Date('2024-05-24');
@@ -210,6 +210,7 @@ const Order = () => {
   // modal state
   const [infoModalOpen, setInfoModalOpen] = useState(false);
   const [orderInfo, setOrderInfo] = useState();
+  const [editOrderModalOpen, setEditOrderModalOpen] = useState(false);
 
   const handleRowClick = (rowData) => {
     setOrderInfo(rowData);
@@ -222,6 +223,8 @@ const Order = () => {
         infoModalOpen,
         setInfoModalOpen,
         orderInfo,
+        editOrderModalOpen,
+        setEditOrderModalOpen,
       }}
     >
       <Wrapper>
@@ -236,6 +239,7 @@ const Order = () => {
           </div>
           {/* Modal */}
           <OrderInfoModal />
+          <EditOrderInfoModal />
         </main>
       </Wrapper>
     </OrderContext.Provider>

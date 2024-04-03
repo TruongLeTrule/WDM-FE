@@ -36,14 +36,19 @@ const Wrapper = styled.div`
     }
     .rows {
       width: max-content;
-      margin: 0.8rem auto;
+      margin: 0 auto;
       .row {
-        margin-top: 0.5rem;
+        display: flex;
+        justify-content: space-between;
+        margin-top: 0.7rem;
         .title {
           font-weight: 600;
           margin-right: 1rem;
         }
         .link {
+          display: inline-flex;
+          align-items: center;
+          column-gap: 0.5rem;
           color: var(--grey-400);
           text-decoration: underline;
           cursor: pointer;

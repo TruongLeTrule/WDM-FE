@@ -4,14 +4,18 @@ import { useOrderContext } from '../../pages/Order';
 import Modal from '../Modal';
 
 const OrderInfoModal = () => {
-  const { orderInfo, infoModalOpen, setInfoModalOpen } = useOrderContext();
+  const { orderInfo, infoModalOpen, setInfoModalOpen, setEditOrderModalOpen } =
+    useOrderContext();
 
   return (
     <Modal isOpen={infoModalOpen} setIsOpen={setInfoModalOpen}>
       <Wrapper>
         <div className="header">
-          <h4>Order {orderInfo?.id}</h4>
-          <FaPenToSquare className="icon" />
+          <h4>order {orderInfo?.id}</h4>
+          <FaPenToSquare
+            className="icon"
+            onClick={() => setEditOrderModalOpen(true)}
+          />
         </div>
         <div className="container">
           {/* Left col */}
@@ -19,59 +23,59 @@ const OrderInfoModal = () => {
             <h5>Customer information</h5>
             <div className="rows">
               <div className="row">
-                <span className="title">groom:</span>
+                <span className="title">groom</span>
                 <span>{orderInfo?.groom}</span>
               </div>
               <div className="row">
-                <span className="title">bride:</span>
+                <span className="title">bride</span>
                 <span>{orderInfo?.bride}</span>
               </div>
               <div className="row">
-                <span className="title">phone:</span>
+                <span className="title">phone</span>
                 <span>{orderInfo?.phone}</span>
               </div>
               <div className="row">
-                <span className="title">order date:</span>
+                <span className="title">order date</span>
                 <span>{orderInfo?.orderDate}</span>
               </div>
               <div className="row">
-                <span className="title">occur date:</span>
+                <span className="title">occur date</span>
                 <span>{orderInfo?.occurDate}</span>
               </div>
             </div>
           </div>
           {/* Right col */}
           <div>
-            <h5>Lobby</h5>
+            <h5>{orderInfo?.lobby}</h5>
             <p className="shift">{orderInfo?.shift}</p>
             <div className="rows">
               <div className="row">
-                <span className="title">total table:</span>
+                <span className="title">total table</span>
                 <span>{orderInfo?.totalTable}</span>
               </div>
               <div className="row">
-                <span className="title">price/table:</span>
+                <span className="title">price/table</span>
                 <span className="link">
                   {orderInfo?.pricePerTable}$ <FaArrowUpRightFromSquare />
                 </span>
               </div>
               <div className="row">
-                <span className="title">service fee:</span>
+                <span className="title">service fee</span>
                 <span className="link">
                   {orderInfo?.serviceFee}$ <FaArrowUpRightFromSquare />
                 </span>
               </div>
               <div className="row">
-                <span className="title">total:</span>
-                <span>{orderInfo?.total}$</span>
+                <span className="title">total</span>
+                <strong>{orderInfo?.total}$</strong>
               </div>
               <div className="row">
-                <span className="title">deposit:</span>
-                <span>{orderInfo?.deposit}$</span>
+                <span className="title">deposit</span>
+                <strong>{orderInfo?.deposit}$</strong>
               </div>
               <div className="row">
-                <span className="title">remainder:</span>
-                <span>{orderInfo?.total - orderInfo?.deposit}$</span>
+                <span className="title">remainder</span>
+                <strong>{orderInfo?.total - orderInfo?.deposit}$</strong>
               </div>
             </div>
           </div>
