@@ -2,6 +2,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import { Icon } from "../assets/icon";
 import SearchBox from "../components/SearchBox";
+import Information from "../components/Users/Information";
 
 const Checkbox = styled.input`
   outline: none;
@@ -71,6 +72,7 @@ const AccountInformationTable = ({ className, data }) => {
 };
 
 const User = () => {
+  const [isDisplayInfomationBlock, setIsDisplayInformationBlock] = useState(false)
   const [permissionAccount, setPermissionAccount] = useState([
     ["Account Groups", "Lobby", "Order", "Food&Service", "Report", "User"],
     ["Super Admin", true, true, true, true, true],
@@ -95,13 +97,17 @@ const User = () => {
     setPermissionAccount(newUpdatePermission);
   }
 
-  const reloadPage = () => {
-    alert("Saved !!!");
+  const updateInfomation = () => {
+    alert("Saved !!");
     location.reload();
   }
 
+  const displayInfomationBlock = () => {
+    setIsDisplayInformationBlock(!isDisplayInfomationBlock)
+  }
+
   return (
-    <UserBlock>
+    <UserBlock style={{ position: "relative" }}>
       <h4 className="blockTitle" onClick={() => console.log(permissionAccount)}>
         Permissions of account groups
       </h4>
@@ -114,9 +120,13 @@ const User = () => {
       </div>
       <StyledAccountInformationTable data={accountInformation} />
       <CreateSaveCombination>
-        <button className="createButton">Create</button>
-        <button className="saveButton" onClick={reloadPage}>Save</button>
+        <button className="createButton" onClick={displayInfomationBlock}>Create</button>
+        <button className="saveButton" onClick={updateInfomation}>Save</button>
       </CreateSaveCombination>
+      <Information
+        display={isDisplayInfomationBlock}
+        setIsDisplayInformationBlock={setIsDisplayInformationBlock}
+      />
     </UserBlock>
   );
 };
@@ -125,14 +135,13 @@ export default User;
 
 const UserBlock = styled.div`
   background-color: white;
-  padding-left: 2%;
-  padding-top: 1%;
   width: 100%;
   height: 100vh;
-  overflow-y: scroll;
+  overflow-y: auto;
   .blockTitle {
     width: 100%;
     height: 8vh;
+    padding-left: 2%;
     font-weight: 600;
     display: flex;
     align-items: center;
