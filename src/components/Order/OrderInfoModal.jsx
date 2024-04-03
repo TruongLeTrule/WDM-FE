@@ -4,8 +4,18 @@ import { useOrderContext } from '../../pages/Order';
 import Modal from '../Modal';
 
 const OrderInfoModal = () => {
-  const { orderInfo, infoModalOpen, setInfoModalOpen, setEditOrderModalOpen } =
-    useOrderContext();
+  const {
+    orderInfo,
+    infoModalOpen,
+    setInfoModalOpen,
+    setEditOrderModalOpen,
+    setPayRemainderModalOpen,
+  } = useOrderContext();
+
+  const handlePayBtnClick = () => {
+    setPayRemainderModalOpen(true);
+    setInfoModalOpen(false);
+  };
 
   return (
     <Modal isOpen={infoModalOpen} setIsOpen={setInfoModalOpen}>
@@ -80,7 +90,9 @@ const OrderInfoModal = () => {
             </div>
           </div>
         </div>
-        <button className="btn">pay</button>
+        <button className="btn" onClick={handlePayBtnClick}>
+          pay
+        </button>
       </Wrapper>
     </Modal>
   );

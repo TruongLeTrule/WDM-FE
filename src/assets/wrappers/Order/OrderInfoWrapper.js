@@ -40,7 +40,7 @@ const Wrapper = styled.div`
       .row {
         display: flex;
         justify-content: space-between;
-        margin-top: 0.7rem;
+        margin-top: 0.8rem;
         .title {
           font-weight: 600;
           margin-right: 1rem;

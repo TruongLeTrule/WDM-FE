@@ -39,7 +39,7 @@ const EditOrderInfoModal = () => {
             <h5>Customer information</h5>
             <form className="rows">
               <div className="row">
-                <label className="title" for="groom">
+                <label className="title" htmlFor="groom">
                   groom
                 </label>
                 <input
@@ -50,7 +50,7 @@ const EditOrderInfoModal = () => {
                 />
               </div>
               <div className="row">
-                <label className="title" for="bride">
+                <label className="title" htmlFor="bride">
                   bride
                 </label>
                 <input
@@ -61,7 +61,7 @@ const EditOrderInfoModal = () => {
                 />
               </div>
               <div className="row">
-                <label className="title" for="phone">
+                <label className="title" htmlFor="phone">
                   phone
                 </label>
                 <input
@@ -91,7 +91,7 @@ const EditOrderInfoModal = () => {
             <p className="shift">{orderInfo?.shift}</p>
             <div className="rows">
               <div className="row">
-                <label className="title" for="totalTable">
+                <label className="title" htmlFor="totalTable">
                   total table
                 </label>
                 <input

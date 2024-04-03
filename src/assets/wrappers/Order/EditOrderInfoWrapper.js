@@ -4,19 +4,10 @@ const Wrapper = styled.div`
   padding: 0 3rem;
   text-transform: capitalize;
   .header {
-    position: relative;
     h4 {
       text-align: center;
       margin-top: 3rem;
       font-weight: 700;
-    }
-    .icon {
-      position: absolute;
-      right: 0;
-      top: 50%;
-      translate: 0 -50%;
-      color: var(--primary);
-      cursor: pointer;
     }
   }
   .container {
@@ -54,12 +45,12 @@ const Wrapper = styled.div`
           color: var(--grey-400);
         }
         .calendar-wrap {
+          cursor: pointer;
           display: inline-flex;
           align-items: center;
           column-gap: 0.5rem;
           .icon {
             color: var(--primary);
-            cursor: pointer;
           }
         }
         .link {

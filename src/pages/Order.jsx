@@ -1,10 +1,14 @@
 import { createContext, useContext, useMemo, useState } from 'react';
 import Wrapper from '../assets/wrappers/OrderWrapper';
 import { Header, Table } from '../components';
-import { EditOrderInfoModal, OrderInfoModal } from '../components/Order';
+import {
+  EditOrderInfoModal,
+  OrderInfoModal,
+  PayRemainderModal,
+} from '../components/Order';
 
 const orderDate = new Date();
-const occurDate = new Date('2024-05-24');
+const occurDate = new Date('2024-04-01');
 const orderList = [
   {
     id: '#1',
@@ -22,6 +26,7 @@ const orderList = [
     serviceFee: 2000,
     total: 100000,
     deposit: 100,
+    extraFee: 0,
   },
   {
     id: '#2',
@@ -211,6 +216,7 @@ const Order = () => {
   const [infoModalOpen, setInfoModalOpen] = useState(false);
   const [orderInfo, setOrderInfo] = useState();
   const [editOrderModalOpen, setEditOrderModalOpen] = useState(false);
+  const [payRemainderModalOpen, setPayRemainderModalOpen] = useState(false);
 
   const handleRowClick = (rowData) => {
     setOrderInfo(rowData);
@@ -225,6 +231,8 @@ const Order = () => {
         orderInfo,
         editOrderModalOpen,
         setEditOrderModalOpen,
+        payRemainderModalOpen,
+        setPayRemainderModalOpen,
       }}
     >
       <Wrapper>
@@ -240,6 +248,7 @@ const Order = () => {
           {/* Modal */}
           <OrderInfoModal />
           <EditOrderInfoModal />
+          <PayRemainderModal />
         </main>
       </Wrapper>
     </OrderContext.Provider>
