@@ -7,7 +7,7 @@ import {
 } from 'react-icons/fa';
 import Wrapper from '../assets/wrappers/TableWrapper';
 
-const Table = ({ columns, data, canClick }) => {
+const Table = ({ columns, data, handleRowClick }) => {
   const {
     getTableProps,
     getTableBodyProps,
@@ -22,8 +22,8 @@ const Table = ({ columns, data, canClick }) => {
     pageCount,
   } = useTable({ columns, data }, useSortBy, usePagination);
 
-  const resolveCellClass = (data) => {
-    switch (data) {
+  const resolveCellClass = (cellValue) => {
+    switch (cellValue) {
       case 'paid':
         return 'paid';
       case 'deposit':
@@ -31,10 +31,6 @@ const Table = ({ columns, data, canClick }) => {
       default:
         return;
     }
-  };
-
-  const handleRowClick = (data) => {
-    console.log(data);
   };
 
   return (
@@ -62,8 +58,8 @@ const Table = ({ columns, data, canClick }) => {
             return (
               <tr
                 {...row.getRowProps()}
-                className={canClick && 'can-click'}
-                onClick={canClick && (() => handleRowClick(row.values))}
+                className={handleRowClick && 'can-click'}
+                onClick={() => handleRowClick(row.original)}
               >
                 {row.cells.map((cell) => (
                   <td

@@ -1,18 +1,27 @@
-import { useMemo } from 'react';
+import { createContext, useContext, useMemo, useState } from 'react';
 import Wrapper from '../assets/wrappers/OrderWrapper';
-import { Header } from '../components';
-import { Table } from '../components';
+import { Header, Table } from '../components';
+import { OrderInfoModal } from '../components/Order';
 
+const orderDate = new Date();
+const occurDate = new Date('2024-05-24');
 const orderList = [
   {
     id: '#1',
     customerName: 'truong',
+    groom: 'Le Quang Truong',
+    bride: 'Truong Quang Le',
     phone: '0389662855',
     lobby: 'lobby 1',
     shift: 'morning',
-    date: '21-05-2024',
-    totalTable: 100,
     status: 'deposit',
+    orderDate: orderDate.toLocaleDateString(),
+    occurDate: occurDate.toLocaleDateString(),
+    totalTable: 100,
+    pricePerTable: 200,
+    serviceFee: 2000,
+    total: 100000,
+    deposit: 100,
   },
   {
     id: '#2',
@@ -156,6 +165,8 @@ const orderList = [
   },
 ];
 
+const OrderContext = createContext();
+
 const Order = () => {
   const data = useMemo(() => orderList, []);
   const columns = useMemo(
@@ -182,7 +193,7 @@ const Order = () => {
       },
       {
         Header: 'Date',
-        accessor: 'date',
+        accessor: 'occurDate',
       },
       {
         Header: 'Tol.table',
@@ -196,15 +207,40 @@ const Order = () => {
     []
   );
 
+  // modal state
+  const [infoModalOpen, setInfoModalOpen] = useState(false);
+  const [orderInfo, setOrderInfo] = useState();
+
+  const handleRowClick = (rowData) => {
+    setOrderInfo(rowData);
+    setInfoModalOpen(true);
+  };
+
   return (
-    <Wrapper>
-      <Header />
-      <main>
-        <div className="container">
-          <Table data={data} columns={columns} canClick />
-        </div>
-      </main>
-    </Wrapper>
+    <OrderContext.Provider
+      value={{
+        infoModalOpen,
+        setInfoModalOpen,
+        orderInfo,
+      }}
+    >
+      <Wrapper>
+        <Header />
+        <main>
+          <div className="container">
+            <Table
+              data={data}
+              columns={columns}
+              handleRowClick={handleRowClick}
+            />
+          </div>
+          {/* Modal */}
+          <OrderInfoModal />
+        </main>
+      </Wrapper>
+    </OrderContext.Provider>
   );
 };
+
+export const useOrderContext = () => useContext(OrderContext);
 export default Order;

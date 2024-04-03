@@ -3,6 +3,7 @@ import styled from 'styled-components';
 const Wrapper = styled.section`
   height: var(--section-height);
   main {
+    position: relative;
     height: calc(var(--section-height) - var(--header-height));
     padding: 2.5rem;
   }
