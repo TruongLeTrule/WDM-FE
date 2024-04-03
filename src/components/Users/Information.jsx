@@ -1,36 +1,49 @@
 import styled from "styled-components"
-const Information = ({ display, setIsDisplayInformationBlock }) => {
+import { useState } from "react"
+const Information = ({ display, setIsDisplayInformationBlock, type, editrow, accountInformation, setAccountInformation }) => {
+  const [tempData, setTempData] = useState({
+    ID: "",
+    DisplayName: "",
+    UserName: "",
+    Password: "",
+    Permission: "",
+  })
+  const updateTempData = (name, data) => {
+    const newData = { ...tempData };
+    newData[name] = data;
+    setTempData(newData);
+  }
   return (
     <InformationBlock display={display.toString()}>
       <InformationBoard>
-        <h4>Account Information</h4>
+        <h4 onClick={() => { console.log(type) }}>Account Information</h4>
         <table className="boardInput">
           <tbody>
             <tr>
               <td className="informationTitle"><p>ID :</p> </td>
-              <td><input></input></td>
+              <td><input onChange={(e) => updateTempData("ID", e.target.value)} ></input></td>
             </tr>
             <tr>
               <td className="informationTitle"><p>Name :</p> </td>
-              <td><input></input></td>
+              <td><input onChange={(e) => updateTempData("DisplayName", e.target.value)}></input></td>
             </tr>
             <tr>
               <td className="informationTitle"><p>Username :</p> </td>
-              <td><input></input></td>
+              <td><input onChange={(e) => updateTempData("UserName", e.target.value)}></input></td>
             </tr>
             <tr>
               <td className="informationTitle"><p>Password :</p> </td>
-              <td><input type="password"></input></td>
+              <td><input type="password" onChange={(e) => updateTempData("Password", e.target.value)}></input></td>
             </tr>
             <tr>
               <td className="informationTitle"><p>Permission :</p> </td>
               <td>
-                <select>
+                <select value={tempData} onChange={(e) => updateTempData("Permission", e.target.value)}>
                   <option value="">Select an option</option>
-                  <option value="option1">Super Admin</option>
-                  <option value="option2">Admin</option>
-                  <option value="option3">Manager</option>
-                  <option value="option4">Staff</option>
+                  <option value="Super Admin">Super Admin</option>
+                  <option value="Admin">Admin</option>
+                  <option value="Manager">Manager</option>
+                  <option value="Staff">Staff</option>
                 </select>
               </td>
             </tr>
@@ -38,7 +51,24 @@ const Information = ({ display, setIsDisplayInformationBlock }) => {
         </table>
         <div className="cancelSaveCombination">
           <button className="cancelButton" onClick={() => setIsDisplayInformationBlock(false)}>Cancel</button>
-          <button className="saveButton" onClick={() => setIsDisplayInformationBlock(false)}>Save</button>
+          <button
+            className="saveButton"
+            onClick={() => {
+              setIsDisplayInformationBlock(false);
+              const newData = [...accountInformation];
+              let newTempData = Object.values(tempData)
+              newTempData.splice(3, 1)
+              newTempData = newTempData.map((value, index) => {
+                if (value === '') value = newData[editrow][index];
+                return value;
+              });
+              newData[editrow] = newTempData;
+              setAccountInformation(newData);
+            }}
+          >
+            Save
+          </button>
+
         </div>
       </InformationBoard>
     </InformationBlock>
