@@ -44,7 +44,7 @@ const PermissonAccountTable = ({ className, data, action }) => {
   );
 };
 
-const AccountInformationTable = ({ className, data }) => {
+const AccountInformationTable = ({ className, data, deleteRow, editRow }) => {
   return (
     <table className={className}>
       <thead>
@@ -62,8 +62,8 @@ const AccountInformationTable = ({ className, data }) => {
             {row.map((cell, cellIndex) => (
               <td key={cellIndex}>{cell}</td>
             ))}
-            <td className="pencilIcon"><Icon.pencil /></td>
-            <td className="deleteIcon"><Icon.delete /></td>
+            <td className="pencilIcon" onClick={() => editRow(rowIndex + 1)}><Icon.pencil /></td>
+            <td className="deleteIcon" onClick={() => deleteRow(rowIndex + 1)}><Icon.delete /></td>
           </tr>
         ))}
       </tbody>
@@ -72,7 +72,7 @@ const AccountInformationTable = ({ className, data }) => {
 };
 
 const User = () => {
-  const [isDisplayInfomationBlock, setIsDisplayInformationBlock] = useState(false)
+  const [isDisplayInfomationBlock, setIsDisplayInformationBlock] = useState(false);
   const [permissionAccount, setPermissionAccount] = useState([
     ["Account Groups", "Lobby", "Order", "Food&Service", "Report", "User"],
     ["Super Admin", true, true, true, true, true],
@@ -91,6 +91,9 @@ const User = () => {
     ["QT005", "Le Tan Hoa", "hoale", "Staff"],
   ]);
 
+  const [boardType, setBoardType] = useState("")
+  const [row, setRow] = useState()
+
   const updatePermission = (rowIndex, cellIndex) => {
     const newUpdatePermission = [...permissionAccount];
     newUpdatePermission[rowIndex + 1][cellIndex] = !permissionAccount[rowIndex + 1][cellIndex];
@@ -106,19 +109,33 @@ const User = () => {
     setIsDisplayInformationBlock(!isDisplayInfomationBlock)
   }
 
+  const deleteInformation = (row) => {
+    if (confirm("Bạn muốn xóa ? ")) {
+      const newUpdateInformation = [...accountInformation];
+      newUpdateInformation.splice(row, 1);
+      setAccountInformation(newUpdateInformation);
+    }
+  }
+
+  const editInformation = (row) => {
+    setBoardType("Edit");
+    setIsDisplayInformationBlock(true);
+    setRow(row);
+  }
+
   return (
     <UserBlock style={{ position: "relative" }}>
-      <h4 className="blockTitle" onClick={() => console.log(permissionAccount)}>
+      <h4 className="blockTitle" onClick={() => console.log(editInformationData)}>
         Permissions of account groups
       </h4>
       <StyledPermissionAccountTable data={permissionAccount} action={updatePermission} />
       <div className="TitleSearchCombination">
-        <h4 className="blockTitle" onClick={() => console.log(permissionAccount)}>
+        <h4 className="blockTitle" onClick={() => console.log(accountInformation)}>
           Account Information
         </h4>
         <SearchBox />
       </div>
-      <StyledAccountInformationTable data={accountInformation} />
+      <StyledAccountInformationTable data={accountInformation} deleteRow={deleteInformation} editRow={editInformation} />
       <CreateSaveCombination>
         <button className="createButton" onClick={displayInfomationBlock}>Create</button>
         <button className="saveButton" onClick={updateInfomation}>Save</button>
@@ -126,6 +143,10 @@ const User = () => {
       <Information
         display={isDisplayInfomationBlock}
         setIsDisplayInformationBlock={setIsDisplayInformationBlock}
+        type={boardType}
+        editrow={row}
+        accountInformation={accountInformation}
+        setAccountInformation={setAccountInformation}
       />
     </UserBlock>
   );
