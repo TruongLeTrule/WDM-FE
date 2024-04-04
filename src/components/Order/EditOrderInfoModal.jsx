@@ -1,8 +1,8 @@
-import { FaRegCalendar } from 'react-icons/fa';
-import { FaArrowUpRightFromSquare } from 'react-icons/fa6';
 import Wrapper from '../../assets/wrappers/Order/EditOrderInfoWrapper';
 import { useOrderContext } from '../../pages/Order';
 import Modal from '../Modal';
+import { editOrderLeft, editOrderRight } from '../../utils/orderRows';
+import Rows from './Rows';
 
 const customStyle = {
   content: {
@@ -24,7 +24,7 @@ const EditOrderInfoModal = () => {
 
   return (
     <Modal
-      isOpen={orderModalState.edit}
+      isOpen={orderModalState?.edit}
       setModalClose={() =>
         setOrderModalState({ ...orderModalState, edit: false })
       }
@@ -38,95 +38,13 @@ const EditOrderInfoModal = () => {
           {/* Left col */}
           <div>
             <h5>Customer information</h5>
-            <form className="rows">
-              <div className="row">
-                <label className="title" htmlFor="groom">
-                  groom
-                </label>
-                <input
-                  type="text"
-                  name="groom"
-                  id="groom"
-                  defaultValue={orderInfo?.groom}
-                />
-              </div>
-              <div className="row">
-                <label className="title" htmlFor="bride">
-                  bride
-                </label>
-                <input
-                  type="text"
-                  name="bride"
-                  id="bride"
-                  defaultValue={orderInfo?.bride}
-                />
-              </div>
-              <div className="row">
-                <label className="title" htmlFor="phone">
-                  phone
-                </label>
-                <input
-                  type="text"
-                  name="phone"
-                  id="phone"
-                  defaultValue={orderInfo?.phone}
-                />
-              </div>
-              <div className="row">
-                <span className="title">order date</span>
-                <span className="calendar-wrap">
-                  {orderInfo?.orderDate} <FaRegCalendar className="icon" />
-                </span>
-              </div>
-              <div className="row">
-                <span className="title">occur date</span>
-                <span className="calendar-wrap">
-                  {orderInfo?.occurDate} <FaRegCalendar className="icon" />
-                </span>
-              </div>
-            </form>
+            <Rows render={editOrderLeft} />
           </div>
           {/* Right col */}
           <div className="right-col">
             <h5>{orderInfo?.lobby}</h5>
             <p className="shift">{orderInfo?.shift}</p>
-            <div className="rows">
-              <div className="row">
-                <label className="title" htmlFor="totalTable">
-                  total table
-                </label>
-                <input
-                  type="text"
-                  name="totalTable"
-                  id="totalTable"
-                  defaultValue={orderInfo?.totalTable}
-                />
-              </div>
-              <div className="row space-between">
-                <span className="title">price/table</span>
-                <span className="link">
-                  {orderInfo?.pricePerTable}$ <FaArrowUpRightFromSquare />
-                </span>
-              </div>
-              <div className="row space-between">
-                <span className="title">service fee</span>
-                <span className="link">
-                  {orderInfo?.serviceFee}$ <FaArrowUpRightFromSquare />
-                </span>
-              </div>
-              <div className="row space-between">
-                <span className="title">total</span>
-                <strong>{orderInfo?.total}$</strong>
-              </div>
-              <div className="row space-between">
-                <span className="title">deposit</span>
-                <strong>{orderInfo?.deposit}$</strong>
-              </div>
-              <div className="row space-between">
-                <span className="title">remainder</span>
-                <strong>{orderInfo?.total - orderInfo?.deposit}$</strong>
-              </div>
-            </div>
+            <Rows render={editOrderRight} />
           </div>
         </div>
         <div className="btn-wrap">

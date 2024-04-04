@@ -90,5 +90,8 @@ const Wrapper = styled.div`
       background-color: var(--red-dark);
     }
   }
+  .strong {
+    font-weight: 700;
+  }
 `;
 export default Wrapper;

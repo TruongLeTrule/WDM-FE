@@ -54,6 +54,10 @@ const Wrapper = styled.div`
           cursor: pointer;
         }
       }
+      .space-between {
+        display: flex;
+        justify-content: space-between;
+      }
     }
   }
   .btn {
@@ -62,6 +66,9 @@ const Wrapper = styled.div`
     font-weight: 500;
     margin: 1.2rem auto;
     display: block;
+  }
+  .strong {
+    font-weight: 700;
   }
 `;
 export default Wrapper;

@@ -44,11 +44,9 @@ const Wrapper = styled.div`
         display: grid;
         grid-template-columns: 1em auto;
         gap: 0.5em;
+        align-items: center;
       }
     }
-  }
-  input {
-    margin-right: 0.5rem;
   }
   /* radio */
   input[type='radio'] {
@@ -104,7 +102,11 @@ const Wrapper = styled.div`
   }
   /* checkbox */
   input[type='checkbox'] {
+    margin-right: 0.5rem;
     accent-color: var(--primary);
+  }
+  .strong {
+    font-weight: 700;
   }
 `;
 

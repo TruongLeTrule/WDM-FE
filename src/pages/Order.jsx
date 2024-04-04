@@ -251,9 +251,9 @@ const Order = () => {
             />
           </div>
           {/* Modal */}
-          <OrderInfoModal />
-          <EditOrderInfoModal />
-          <PayRemainderModal />
+          {orderModalState.info && <OrderInfoModal />}
+          {orderModalState.edit && <EditOrderInfoModal />}
+          {orderModalState.payRemainder && <PayRemainderModal />}
         </main>
       </Wrapper>
     </OrderContext.Provider>
