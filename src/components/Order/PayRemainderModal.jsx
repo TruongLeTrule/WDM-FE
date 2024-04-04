@@ -20,8 +20,7 @@ const customStyle = {
 };
 
 const PayRemainderModal = () => {
-  const { payRemainderModalOpen, setPayRemainderModalOpen, orderInfo } =
-    useOrderContext();
+  const { orderModalState, setOrderModalState, orderInfo } = useOrderContext();
 
   const [payMethod, setPayMethod] = useState('cash');
   const [isPenaltyMode, setIsPenaltyMode] = useState(false);
@@ -63,8 +62,13 @@ const PayRemainderModal = () => {
 
   return (
     <Modal
-      isOpen={payRemainderModalOpen}
-      setIsOpen={setPayRemainderModalOpen}
+      isOpen={orderModalState.payRemainder}
+      setModalClose={() =>
+        setOrderModalState({
+          ...orderModalState,
+          payRemainder: false,
+        })
+      }
       customStyle={customStyle}
     >
       <Wrapper>

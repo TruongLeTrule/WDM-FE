@@ -212,27 +212,27 @@ const Order = () => {
     []
   );
 
-  // modal state
-  const [infoModalOpen, setInfoModalOpen] = useState(false);
   const [orderInfo, setOrderInfo] = useState();
-  const [editOrderModalOpen, setEditOrderModalOpen] = useState(false);
-  const [payRemainderModalOpen, setPayRemainderModalOpen] = useState(false);
+  const [orderModalState, setOrderModalState] = useState({
+    info: false,
+    edit: false,
+    payRemainder: false,
+  });
 
   const handleRowClick = (rowData) => {
     setOrderInfo(rowData);
-    setInfoModalOpen(true);
+    setOrderModalState((prev) => ({
+      ...prev,
+      info: true,
+    }));
   };
 
   return (
     <OrderContext.Provider
       value={{
-        infoModalOpen,
-        setInfoModalOpen,
+        orderModalState,
+        setOrderModalState,
         orderInfo,
-        editOrderModalOpen,
-        setEditOrderModalOpen,
-        payRemainderModalOpen,
-        setPayRemainderModalOpen,
       }}
     >
       <Wrapper>

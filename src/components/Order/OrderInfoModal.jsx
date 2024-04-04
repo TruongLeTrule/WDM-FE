@@ -4,27 +4,31 @@ import { useOrderContext } from '../../pages/Order';
 import Modal from '../Modal';
 
 const OrderInfoModal = () => {
-  const {
-    orderInfo,
-    infoModalOpen,
-    setInfoModalOpen,
-    setEditOrderModalOpen,
-    setPayRemainderModalOpen,
-  } = useOrderContext();
+  const { orderInfo, orderModalState, setOrderModalState } = useOrderContext();
 
   const handlePayBtnClick = () => {
-    setPayRemainderModalOpen(true);
-    setInfoModalOpen(false);
+    setOrderModalState({
+      ...orderModalState,
+      info: false,
+      payRemainder: true,
+    });
   };
 
   return (
-    <Modal isOpen={infoModalOpen} setIsOpen={setInfoModalOpen}>
+    <Modal
+      isOpen={orderModalState.info}
+      setModalClose={() =>
+        setOrderModalState({ ...orderModalState, info: false })
+      }
+    >
       <Wrapper>
         <div className="header">
           <h4>order {orderInfo?.id}</h4>
           <FaPenToSquare
             className="icon"
-            onClick={() => setEditOrderModalOpen(true)}
+            onClick={() =>
+              setOrderModalState({ ...orderModalState, edit: true })
+            }
           />
         </div>
         <div className="container">

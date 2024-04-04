@@ -20,13 +20,14 @@ const customStyle = {
 };
 
 const EditOrderInfoModal = () => {
-  const { editOrderModalOpen, setEditOrderModalOpen, orderInfo } =
-    useOrderContext();
+  const { orderModalState, setOrderModalState, orderInfo } = useOrderContext();
 
   return (
     <Modal
-      isOpen={editOrderModalOpen}
-      setIsOpen={setEditOrderModalOpen}
+      isOpen={orderModalState.edit}
+      setModalClose={() =>
+        setOrderModalState({ ...orderModalState, edit: false })
+      }
       customStyle={customStyle}
     >
       <Wrapper>
