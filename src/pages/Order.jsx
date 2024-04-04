@@ -19,6 +19,7 @@ const orderList = [
     lobby: 'lobby 1',
     shift: 'morning',
     status: 'deposit',
+    payMethod: 'cash',
     orderDate: orderDate.toLocaleDateString(),
     occurDate: occurDate.toLocaleDateString(),
     totalTable: 100,
@@ -27,6 +28,9 @@ const orderList = [
     total: 100000,
     deposit: 100,
     extraFee: 0,
+    remainder: 990000,
+    isPenaltyMode: false,
+    isPaid: false,
   },
   {
     id: '#2',
@@ -233,6 +237,7 @@ const Order = () => {
         orderModalState,
         setOrderModalState,
         orderInfo,
+        setOrderInfo,
       }}
     >
       <Wrapper>

@@ -20,19 +20,20 @@ const customStyle = {
 };
 
 const PayRemainderModal = () => {
-  const { orderModalState, setOrderModalState, orderInfo } = useOrderContext();
+  const { orderModalState, setOrderModalState, orderInfo, setOrderInfo } =
+    useOrderContext();
 
-  const [payMethod, setPayMethod] = useState('cash');
-  const [isPenaltyMode, setIsPenaltyMode] = useState(false);
-  const [extraFee, setExtraFee] = useState(0);
-  const [remainder, setRemainder] = useState(0);
-
-  const onOptionChange = (e) => {
-    setPayMethod(e.target.value);
-  };
-
-  const onCheckBoxChange = () => {
-    setIsPenaltyMode(!isPenaltyMode);
+  const handleChange = (e) => {
+    if (e.target.type === 'checkbox') {
+      return setOrderInfo({
+        ...orderInfo,
+        isPenaltyMode: !orderInfo.isPenaltyMode,
+      });
+    }
+    setOrderInfo({
+      ...orderInfo,
+      [e.target.name]: e.target.value,
+    });
   };
 
   const calculateExtraFee = () => {
@@ -40,29 +41,19 @@ const PayRemainderModal = () => {
     const today = new Date();
     occurDate.setHours(0, 0, 0, 0);
     today.setHours(0, 0, 0, 0);
-    if (isPenaltyMode && today.getTime() > occurDate.getTime()) {
-      setExtraFee(200);
-    } else {
-      setExtraFee(0);
+    if (orderInfo?.isPenaltyMode && today.getTime() > occurDate.getTime()) {
+      return setOrderInfo({ ...orderInfo, extraFee: 200 });
     }
+    setOrderInfo({ ...orderInfo, extraFee: 0 });
   };
 
   useEffect(() => {
-    setExtraFee(orderInfo?.extraFee);
-    setRemainder(orderInfo?.total - orderInfo?.deposit + orderInfo?.extraFee);
-  }, [orderInfo]);
-
-  useEffect(() => {
     calculateExtraFee();
-  }, [isPenaltyMode]);
-
-  useEffect(() => {
-    setRemainder(orderInfo?.total - orderInfo?.deposit + extraFee);
-  }, [extraFee]);
+  }, [orderInfo?.isPenaltyMode]);
 
   return (
     <Modal
-      isOpen={orderModalState.payRemainder}
+      isOpen={orderModalState?.payRemainder}
       setModalClose={() =>
         setOrderModalState({
           ...orderModalState,
@@ -99,12 +90,16 @@ const PayRemainderModal = () => {
               <span>{orderInfo?.deposit}$</span>
             </div>
             <div className="row">
-              <span className={extraFee > 0 ? 'red' : ''}>extra fee</span>
-              <span className={extraFee > 0 ? 'red' : ''}>{extraFee}$</span>
+              <span className={orderInfo?.extraFee > 0 ? 'red' : ''}>
+                extra fee
+              </span>
+              <span className={orderInfo?.extraFee > 0 ? 'red' : ''}>
+                {orderInfo?.extraFee}$
+              </span>
             </div>
             <div className="row">
               <strong>remainder</strong>
-              <strong>{remainder}$</strong>
+              <strong>{orderInfo?.remainder}$</strong>
             </div>
           </div>
           {/* Payment block */}
@@ -114,26 +109,26 @@ const PayRemainderModal = () => {
               <div className="row">
                 <input
                   type="radio"
-                  name="method"
+                  name="payMethod"
                   id="cash"
                   value="cash"
-                  checked={payMethod === 'cash'}
-                  onChange={onOptionChange}
+                  checked={orderInfo?.payMethod === 'cash'}
+                  onChange={(e) => handleChange(e)}
                 />
                 <label htmlFor="cash">cash</label>
               </div>
               <div className="row">
                 <input
                   type="radio"
-                  name="method"
+                  name="payMethod"
                   id="bank"
                   value="bank"
-                  checked={payMethod === 'bank'}
-                  onChange={onOptionChange}
+                  checked={orderInfo?.payMethod === 'bank'}
+                  onChange={(e) => handleChange(e)}
                 />
                 <label htmlFor="bank">internet banking</label>
               </div>
-              {payMethod === 'bank' && (
+              {orderInfo?.payMethod === 'bank' && (
                 <img src={qrCode} alt="qr code" className="qr-code" />
               )}
             </form>
@@ -146,12 +141,12 @@ const PayRemainderModal = () => {
               type="checkbox"
               id="penalty-mode"
               name="isPenaltyMode"
-              checked={isPenaltyMode}
-              onChange={onCheckBoxChange}
+              checked={orderInfo?.isPenaltyMode}
+              onChange={(e) => handleChange(e)}
             />
             <label
               htmlFor="penalty-mode"
-              className={isPenaltyMode ? 'checked' : ''}
+              className={orderInfo?.isPenaltyMode ? 'checked' : ''}
             >
               penalty mode
             </label>
