@@ -2,7 +2,7 @@ import React from "react";
 import { useRef } from 'react';
 import { FaMagnifyingGlass } from 'react-icons/fa6';
 import { PiForkKnifeBold, PiGuitarDuotone } from "react-icons/pi";
-const FSheader_Content = () => {
+const FSheader_Content = ({ setPage }) => {
     const inputRef = useRef(null);
     const handleFormClick = () => {
         inputRef.current.focus();
@@ -10,8 +10,8 @@ const FSheader_Content = () => {
     return (
         <div class="fsheader">
             <div className="left">
-                <button className="food"><PiForkKnifeBold/> FOOD</button>
-                <button className="service"><PiGuitarDuotone /> SERVICE</button>
+                <button onClick={() => setPage("1")} className="food"><PiForkKnifeBold /> FOOD</button>
+                <button onClick={() => setPage("2")} className="service"><PiGuitarDuotone /> SERVICE</button>
             </div>
             <div className="right">
                 <form>
