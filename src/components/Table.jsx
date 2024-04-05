@@ -6,8 +6,9 @@ import {
   FaAngleUp,
 } from 'react-icons/fa';
 import Wrapper from '../assets/wrappers/TableWrapper';
+import resolveCurrency from '../utils/resolveCurrency';
 
-const Table = ({ columns, data, handleRowClick }) => {
+const Table = ({ columns, data, handleRowClick, paginationBtn }) => {
   const {
     getTableProps,
     getTableBodyProps,
@@ -67,6 +68,7 @@ const Table = ({ columns, data, handleRowClick }) => {
                     className={resolveCellClass(cell.value)}
                   >
                     {cell.render('Cell')}
+                    {resolveCurrency(cell.column.id)}
                   </td>
                 ))}
               </tr>
@@ -74,17 +76,19 @@ const Table = ({ columns, data, handleRowClick }) => {
           })}
         </tbody>
       </table>
-      <div className="page-group">
-        <button disabled={!canPreviousPage} onClick={previousPage}>
-          <FaAngleLeft />
-        </button>
-        <span>
-          {pageIndex + 1} of {pageCount}
-        </span>
-        <button disabled={!canNextPage} onClick={nextPage}>
-          <FaAngleRight />
-        </button>
-      </div>
+      {paginationBtn && (
+        <div className="page-group">
+          <button disabled={!canPreviousPage} onClick={previousPage}>
+            <FaAngleLeft />
+          </button>
+          <span>
+            {pageIndex + 1} of {pageCount}
+          </span>
+          <button disabled={!canNextPage} onClick={nextPage}>
+            <FaAngleRight />
+          </button>
+        </div>
+      )}
     </Wrapper>
   );
 };

@@ -1,11 +1,10 @@
 import { FaArrowUpRightFromSquare } from 'react-icons/fa6';
 import { FaRegCalendar } from 'react-icons/fa';
 import resolveCurrency from '../../utils/resolveCurrency';
-import { Link } from 'react-router-dom';
 import { useOrderContext } from '../../pages/Order';
 
-const Row = ({ title, keyValue, value, type, link, handleChange }) => {
-  const { orderInfo } = useOrderContext();
+const Row = ({ title, keyValue, value, type, openModal, handleChange }) => {
+  const { orderInfo, setOrderModalState } = useOrderContext();
 
   const resolveClass = () => {
     switch (keyValue) {
@@ -76,15 +75,20 @@ const Row = ({ title, keyValue, value, type, link, handleChange }) => {
     );
   }
 
-  if (link) {
+  if (openModal) {
     return (
       <div className="row space-between">
         <span className="title">{title}</span>
-        <Link to={link} className="link">
+        <div
+          onClick={() =>
+            setOrderModalState((prev) => ({ ...prev, [openModal]: true }))
+          }
+          className="link"
+        >
           {value}
           {resolveCurrency(keyValue)}
           <FaArrowUpRightFromSquare />
-        </Link>
+        </div>
       </div>
     );
   }

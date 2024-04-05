@@ -8,8 +8,8 @@ export const orderInfoLeft = [
 
 export const orderInfoRight = [
   { title: 'total table', key: 'totalTable' },
-  { title: 'price/table', key: 'pricePerTable', link: '/' },
-  { title: 'service fee', key: 'serviceFee', link: '/' },
+  { title: 'price/table', key: 'pricePerTable', openModal: 'food' },
+  { title: 'service fee', key: 'serviceFee', openModal: 'service' },
   { title: 'total', key: 'total' },
   { title: 'deposit', key: 'deposit' },
   { title: 'remainder', key: 'remainder' },
@@ -25,8 +25,8 @@ export const editOrderLeft = [
 
 export const editOrderRight = [
   { title: 'total table', key: 'totalTable', type: 'input' },
-  { title: 'price/table', key: 'pricePerTable', link: '/' },
-  { title: 'service fee', key: 'serviceFee', link: '/' },
+  { title: 'price/table', key: 'pricePerTable', openModal: 'food' },
+  { title: 'service fee', key: 'serviceFee', openModal: 'service' },
   { title: 'total', key: 'total' },
   { title: 'deposit', key: 'deposit' },
   { title: 'remainder', key: 'remainder' },

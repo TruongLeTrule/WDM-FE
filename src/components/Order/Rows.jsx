@@ -5,7 +5,7 @@ const Rows = ({ render, handleChange }) => {
   const { orderInfo } = useOrderContext();
   return (
     <div className="rows">
-      {render.map(({ title, key, type, link, optionValue }) => (
+      {render.map(({ title, key, type, link, optionValue, openModal }) => (
         <Row
           title={title}
           value={optionValue ? optionValue : orderInfo?.[key]}
@@ -13,6 +13,7 @@ const Rows = ({ render, handleChange }) => {
           keyValue={key}
           link={link}
           handleChange={handleChange}
+          openModal={openModal}
           key={optionValue ? optionValue : key}
         />
       ))}

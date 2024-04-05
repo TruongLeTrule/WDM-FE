@@ -6,186 +6,9 @@ import {
   OrderInfoModal,
   PayRemainderModal,
   BillModal,
+  ServiceModal,
 } from '../components/Order';
-
-const orderDate = new Date();
-const occurDate = new Date('2024-04-01');
-const orderList = [
-  {
-    id: '#1',
-    customerName: 'truong',
-    groom: 'Le Quang Truong',
-    bride: 'Truong Quang Le',
-    phone: '0389662855',
-    lobby: 'lobby 1',
-    shift: 'morning',
-    status: 'deposit',
-    payMethod: 'cash',
-    orderDate: orderDate.toLocaleDateString(),
-    occurDate: occurDate.toLocaleDateString(),
-    totalTable: 100,
-    pricePerTable: 200,
-    serviceFee: 2000,
-    total: 100000,
-    deposit: 100,
-    extraFee: 0,
-    remainder: 990000,
-    isPenaltyMode: false,
-    paidDate: null,
-  },
-  {
-    id: '#2',
-    customerName: 'truong',
-    groom: 'Le Quang Truong',
-    bride: 'Truong Quang Le',
-    phone: '0389662855',
-    lobby: 'lobby 1',
-    shift: 'morning',
-    status: 'paid',
-    payMethod: 'cash',
-    orderDate: orderDate.toLocaleDateString(),
-    occurDate: occurDate.toLocaleDateString(),
-    paidDate: new Date(),
-    totalTable: 100,
-    pricePerTable: 200,
-    serviceFee: 2000,
-    total: 100000,
-    deposit: 100,
-    extraFee: 0,
-    remainder: 990000,
-    isPenaltyMode: false,
-  },
-  {
-    id: '#3',
-    customerName: 'minh',
-    phone: '0389662855',
-    lobby: 'lobby 1',
-    shift: 'morning',
-    date: '21-05-2024',
-    totalTable: 100,
-    status: 'deposit',
-  },
-  {
-    id: '#4',
-    customerName: 'quy',
-    phone: '0389662855',
-    lobby: 'lobby 1',
-    shift: 'morning',
-    date: '21-05-2024',
-    totalTable: 100,
-    status: 'deposit',
-  },
-  {
-    id: '#5',
-    customerName: 'hoa',
-    phone: '0389662855',
-    lobby: 'lobby 1',
-    shift: 'morning',
-    date: '21-05-2024',
-    totalTable: 100,
-    status: 'deposit',
-  },
-  {
-    id: '#6',
-    customerName: 'trule',
-    phone: '0389662855',
-    lobby: 'lobby 1',
-    shift: 'morning',
-    date: '21-05-2024',
-    totalTable: 100,
-    status: 'paid',
-  },
-  {
-    id: '#1r24id',
-    customerName: 'trule',
-    phone: '0389662855',
-    lobby: 'lobby 1',
-    shift: 'morning',
-    date: '21-05-2024',
-    totalTable: 100,
-    status: 'paid',
-  },
-  {
-    id: '#1r24id',
-    customerName: 'trule',
-    phone: '0389662855',
-    lobby: 'lobby 1',
-    shift: 'morning',
-    date: '21-05-2024',
-    totalTable: 100,
-    status: 'paid',
-  },
-  {
-    id: '#1r24id',
-    customerName: 'trule',
-    phone: '0389662855',
-    lobby: 'lobby 1',
-    shift: 'morning',
-    date: '21-05-2024',
-    totalTable: 100,
-    status: 'paid',
-  },
-  {
-    id: '#1r24id',
-    customerName: 'trule',
-    phone: '0389662855',
-    lobby: 'lobby 1',
-    shift: 'morning',
-    date: '21-05-2024',
-    totalTable: 100,
-    status: 'paid',
-  },
-  {
-    id: '#1r24id',
-    customerName: 'trule',
-    phone: '0389662855',
-    lobby: 'lobby 1',
-    shift: 'morning',
-    date: '21-05-2024',
-    totalTable: 100,
-    status: 'paid',
-  },
-  {
-    id: '#1r24id',
-    customerName: 'trule',
-    phone: '0389662855',
-    lobby: 'lobby 1',
-    shift: 'morning',
-    date: '21-05-2024',
-    totalTable: 100,
-    status: 'paid',
-  },
-  {
-    id: '#1r24id',
-    customerName: 'trule',
-    phone: '0389662855',
-    lobby: 'lobby 1',
-    shift: 'morning',
-    date: '21-05-2024',
-    totalTable: 100,
-    status: 'paid',
-  },
-  {
-    id: '#1r24id',
-    customerName: 'trule',
-    phone: '0389662855',
-    lobby: 'lobby 1',
-    shift: 'morning',
-    date: '21-05-2024',
-    totalTable: 100,
-    status: 'paid',
-  },
-  {
-    id: '#1r24id',
-    customerName: 'trule',
-    phone: '0389662855',
-    lobby: 'lobby 1',
-    shift: 'morning',
-    date: '21-05-2024',
-    totalTable: 100,
-    status: 'paid',
-  },
-];
+import { orderList, food, service } from '../utils/orderTestData';
 
 const OrderContext = createContext();
 
@@ -235,6 +58,8 @@ const Order = () => {
     edit: false,
     payRemainder: false,
     bill: false,
+    food: false,
+    service: false,
   });
 
   const handleRowClick = (rowData) => {
@@ -263,6 +88,7 @@ const Order = () => {
               data={data}
               columns={columns}
               handleRowClick={handleRowClick}
+              paginationBtn
             />
           </div>
           {/* Modal */}
@@ -270,6 +96,12 @@ const Order = () => {
           {orderModalState.edit && <EditOrderInfoModal />}
           {orderModalState.payRemainder && <PayRemainderModal />}
           {orderModalState.bill && <BillModal />}
+          {orderModalState.food && (
+            <ServiceModal type="food" title="food" data={food} />
+          )}
+          {orderModalState.service && (
+            <ServiceModal type="service" title="service" data={service} />
+          )}
         </main>
       </Wrapper>
     </OrderContext.Provider>

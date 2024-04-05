@@ -17,7 +17,8 @@ const SpecificOrderTable = ({ data }) => {
             <div className={`cell ${resolveClass()}`}>{index + 1}</div>
             <div className={`cell ${resolveClass()}`}>{title}</div>
             <div className={`cell ${resolveClass()}`}>
-              {orderInfo[key]} {resolveCurrency(key)}
+              {orderInfo[key]}
+              {resolveCurrency(key)}
             </div>
           </div>
         ))}
