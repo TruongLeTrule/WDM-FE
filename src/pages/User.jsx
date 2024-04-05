@@ -81,15 +81,24 @@ const User = () => {
   ]);
 
   const [accountInformation, setAccountInformation] = useState([
-    ["ID", "Display Name", "Username", "Permission", ""],
-    ["QT001", "Nguyen Hoang Quy", "frwkHoangQuy", "Super Admin"],
-    ["QT002", "Pham Doan Canh", "canhngu", "Admin"],
-    ["QT003", "Nguyen Tue Minh", "minhtue", "Manager"],
-    ["QT004", "Le Quang Truong", "truongle", "Staff"],
-    ["QT005", "Le Tan Hoa", "hoale", "Staff"],
-    ["QT005", "Le Tan Hoa", "hoale", "Staff"],
-    ["QT005", "Le Tan Hoa", "hoale", "Staff"],
-  ]);
+    ["ID", "Display Name", "Username", "Password", "Permission", ""],
+    ["QT001", "Nguyen Hoang Quy", "frwkHoangQuy", "vG3qk7bF", "Super Admin"],
+    ["QT002", "Pham Doan Canh", "canhngu", "1V6r8QWd", "Admin"],
+    ["QT003", "Nguyen Tue Minh", "minhtue", "pMfzLYho", "Manager"],
+    ["QT004", "Le Quang Truong", "truongle", "2nUfGx5K", "Staff"],
+    ["QT005", "Le Tan Hoa", "hoale", "9dCt4PvW", "Staff"],
+    ["QT005", "Le Tan Hoa", "hoale", "uR5k7zLv", "Staff"],
+    ["QT005", "Le Tan Hoa", "hoale", "J4xSbE7n", "Staff"]
+  ]
+  );
+
+  const [accountInformationInput, setAccountInformationInput] = useState({
+    ID: "",
+    DisplayName: "",
+    UserName: "",
+    Password: "",
+    Permission: "",
+  })
 
   const [boardType, setBoardType] = useState("")
   const [row, setRow] = useState()
@@ -120,12 +129,23 @@ const User = () => {
   const editInformation = (row) => {
     setBoardType("Edit");
     setIsDisplayInformationBlock(true);
+    const tempData = [...accountInformation[row]]
+    setAccountInformationInput(() => {
+      return (
+        {
+          ID: tempData[0],
+          DisplayName: tempData[1],
+          UserName: tempData[2],
+          Password: tempData[3],
+          Permission: tempData[4],
+        }
+      )
+    })
     setRow(row);
   }
-
   return (
-    <UserBlock style={{ position: "relative" }}>
-      <h4 className="blockTitle" onClick={() => console.log(editInformationData)}>
+    <UserBlock>
+      <h4 className="blockTitle" onClick={() => console.log()}>
         Permissions of account groups
       </h4>
       <StyledPermissionAccountTable data={permissionAccount} action={updatePermission} />
@@ -135,7 +155,10 @@ const User = () => {
         </h4>
         <SearchBox />
       </div>
-      <StyledAccountInformationTable data={accountInformation} deleteRow={deleteInformation} editRow={editInformation} />
+      <StyledAccountInformationTable
+        data={accountInformation}
+        deleteRow={deleteInformation}
+        editRow={editInformation} />
       <CreateSaveCombination>
         <button className="createButton" onClick={displayInfomationBlock}>Create</button>
         <button className="saveButton" onClick={updateInfomation}>Save</button>
@@ -147,6 +170,7 @@ const User = () => {
         editrow={row}
         accountInformation={accountInformation}
         setAccountInformation={setAccountInformation}
+        accountInformationInput={accountInformationInput}
       />
     </UserBlock>
   );

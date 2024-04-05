@@ -1,6 +1,6 @@
 import styled from "styled-components"
 import { useState } from "react"
-const Information = ({ display, setIsDisplayInformationBlock, type, editrow, accountInformation, setAccountInformation }) => {
+const Information = ({ display, setIsDisplayInformationBlock, type, editrow, accountInformation, setAccountInformation, accountInformationInput }) => {
   const [tempData, setTempData] = useState({
     ID: "",
     DisplayName: "",
@@ -13,6 +13,12 @@ const Information = ({ display, setIsDisplayInformationBlock, type, editrow, acc
     newData[name] = data;
     setTempData(newData);
   }
+  const [inputValue, setInputValue] = useState(accountInformationInput);
+  const updateInputValue = (name, value) => {
+    const tempData = { ...inputValue }
+    tempData[name] = value;
+    setInputValue(tempData);
+  }
   return (
     <InformationBlock display={display.toString()}>
       <InformationBoard>
@@ -21,22 +27,31 @@ const Information = ({ display, setIsDisplayInformationBlock, type, editrow, acc
           <tbody>
             <tr>
               <td className="informationTitle"><p>ID :</p> </td>
-              <td><input onChange={(e) => updateTempData("ID", e.target.value)} ></input></td>
+              <td>
+                <input
+                  value={inputValue.ID}
+                  onChange={(e) => {
+                    updateTempData("ID", e.target.value)
+                    updateInputValue("ID", e.target.value)
+                  }
+                  } >
+                </input>
+              </td>
             </tr>
             <tr>
               <td className="informationTitle"><p>Name :</p> </td>
-              <td><input onChange={(e) => updateTempData("DisplayName", e.target.value)}></input></td>
+              <td><input placeholder={accountInformationInput.DisplayName} onChange={(e) => updateTempData("DisplayName", e.target.value)}></input></td>
             </tr>
             <tr>
               <td className="informationTitle"><p>Username :</p> </td>
-              <td><input onChange={(e) => updateTempData("UserName", e.target.value)}></input></td>
+              <td><input placeholder={accountInformationInput.UserName} onChange={(e) => updateTempData("UserName", e.target.value)}></input></td>
             </tr>
             <tr>
               <td className="informationTitle"><p>Password :</p> </td>
-              <td><input type="password" onChange={(e) => updateTempData("Password", e.target.value)}></input></td>
+              <td><input placeholder={accountInformationInput.Password} onChange={(e) => updateTempData("Password", e.target.value)} type="password"></input></td>
             </tr>
             <tr>
-              <td className="informationTitle"><p>Permission :</p> </td>
+              <td className="informationTitle"><p>Permission :</p></td>
               <td>
                 <select value={tempData} onChange={(e) => updateTempData("Permission", e.target.value)}>
                   <option value="">Select an option</option>
@@ -57,7 +72,6 @@ const Information = ({ display, setIsDisplayInformationBlock, type, editrow, acc
               setIsDisplayInformationBlock(false);
               const newData = [...accountInformation];
               let newTempData = Object.values(tempData)
-              newTempData.splice(3, 1)
               newTempData = newTempData.map((value, index) => {
                 if (value === '') value = newData[editrow][index];
                 return value;
