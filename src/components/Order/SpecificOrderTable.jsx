@@ -1,5 +1,6 @@
 import { useOrderContext } from '../../pages/Order';
 import Wrapper from '../../assets/wrappers/Order/SpecificOrderTableWrapper';
+import resolveCurrency from '../../utils/resolveCurrency';
 
 const SpecificOrderTable = ({ data }) => {
   const { orderInfo } = useOrderContext();
@@ -15,7 +16,9 @@ const SpecificOrderTable = ({ data }) => {
           <div className="row" key={index}>
             <div className={`cell ${resolveClass()}`}>{index + 1}</div>
             <div className={`cell ${resolveClass()}`}>{title}</div>
-            <div className={`cell ${resolveClass()}`}>{orderInfo[key]}</div>
+            <div className={`cell ${resolveClass()}`}>
+              {orderInfo[key]} {resolveCurrency(key)}
+            </div>
           </div>
         ))}
       </div>

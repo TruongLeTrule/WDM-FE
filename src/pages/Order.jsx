@@ -31,16 +31,29 @@ const orderList = [
     extraFee: 0,
     remainder: 990000,
     isPenaltyMode: false,
+    paidDate: null,
   },
   {
     id: '#2',
-    customerName: 'canh',
+    customerName: 'truong',
+    groom: 'Le Quang Truong',
+    bride: 'Truong Quang Le',
     phone: '0389662855',
     lobby: 'lobby 1',
     shift: 'morning',
-    date: '21-05-2024',
+    status: 'paid',
+    payMethod: 'cash',
+    orderDate: orderDate.toLocaleDateString(),
+    occurDate: occurDate.toLocaleDateString(),
+    paidDate: new Date(),
     totalTable: 100,
-    status: 'deposit',
+    pricePerTable: 200,
+    serviceFee: 2000,
+    total: 100000,
+    deposit: 100,
+    extraFee: 0,
+    remainder: 990000,
+    isPenaltyMode: false,
   },
   {
     id: '#3',
@@ -226,10 +239,11 @@ const Order = () => {
 
   const handleRowClick = (rowData) => {
     setOrderInfo(rowData);
-    setOrderModalState((prev) => ({
-      ...prev,
-      info: true,
-    }));
+    setOrderModalState({
+      ...orderModalState,
+      info: rowData?.status === 'deposit',
+      bill: rowData?.status === 'paid',
+    });
   };
 
   return (

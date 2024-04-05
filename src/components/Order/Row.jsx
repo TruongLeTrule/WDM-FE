@@ -1,15 +1,11 @@
 import { FaArrowUpRightFromSquare } from 'react-icons/fa6';
 import { FaRegCalendar } from 'react-icons/fa';
-import moneyAttribute from '../../utils/moneyAttribute';
+import resolveCurrency from '../../utils/resolveCurrency';
 import { Link } from 'react-router-dom';
 import { useOrderContext } from '../../pages/Order';
 
 const Row = ({ title, keyValue, value, type, link, handleChange }) => {
   const { orderInfo } = useOrderContext();
-
-  const resolveCurrency = () => {
-    if (moneyAttribute.includes(keyValue)) return '$';
-  };
 
   const resolveClass = () => {
     switch (keyValue) {
@@ -86,7 +82,7 @@ const Row = ({ title, keyValue, value, type, link, handleChange }) => {
         <span className="title">{title}</span>
         <Link to={link} className="link">
           {value}
-          {resolveCurrency()}
+          {resolveCurrency(keyValue)}
           <FaArrowUpRightFromSquare />
         </Link>
       </div>
@@ -98,7 +94,7 @@ const Row = ({ title, keyValue, value, type, link, handleChange }) => {
       <span className={`title  ${resolveClass()}`}>{title}</span>
       <span className={resolveClass()}>
         {value}
-        {resolveCurrency()}
+        {resolveCurrency(keyValue)}
       </span>
     </div>
   );
