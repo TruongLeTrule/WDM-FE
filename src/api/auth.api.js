@@ -13,7 +13,7 @@ export const auth = {
         return axiosClient.post(url, data)
     },
     checkToken(token) {
-        const url = '/check-token';
+        const url = '/check-token'
 
         return axiosClient.post(url, {
             headers: {
