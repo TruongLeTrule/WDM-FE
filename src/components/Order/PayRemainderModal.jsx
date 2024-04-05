@@ -65,6 +65,19 @@ const PayRemainderModal = () => {
     calculateExtraFee();
   }, [orderInfo?.isPenaltyMode]);
 
+  const handleSubmitBtnClick = () => {
+    setOrderInfo({
+      ...orderInfo,
+      paidDate: new Date(),
+      status: 'paid',
+    });
+    setOrderModalState({
+      ...orderModalState,
+      payRemainder: false,
+      bill: true,
+    });
+  };
+
   return (
     <Modal
       isOpen={orderModalState?.payRemainder}
@@ -95,7 +108,9 @@ const PayRemainderModal = () => {
           </div>
         </div>
         <div className="btn-wrap">
-          <button className="btn">complete</button>
+          <button className="btn" onClick={handleSubmitBtnClick}>
+            complete
+          </button>
           <Row
             title="penalty mode"
             type="checkbox"

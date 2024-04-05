@@ -5,6 +5,7 @@ import {
   EditOrderInfoModal,
   OrderInfoModal,
   PayRemainderModal,
+  BillModal,
 } from '../components/Order';
 
 const orderDate = new Date();
@@ -30,7 +31,6 @@ const orderList = [
     extraFee: 0,
     remainder: 990000,
     isPenaltyMode: false,
-    isPaid: false,
   },
   {
     id: '#2',
@@ -221,6 +221,7 @@ const Order = () => {
     info: false,
     edit: false,
     payRemainder: false,
+    bill: false,
   });
 
   const handleRowClick = (rowData) => {
@@ -254,6 +255,7 @@ const Order = () => {
           {orderModalState.info && <OrderInfoModal />}
           {orderModalState.edit && <EditOrderInfoModal />}
           {orderModalState.payRemainder && <PayRemainderModal />}
+          {orderModalState.bill && <BillModal />}
         </main>
       </Wrapper>
     </OrderContext.Provider>
