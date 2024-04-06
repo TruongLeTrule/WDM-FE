@@ -4,6 +4,7 @@ const Wrapper = styled.div`
   table {
     width: 100%;
     border-collapse: collapse;
+    table-layout: fixed;
   }
   tr {
     border-bottom: 0.5px solid var(--grey-200);
@@ -31,6 +32,9 @@ const Wrapper = styled.div`
     text-transform: capitalize;
     font-size: 1rem;
     color: var(--black);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
   .paid {
     color: var(--green-dark);

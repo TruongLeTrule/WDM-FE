@@ -1,7 +1,7 @@
 import Row from './Row';
 import { useOrderContext } from '../../pages/Order';
 
-const Rows = ({ render, handleChange }) => {
+const Rows = ({ render, handleChange, handleDateChange }) => {
   const { orderInfo } = useOrderContext();
   return (
     <div className="rows">
@@ -13,6 +13,7 @@ const Rows = ({ render, handleChange }) => {
           keyValue={key}
           link={link}
           handleChange={handleChange}
+          handleDateChange={handleDateChange}
           openModal={openModal}
           key={optionValue ? optionValue : key}
         />

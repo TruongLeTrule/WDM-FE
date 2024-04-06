@@ -1,9 +1,18 @@
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs from 'dayjs';
 import { FaArrowUpRightFromSquare } from 'react-icons/fa6';
-import { FaRegCalendar } from 'react-icons/fa';
 import resolveCurrency from '../../utils/resolveCurrency';
 import { useOrderContext } from '../../pages/Order';
 
-const Row = ({ title, keyValue, value, type, openModal, handleChange }) => {
+const Row = ({
+  title,
+  keyValue,
+  value,
+  type,
+  openModal,
+  handleChange,
+  handleDateChange,
+}) => {
   const { orderInfo, setOrderModalState } = useOrderContext();
 
   const resolveClass = () => {
@@ -23,7 +32,13 @@ const Row = ({ title, keyValue, value, type, openModal, handleChange }) => {
         <label className="title" htmlFor={keyValue}>
           {title}
         </label>
-        <input type="text" name={keyValue} id={keyValue} defaultValue={value} />
+        <input
+          type="text"
+          name={keyValue}
+          id={keyValue}
+          defaultValue={value}
+          onChange={handleChange}
+        />
       </div>
     );
   }
@@ -66,11 +81,12 @@ const Row = ({ title, keyValue, value, type, openModal, handleChange }) => {
 
   if (type === 'date') {
     return (
-      <div className="row">
+      <div className="date-wrap">
         <span className="title">{title}</span>
-        <span className="calendar-wrap">
-          {value} <FaRegCalendar className="icon" />
-        </span>
+        <DatePicker
+          value={dayjs(value)}
+          onChange={(newValue) => handleDateChange(keyValue, newValue.toDate())}
+        />
       </div>
     );
   }

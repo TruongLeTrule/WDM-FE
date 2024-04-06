@@ -66,6 +66,7 @@ const Table = ({ columns, data, handleRowClick, paginationBtn }) => {
                   <td
                     {...cell.getCellProps()}
                     className={resolveCellClass(cell.value)}
+                    title={cell.column.id === 'customerName' ? cell.value : ''}
                   >
                     {cell.render('Cell')}
                     {resolveCurrency(cell.column.id)}
