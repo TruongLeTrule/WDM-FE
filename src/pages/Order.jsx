@@ -7,6 +7,7 @@ import {
   PayRemainderModal,
   BillModal,
   ServiceModal,
+  CreateOrderModalContainer,
 } from '../components/Order';
 import { orderList, food, service } from '../utils/orderTestData';
 
@@ -53,6 +54,7 @@ const Order = () => {
   );
 
   const [orderInfo, setOrderInfo] = useState();
+  const [newOrder, setNewOrder] = useState();
   const [orderModalState, setOrderModalState] = useState({
     info: false,
     edit: false,
@@ -60,6 +62,10 @@ const Order = () => {
     bill: false,
     food: false,
     service: false,
+  });
+  const [createOrderModalState, setCreateOrderModalState] = useState({
+    pickDate: false,
+    lobType: false,
   });
 
   const handleRowClick = (rowData) => {
@@ -71,17 +77,28 @@ const Order = () => {
     });
   };
 
+  const handleAddBtnClick = () => {
+    setCreateOrderModalState({
+      ...createOrderModalState,
+      pickDate: true,
+    });
+  };
+
   return (
     <OrderContext.Provider
       value={{
         orderModalState,
         setOrderModalState,
+        createOrderModalState,
+        setCreateOrderModalState,
         orderInfo,
         setOrderInfo,
+        newOrder,
+        setNewOrder,
       }}
     >
       <Wrapper>
-        <Header />
+        <Header handleAddBtnClick={handleAddBtnClick} />
         <main>
           <div className="container">
             <Table
@@ -92,16 +109,18 @@ const Order = () => {
             />
           </div>
           {/* Modal */}
-          {orderModalState.info && <OrderInfoModal />}
-          {orderModalState.edit && <EditOrderInfoModal />}
-          {orderModalState.payRemainder && <PayRemainderModal />}
-          {orderModalState.bill && <BillModal />}
-          {orderModalState.food && (
+          {orderModalState?.info && <OrderInfoModal />}
+          {orderModalState?.edit && <EditOrderInfoModal />}
+          {orderModalState?.payRemainder && <PayRemainderModal />}
+          {orderModalState?.bill && <BillModal />}
+          {orderModalState?.food && (
             <ServiceModal type="food" title="food" data={food} />
           )}
-          {orderModalState.service && (
+          {orderModalState?.service && (
             <ServiceModal type="service" title="service" data={service} />
           )}
+          {/* Create new order modal container */}
+          <CreateOrderModalContainer />
         </main>
       </Wrapper>
     </OrderContext.Provider>

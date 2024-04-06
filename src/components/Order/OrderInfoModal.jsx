@@ -1,7 +1,7 @@
 import { FaPenToSquare } from 'react-icons/fa6';
-import Wrapper from '../../assets/wrappers/Order/OrderInfoWrapper';
 import { useOrderContext } from '../../pages/Order';
 import Modal from '../Modal';
+import Wrapper from '../../assets/wrappers/Order/OrderInfoWrapper';
 import { orderInfoLeft, orderInfoRight } from '../../utils/orderRows';
 import Rows from './Rows';
 

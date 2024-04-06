@@ -3,3 +3,5 @@ export { default as EditOrderInfoModal } from './EditOrderInfoModal';
 export { default as PayRemainderModal } from './PayRemainderModal';
 export { default as BillModal } from './BillModal';
 export { default as ServiceModal } from './ServiceModal';
+// create new order modal
+export { default as CreateOrderModalContainer } from './CreateOrderModalContainer';

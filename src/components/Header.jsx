@@ -2,7 +2,7 @@ import { FaFilter, FaPlus } from 'react-icons/fa6';
 import Wrapper from '../assets/wrappers/HeaderWrapper';
 import SearchBox from './SearchBox';
 
-const Header = () => {
+const Header = ({ handleAddBtnClick }) => {
   return (
     <Wrapper>
       <h1>Order</h1>
@@ -11,7 +11,7 @@ const Header = () => {
         <button>
           <FaFilter className="icon" />
         </button>
-        <button>
+        <button onClick={handleAddBtnClick}>
           <FaPlus className="icon" />
         </button>
       </div>
