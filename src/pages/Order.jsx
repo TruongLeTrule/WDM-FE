@@ -70,7 +70,6 @@ const Order = () => {
     userInfo: false,
     food: false,
     service: false,
-    service: false,
     payment: false,
     review: false,
     success: false,
