@@ -66,6 +66,14 @@ const Order = () => {
   const [createOrderModalState, setCreateOrderModalState] = useState({
     pickDate: false,
     lobType: false,
+    lobby: false,
+    userInfo: false,
+    food: false,
+    service: false,
+    service: false,
+    payment: false,
+    review: false,
+    success: false,
   });
 
   const handleRowClick = (rowData) => {

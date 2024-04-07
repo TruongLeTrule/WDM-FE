@@ -1,5 +1,7 @@
 import PickDateModal from './PickDateModal';
-import LobTypeModal from './LobTypeModal';
+import PickLobTypeModal from './PickLobTypeModal';
+import PickLobby from './PickLobbyModal';
+import GetUserInfoModal from './GetUserInfoModal';
 import { useOrderContext } from '../../pages/Order';
 
 const CreateOrderModalContainer = () => {
@@ -36,9 +38,34 @@ const CreateOrderModalContainer = () => {
         />
       )}
       {createOrderModalState?.lobType && (
-        <LobTypeModal
+        <PickLobTypeModal
           isOpen={createOrderModalState?.lobType}
           setModalClose={() => setModalState('lobType', false)}
+          setValue={(value) => setNewOrder({ ...newOrder, lobType: value })}
+          setNextModalOpen={() =>
+            setModalState('lobType', false, 'lobby', true)
+          }
+        />
+      )}
+      {createOrderModalState?.lobby && (
+        <PickLobby
+          isOpen={createOrderModalState?.lobby}
+          setModalClose={() => setModalState('lobby', false)}
+          setLobValue={(value) => setNewOrder({ ...newOrder, lobby: value })}
+          setShiftValue={(value) => setNewOrder({ ...newOrder, shift: value })}
+          setNextModalOpen={() =>
+            setModalState('lobby', false, 'userInfo', true)
+          }
+        />
+      )}
+      {createOrderModalState?.userInfo && (
+        <GetUserInfoModal
+          isOpen={createOrderModalState?.userInfo}
+          setModalClose={() => setModalState('userInfo', false)}
+          setLobValue={(value) => setNewOrder({ ...newOrder, ...value })}
+          setNextModalOpen={() =>
+            setModalState('userInfo', false, 'food', true)
+          }
         />
       )}
     </>

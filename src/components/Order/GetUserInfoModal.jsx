@@ -1,9 +1,10 @@
 import Modal from '../Modal';
+import Wrapper from '../../assets/wrappers/Order/GetUserInfoWrapper';
 
 const customStyle = {
   content: {
-    width: '25vw',
-    height: '43vh',
+    width: '70vw',
+    height: '87vh',
     left: '50%',
     top: '50%',
     padding: 0,
@@ -15,20 +16,17 @@ const customStyle = {
   },
 };
 
-const LobTypeModal = ({
-  isOpen,
-  setModalClose,
-  setValue,
-  setNextModalOpen,
-}) => {
+const PickLobby = ({ isOpen, setModalClose, setValue, setNextModalOpen }) => {
   return (
     <Modal
       isOpen={isOpen}
       setModalClose={setModalClose}
       customStyle={customStyle}
     >
-      <h1>Lob type</h1>
+      <Wrapper>
+        <h1>user information</h1>
+      </Wrapper>
     </Modal>
   );
 };
-export default LobTypeModal;
+export default PickLobby;

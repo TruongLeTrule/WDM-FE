@@ -8,7 +8,7 @@ import {
 import Wrapper from '../assets/wrappers/TableWrapper';
 import resolveCurrency from '../utils/resolveCurrency';
 
-const Table = ({ columns, data, handleRowClick, paginationBtn }) => {
+const Table = ({ columns, data, handleRowClick }) => {
   const {
     getTableProps,
     getTableBodyProps,
@@ -77,19 +77,17 @@ const Table = ({ columns, data, handleRowClick, paginationBtn }) => {
           })}
         </tbody>
       </table>
-      {paginationBtn && (
-        <div className="page-group">
-          <button disabled={!canPreviousPage} onClick={previousPage}>
-            <FaAngleLeft />
-          </button>
-          <span>
-            {pageIndex + 1} of {pageCount}
-          </span>
-          <button disabled={!canNextPage} onClick={nextPage}>
-            <FaAngleRight />
-          </button>
-        </div>
-      )}
+      <div className="page-group">
+        <button disabled={!canPreviousPage} onClick={previousPage}>
+          <FaAngleLeft />
+        </button>
+        <span>
+          {pageIndex + 1} of {pageCount}
+        </span>
+        <button disabled={!canNextPage} onClick={nextPage}>
+          <FaAngleRight />
+        </button>
+      </div>
     </Wrapper>
   );
 };

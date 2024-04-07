@@ -257,3 +257,15 @@ button:disabled {
   border-top-color: var(--primary);
   animation: spinner 0.6s linear infinite;
 }
+
+/* React modal */
+.ReactModal__Content {
+  border: 0;
+  border-radius: 16px;
+  overflow: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.ReactModal__Content::-webkit-scrollbar {
+  display: none;
+}
