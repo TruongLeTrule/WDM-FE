@@ -18,7 +18,7 @@ const customStyle = {
   },
 };
 
-const PickLobby = ({
+const PickLobbyModal = ({
   isOpen,
   setModalClose,
   setLobValue,
@@ -48,4 +48,4 @@ const PickLobby = ({
     </Modal>
   );
 };
-export default PickLobby;
+export default PickLobbyModal;

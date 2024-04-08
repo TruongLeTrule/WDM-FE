@@ -19,7 +19,7 @@ const customStyle = {
   },
 };
 
-const PickLobby = ({
+const GetUserInfoModal = ({
   isOpen,
   setModalClose,
   setUserInfoValue,
@@ -68,4 +68,4 @@ const PickLobby = ({
     </Modal>
   );
 };
-export default PickLobby;
+export default GetUserInfoModal;

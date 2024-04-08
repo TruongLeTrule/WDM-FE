@@ -497,5 +497,79 @@ const lobby = [
     bookedShift: ['morning', 'afternoon'],
   },
 ];
+const foodList = [
+  {
+    id: '#1',
+    name: 'beef',
+    price: 200,
+  },
+  {
+    id: '#2',
+    name: 'chicken',
+    price: 200,
+  },
+  {
+    id: '#3',
+    name: 'beef',
+    price: 200,
+  },
+  {
+    id: '#4',
+    name: 'beef',
+    price: 200,
+  },
+  {
+    id: '#5',
+    name: 'beef',
+    price: 200,
+  },
+  {
+    id: '#6',
+    name: 'beef',
+    price: 200,
+  },
+  {
+    id: '#7',
+    name: 'beef',
+    price: 200,
+  },
+];
+const serviceList = [
+  {
+    id: '#1',
+    name: 'ballet',
+    price: 200,
+  },
+  {
+    id: '#2',
+    name: 'ballet',
+    price: 200,
+  },
+  {
+    id: '#3',
+    name: 'ballet',
+    price: 200,
+  },
+  {
+    id: '#4',
+    name: 'ballet',
+    price: 200,
+  },
+  {
+    id: '#5',
+    name: 'ballet',
+    price: 200,
+  },
+  {
+    id: '#6',
+    name: 'ballet',
+    price: 200,
+  },
+  {
+    id: '#7',
+    name: 'ballet',
+    price: 200,
+  },
+];
 
-export { orderList, food, service, lobType, lobby };
+export { orderList, food, service, lobType, lobby, foodList, serviceList };

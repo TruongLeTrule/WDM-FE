@@ -1,8 +1,14 @@
-import PickDateModal from './PickDateModal';
-import PickLobTypeModal from './PickLobTypeModal';
-import PickLobby from './PickLobbyModal';
-import GetUserInfoModal from './GetUserInfoModal';
 import { useOrderContext } from '../../pages/Order';
+import {
+  PickDateModal,
+  PickLobTypeModal,
+  PickLobbyModal,
+  GetUserInfoModal,
+  PickFoodServiceModal,
+  PaymentModal,
+  ReviewModal,
+  SuccessModal,
+} from './';
 
 const CreateOrderModalContainer = () => {
   const {
@@ -23,6 +29,10 @@ const CreateOrderModalContainer = () => {
       [currModal]: currModalState,
       [nextModal]: nextModalState,
     });
+  };
+
+  const handleSubmit = () => {
+    console.log('fetch api');
   };
 
   return (
@@ -48,7 +58,7 @@ const CreateOrderModalContainer = () => {
         />
       )}
       {createOrderModalState?.lobby && (
-        <PickLobby
+        <PickLobbyModal
           isOpen={createOrderModalState?.lobby}
           setModalClose={() => setModalState('lobby', false)}
           setLobValue={(value) => setNewOrder({ ...newOrder, lobby: value })}
@@ -66,6 +76,53 @@ const CreateOrderModalContainer = () => {
           setNextModalOpen={() =>
             setModalState('userInfo', false, 'food', true)
           }
+        />
+      )}
+      {createOrderModalState?.food && (
+        <PickFoodServiceModal
+          type="food"
+          isOpen={createOrderModalState?.food}
+          setModalClose={() => setModalState('food', false)}
+          setValue={(value) => setNewOrder({ ...newOrder, food: value })}
+          setNextModalOpen={() => setModalState('food', false, 'service', true)}
+        />
+      )}
+      {createOrderModalState?.service && (
+        <PickFoodServiceModal
+          type="service"
+          isOpen={createOrderModalState?.service}
+          setModalClose={() => setModalState('service', false)}
+          setValue={(value) => setNewOrder({ ...newOrder, service: value })}
+          setNextModalOpen={() =>
+            setModalState('service', false, 'payment', true)
+          }
+        />
+      )}
+      {createOrderModalState?.payment && (
+        <PaymentModal
+          isOpen={createOrderModalState?.payment}
+          setModalClose={() => setModalState('payment', false)}
+          setPaymentValue={(value) => setNewOrder({ ...newOrder, ...value })}
+          setNextModalOpen={() =>
+            setModalState('payment', false, 'review', true)
+          }
+        />
+      )}
+      {createOrderModalState?.review && (
+        <ReviewModal
+          isOpen={createOrderModalState?.review}
+          setModalClose={() => setModalState('review', false)}
+          handleSubmit={handleSubmit}
+          setNextModalOpen={() =>
+            setModalState('review', false, 'success', true)
+          }
+        />
+      )}
+      {createOrderModalState?.success && (
+        <SuccessModal
+          isOpen={createOrderModalState?.success}
+          setModalClose={() => setModalState('success', false)}
+          setNextModalOpen={() => setModalState('success', false)}
         />
       )}
     </>
