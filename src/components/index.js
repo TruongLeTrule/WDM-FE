@@ -13,6 +13,7 @@ export { default as DatePick } from './DatePick';
 export { default as TextInput } from './TextInput';
 export { default as CheckBox } from './CheckBox';
 export { default as TextRow } from './TextRow';
+export { default as Radio } from './Radio';
 
 // food and service components
 export { default as FSheader } from '../components/Foodandservice/FSheader';

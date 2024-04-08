@@ -41,7 +41,9 @@ const PickFoodServiceModal = ({
 
   const handleNextBtnClick = () => {
     console.log(pickedItem);
-    setValue(pickedItem);
+    if (type === 'food') setValue({ food: pickedItem, pricePerTable: total });
+    if (type === 'service')
+      setValue({ service: pickedItem, serviceFee: total });
     setNextModalOpen();
   };
 
@@ -125,7 +127,7 @@ const PickFoodServiceModal = ({
                       </div>
                       <strong>total {total}$</strong>
                       <button className="btn" onClick={handleNextBtnClick}>
-                        next: choose {type === 'food' ? 'service' : 'payment'}
+                        next: {type === 'food' ? 'choose service' : 'payment'}
                       </button>
                     </>
                   ) : (

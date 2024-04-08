@@ -83,7 +83,7 @@ const CreateOrderModalContainer = () => {
           type="food"
           isOpen={createOrderModalState?.food}
           setModalClose={() => setModalState('food', false)}
-          setValue={(value) => setNewOrder({ ...newOrder, food: value })}
+          setValue={(value) => setNewOrder({ ...newOrder, ...value })}
           setNextModalOpen={() => setModalState('food', false, 'service', true)}
         />
       )}
@@ -92,7 +92,7 @@ const CreateOrderModalContainer = () => {
           type="service"
           isOpen={createOrderModalState?.service}
           setModalClose={() => setModalState('service', false)}
-          setValue={(value) => setNewOrder({ ...newOrder, service: value })}
+          setValue={(value) => setNewOrder({ ...newOrder, ...value })}
           setNextModalOpen={() =>
             setModalState('service', false, 'payment', true)
           }

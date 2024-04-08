@@ -1,6 +1,9 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
+  display: flex;
+  align-items: center;
+  column-gap: 0.5rem;
   input[type='radio'] {
     -webkit-appearance: none;
     margin: 0;
@@ -29,10 +32,6 @@ const Wrapper = styled.div`
   }
   input[type='radio']:checked::before {
     transform: scale(1);
-  }
-  label {
-    font-weight: 600;
-    margin-right: 1rem;
   }
 `;
 export default Wrapper;

@@ -68,4 +68,28 @@ export const getUserInfo = [
     key: 'phone',
     title: 'contact phone',
   },
+  {
+    key: 'totalTable',
+    title: 'total table',
+  },
+];
+
+export const paymentOverall = [
+  {
+    key: 'totalTable',
+    title: 'total table',
+  },
+  {
+    key: 'pricePerTable',
+    title: 'price/table',
+  },
+  {
+    key: 'serviceFee',
+    title: 'service fee',
+  },
+];
+
+export const paymentOption = [
+  { title: 'deposit', key: 'payOption', value: 'deposit' },
+  { title: 'pay in full', key: 'payOption', value: 'full' },
 ];
