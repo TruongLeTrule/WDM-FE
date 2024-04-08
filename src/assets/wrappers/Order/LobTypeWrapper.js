@@ -11,7 +11,7 @@ const Wrapper = styled.div`
     margin-top: 2rem;
     position: relative;
     width: 100%;
-    height: 100%;
+    height: 36.5rem;
     border-radius: var(--border-radius);
     background-color: var(--white);
     padding: 0 2rem 3.8rem 2rem;

@@ -112,7 +112,7 @@ const Order = () => {
               data={data}
               columns={columns}
               handleRowClick={handleRowClick}
-              paginationBtn
+              pagination
             />
           </div>
           {/* Modal */}

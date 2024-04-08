@@ -70,6 +70,7 @@ const PickLobTypeModal = ({
             data={data}
             columns={columns}
             handleRowClick={handleRowClick}
+            pagination
           />
         </div>
       </Wrapper>
