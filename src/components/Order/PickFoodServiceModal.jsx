@@ -89,15 +89,16 @@ const PickFoodServiceModal = ({
       <Wrapper>
         <div className="header">
           <h4>choose {type}</h4>
-          <div className="cart-wrapper" ref={cartRef}>
+          <div
+            className="cart-wrapper"
+            ref={cartRef}
+            onClick={() => {
+              setShowPickedItemList(true);
+            }}
+          >
             {!showPickedItemList ? (
               <>
-                <FaShoppingCart
-                  className="icon"
-                  onClick={() => {
-                    setShowPickedItemList(true);
-                  }}
-                />
+                <FaShoppingCart className="icon" />
                 <span className="badge">{pickedItem.length}</span>
               </>
             ) : (

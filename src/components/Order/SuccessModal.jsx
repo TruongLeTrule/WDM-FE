@@ -1,10 +1,11 @@
+import { FaCheck } from 'react-icons/fa';
 import Modal from '../Modal';
 import Wrapper from '../../assets/wrappers/Order/SuccessWrapper';
 
 const customStyle = {
   content: {
-    width: '25vw',
-    height: '43vh',
+    width: '55vw',
+    height: '40vh',
     left: '50%',
     top: '50%',
     padding: 0,
@@ -16,16 +17,7 @@ const customStyle = {
   },
 };
 
-const SuccessModal = ({
-  isOpen,
-  setModalClose,
-  setValue,
-  setNextModalOpen,
-}) => {
-  const handleNextBtnClick = () => {
-    setNextModalOpen();
-  };
-
+const SuccessModal = ({ isOpen, setModalClose }) => {
   return (
     <Modal
       isOpen={isOpen}
@@ -33,10 +25,17 @@ const SuccessModal = ({
       customStyle={customStyle}
     >
       <Wrapper>
-        <h1>success</h1>
-        <button className="btn" onClick={handleNextBtnClick}>
-          complete
-        </button>
+        <div className="top">
+          <div className="icon-wrapper">
+            <FaCheck className="icon" />
+          </div>
+        </div>
+        <div className="bottom">
+          <strong>create new order successfully</strong>
+          <div className="btn" onClick={setModalClose}>
+            back to home
+          </div>
+        </div>
       </Wrapper>
     </Modal>
   );
