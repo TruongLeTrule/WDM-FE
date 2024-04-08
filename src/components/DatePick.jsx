@@ -5,7 +5,7 @@ import Wrapper from '../assets/wrappers/DatePickWrapper';
 const DatePick = ({ title, handleDateChange, keyValue, value }) => {
   return (
     <Wrapper className="date-wrapper">
-      <label className="title">{title}</label>
+      <label>{title}</label>
       <DatePicker
         value={dayjs(value)}
         onChange={(newValue) => handleDateChange(keyValue, newValue.toDate())}

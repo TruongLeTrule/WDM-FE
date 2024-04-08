@@ -1,10 +1,13 @@
+import { useState } from 'react';
+import { getUserInfo } from '../../utils/orderRenderArr';
+import { TextInput } from '../';
 import Modal from '../Modal';
 import Wrapper from '../../assets/wrappers/Order/GetUserInfoWrapper';
 
 const customStyle = {
   content: {
-    width: '70vw',
-    height: '87vh',
+    width: '25vw',
+    height: '60vh',
     left: '50%',
     top: '50%',
     padding: 0,
@@ -16,7 +19,30 @@ const customStyle = {
   },
 };
 
-const PickLobby = ({ isOpen, setModalClose, setValue, setNextModalOpen }) => {
+const PickLobby = ({
+  isOpen,
+  setModalClose,
+  setUserInfoValue,
+  setNextModalOpen,
+}) => {
+  const [formState, setFormState] = useState({
+    groom: '',
+    bride: '',
+    phone: '',
+  });
+
+  const handleChange = (e) => {
+    setFormState({
+      ...formState,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleNextBtnClick = () => {
+    setUserInfoValue(formState);
+    setNextModalOpen();
+  };
+
   return (
     <Modal
       isOpen={isOpen}
@@ -24,7 +50,20 @@ const PickLobby = ({ isOpen, setModalClose, setValue, setNextModalOpen }) => {
       customStyle={customStyle}
     >
       <Wrapper>
-        <h1>user information</h1>
+        <h4>user information</h4>
+        <div className="rows">
+          {getUserInfo.map(({ key, title }) => (
+            <TextInput
+              key={key}
+              title={title}
+              keyValue={key}
+              handleChange={handleChange}
+            />
+          ))}
+        </div>
+        <button className="btn" onClick={handleNextBtnClick}>
+          next: choose food
+        </button>
       </Wrapper>
     </Modal>
   );

@@ -1,6 +1,10 @@
 import { useState } from 'react';
 import { useOrderContext } from '../../pages/Order';
-import { editOrderLeft, editOrderRight, dateType } from '../../utils/orderRows';
+import {
+  editOrderLeft,
+  editOrderRight,
+  datePickArr,
+} from '../../utils/orderRenderArr';
 import { Modal, DatePick, TextInput } from '../';
 import Wrapper from '../../assets/wrappers/Order/EditOrderInfoWrapper';
 import TextRow from '../TextRow';
@@ -86,7 +90,7 @@ const EditOrderInfoModal = () => {
               {editOrderLeft.map(({ title, key, type }) =>
                 resolveComponent(title, key, type)
               )}
-              {dateType.map(({ title, key }) => (
+              {datePickArr.map(({ title, key }) => (
                 <DatePick
                   title={title}
                   key={key}

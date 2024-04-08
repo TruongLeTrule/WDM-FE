@@ -21,7 +21,7 @@ export const editOrderLeft = [
   { title: 'phone', key: 'phone', type: 'text-input' },
 ];
 
-export const dateType = [
+export const datePickArr = [
   { title: 'order date', key: 'orderDate', type: 'date' },
   { title: 'occur date', key: 'occurDate', type: 'date' },
 ];
@@ -52,5 +52,20 @@ export const paymentMethodRadio = [
     key: 'payMethod',
     type: 'radio',
     optionValue: 'bank',
+  },
+];
+
+export const getUserInfo = [
+  {
+    key: 'groom',
+    title: 'groom',
+  },
+  {
+    key: 'bride',
+    title: 'bride',
+  },
+  {
+    key: 'phone',
+    title: 'contact phone',
   },
 ];

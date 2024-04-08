@@ -4,7 +4,7 @@ const Wrapper = styled.div`
   label {
     color: var(--grey-400);
   }
-  label.checked {
+  .checked {
     color: var(--primary);
   }
   input[type='checkbox'] {

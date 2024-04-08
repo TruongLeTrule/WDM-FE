@@ -62,7 +62,7 @@ const CreateOrderModalContainer = () => {
         <GetUserInfoModal
           isOpen={createOrderModalState?.userInfo}
           setModalClose={() => setModalState('userInfo', false)}
-          setLobValue={(value) => setNewOrder({ ...newOrder, ...value })}
+          setUserInfoValue={(value) => setNewOrder({ ...newOrder, ...value })}
           setNextModalOpen={() =>
             setModalState('userInfo', false, 'food', true)
           }

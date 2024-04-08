@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useOrderContext } from '../../pages/Order';
-import { payRemainderOverall } from '../../utils/orderRows';
+import { payRemainderOverall } from '../../utils/orderRenderArr';
 import { CheckBox, Modal, TextInput } from '../';
 import TextRow from '../TextRow';
 import Wrapper from '../../assets/wrappers/Order/PayRemainderWrapper';
@@ -104,10 +104,9 @@ const PayRemainderModal = () => {
           </div>
           {/* Payment block */}
           <div className="payment">
-            <h5>payment</h5>
+            <h5>pay remainder</h5>
             <TextInput
               keyValue="payRemainder"
-              title="pay remainder"
               value={Number(payRemainder).toString()}
               handleChange={(e) => setPayRemainder(e.target.value)}
               type="number"
@@ -122,6 +121,7 @@ const PayRemainderModal = () => {
             title="penalty mode"
             type="checkbox"
             value="isPenaltyMode"
+            currValue={orderInfo?.isPenaltyMode}
             handleChange={handleChange}
           />
         </div>
