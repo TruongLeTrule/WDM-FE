@@ -1,9 +1,9 @@
 import { FaPenToSquare } from 'react-icons/fa6';
 import { useOrderContext } from '../../pages/Order';
-import Modal from '../Modal';
-import Wrapper from '../../assets/wrappers/Order/OrderInfoWrapper';
 import { orderInfoLeft, orderInfoRight } from '../../utils/orderRows';
-import Rows from './Rows';
+import { Modal } from '../';
+import TextRow from '../TextRow';
+import Wrapper from '../../assets/wrappers/Order/OrderInfoWrapper';
 
 const OrderInfoModal = () => {
   const { orderInfo, orderModalState, setOrderModalState } = useOrderContext();
@@ -37,13 +37,32 @@ const OrderInfoModal = () => {
           {/* Left col */}
           <div>
             <h5>Customer information</h5>
-            <Rows render={orderInfoLeft} />
+            <div className="rows">
+              {orderInfoLeft.map(({ title, key }) => (
+                <TextRow
+                  title={title}
+                  keyValue={key}
+                  key={key}
+                  value={orderInfo?.[key]}
+                />
+              ))}
+            </div>
           </div>
           {/* Right col */}
           <div>
             <h5>{orderInfo?.lobby}</h5>
             <p className="shift">{orderInfo?.shift}</p>
-            <Rows render={orderInfoRight} />
+            <div className="rows">
+              {orderInfoRight.map(({ title, key, openModal }) => (
+                <TextRow
+                  value={orderInfo?.[key]}
+                  title={title}
+                  keyValue={key}
+                  key={key}
+                  openModal={openModal}
+                />
+              ))}
+            </div>
           </div>
         </div>
         <button className="btn" onClick={handlePayBtnClick}>

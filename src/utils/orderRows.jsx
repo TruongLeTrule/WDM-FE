@@ -16,15 +16,18 @@ export const orderInfoRight = [
 ];
 
 export const editOrderLeft = [
-  { title: 'groom', key: 'groom', type: 'input' },
-  { title: 'bride', key: 'bride', type: 'input' },
-  { title: 'phone', key: 'phone', type: 'input' },
+  { title: 'groom', key: 'groom', type: 'text-input' },
+  { title: 'bride', key: 'bride', type: 'text-input' },
+  { title: 'phone', key: 'phone', type: 'text-input' },
+];
+
+export const dateType = [
   { title: 'order date', key: 'orderDate', type: 'date' },
   { title: 'occur date', key: 'occurDate', type: 'date' },
 ];
 
 export const editOrderRight = [
-  { title: 'total table', key: 'totalTable', type: 'input' },
+  { title: 'total table', key: 'totalTable', type: 'text-input' },
   { title: 'price/table', key: 'pricePerTable', openModal: 'food' },
   { title: 'service fee', key: 'serviceFee', openModal: 'service' },
   { title: 'total', key: 'total' },
@@ -42,7 +45,7 @@ export const payRemainderOverall = [
   { title: 'remainder', key: 'remainder' },
 ];
 
-export const payRemainderPayment = [
+export const paymentMethodRadio = [
   { title: 'cash', key: 'payMethod', type: 'radio', optionValue: 'cash' },
   {
     title: 'internet banking',

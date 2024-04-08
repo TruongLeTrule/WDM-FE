@@ -23,54 +23,17 @@ const Wrapper = styled.div`
     margin-top: 0.5rem;
     color: var(--grey-400);
   }
-  .title {
-    font-weight: 600;
-    margin-right: 1rem;
-  }
-  .row,
-  .date-wrap {
+  .text-row,
+  .date-wrapper,
+  .text-input-wrapper {
     margin-top: 1.3rem;
   }
-  .space-between {
-    display: flex;
-    justify-content: space-between;
-  }
-  .row input {
-    min-width: 15rem;
-    font-size: 1rem;
-    margin-top: 0.4rem;
-    display: block;
-    padding: 0.6rem 1rem;
-    border: 1px solid var(--grey-200);
-    border-radius: 7px;
-    color: var(--grey-400);
-  }
-  .date-wrap {
-    max-width: 15rem;
-    display: flex;
-    flex-direction: column;
-    row-gap: 0.4rem;
-    fieldset {
-      border: 1px solid var(--grey-200);
-      border-radius: 7px;
-    }
-    input {
-      padding: 0.6rem 1rem;
-      font-size: 1rem;
-      color: var(--grey-400);
-    }
-  }
-  .link {
-    display: inline-flex;
-    align-items: center;
-    column-gap: 0.5rem;
-    color: var(--grey-400);
-    text-decoration: underline;
-    cursor: pointer;
+  .text-row {
+    column-gap: 2.5rem;
   }
   .right-col {
     h5 {
-      margin-top: 3.7rem;
+      margin-top: 4.2rem;
       text-align: center;
     }
     .rows {
@@ -78,10 +41,7 @@ const Wrapper = styled.div`
       margin: 0 auto;
     }
   }
-  .strong {
-    font-weight: 700;
-  }
-  .btn-wrap {
+  .btn-wrapper {
     margin-top: 2.3rem;
     display: flex;
     justify-content: center;

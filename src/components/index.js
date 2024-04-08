@@ -9,6 +9,10 @@ export { default as Header } from './Header';
 export { default as SearchBox } from './SearchBox';
 export { default as Table } from './Table';
 export { default as Modal } from './Modal';
+export { default as DatePick } from './DatePick';
+export { default as TextInput } from './TextInput';
+export { default as CheckBox } from './CheckBox';
+export { default as TextRow } from './TextRow';
 
 // food and service components
 export { default as FSheader } from '../components/Foodandservice/FSheader';

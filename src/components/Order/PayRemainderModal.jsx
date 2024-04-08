@@ -1,19 +1,14 @@
-import { useEffect } from 'react';
-import Modal from '../Modal';
-import Wrapper from '../../assets/wrappers/Order/PayRemainderWrapper';
+import { useEffect, useState } from 'react';
 import { useOrderContext } from '../../pages/Order';
-import qrCode from '../../assets/images/qr-code.png';
-import {
-  payRemainderOverall,
-  payRemainderPayment,
-} from '../../utils/orderRows';
-import Rows from './Rows';
-import Row from './Row';
+import { payRemainderOverall } from '../../utils/orderRows';
+import { CheckBox, Modal, TextInput } from '../';
+import TextRow from '../TextRow';
+import Wrapper from '../../assets/wrappers/Order/PayRemainderWrapper';
 
 const customStyle = {
   content: {
     width: '35vw',
-    height: '83vh',
+    height: '75vh',
     left: '50%',
     top: '50%',
     padding: 0,
@@ -28,6 +23,7 @@ const customStyle = {
 const PayRemainderModal = () => {
   const { orderModalState, setOrderModalState, orderInfo, setOrderInfo } =
     useOrderContext();
+  const [payRemainder, setPayRemainder] = useState(0);
 
   const handleChange = (e) => {
     if (e.target.type === 'checkbox')
@@ -76,6 +72,7 @@ const PayRemainderModal = () => {
       payRemainder: false,
       bill: true,
     });
+    console.log(payRemainder);
   };
 
   return (
@@ -96,22 +93,32 @@ const PayRemainderModal = () => {
           {/* Overall block */}
           <div className="overall">
             <h5>overall</h5>
-            <Rows render={payRemainderOverall} />
+            {payRemainderOverall.map(({ title, key }) => (
+              <TextRow
+                title={title}
+                keyValue={key}
+                key={key}
+                value={orderInfo?.[key]}
+              />
+            ))}
           </div>
           {/* Payment block */}
           <div className="payment">
-            <h5>payment method</h5>
-            <Rows render={payRemainderPayment} handleChange={handleChange} />
-            {orderInfo?.payMethod === 'bank' && (
-              <img src={qrCode} alt="qr code" className="qr-code" />
-            )}
+            <h5>payment</h5>
+            <TextInput
+              keyValue="payRemainder"
+              title="pay remainder"
+              value={Number(payRemainder).toString()}
+              handleChange={(e) => setPayRemainder(e.target.value)}
+              type="number"
+            />
           </div>
         </div>
-        <div className="btn-wrap">
+        <div className="btn-wrapper">
           <button className="btn" onClick={handleSubmitBtnClick}>
             complete
           </button>
-          <Row
+          <CheckBox
             title="penalty mode"
             type="checkbox"
             value="isPenaltyMode"

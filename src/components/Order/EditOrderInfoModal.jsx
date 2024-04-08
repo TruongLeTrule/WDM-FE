@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useOrderContext } from '../../pages/Order';
-import { editOrderLeft, editOrderRight } from '../../utils/orderRows';
+import { editOrderLeft, editOrderRight, dateType } from '../../utils/orderRows';
+import { Modal, DatePick, TextInput } from '../';
 import Wrapper from '../../assets/wrappers/Order/EditOrderInfoWrapper';
-import Modal from '../Modal';
-import Rows from './Rows';
+import TextRow from '../TextRow';
 
 const customStyle = {
   content: {
@@ -43,6 +43,29 @@ const EditOrderInfoModal = () => {
     console.log(formState);
   };
 
+  const resolveComponent = (title, key, type) => {
+    const value = orderInfo?.[key];
+    if (type === 'text-input') {
+      return (
+        <TextInput
+          key={key}
+          keyValue={key}
+          title={title}
+          value={value}
+          handleChange={handleChange}
+        />
+      );
+    }
+    return (
+      <TextRow
+        value={orderInfo?.[key]}
+        title={title}
+        keyValue={key}
+        key={key}
+      />
+    );
+  };
+
   return (
     <Modal
       isOpen={orderModalState?.edit}
@@ -59,20 +82,39 @@ const EditOrderInfoModal = () => {
           {/* Left col */}
           <div>
             <h5>Customer information</h5>
-            <Rows
-              render={editOrderLeft}
-              handleChange={handleChange}
-              handleDateChange={handleDateChange}
-            />
+            <div className="rows">
+              {editOrderLeft.map(({ title, key, type }) =>
+                resolveComponent(title, key, type)
+              )}
+              {dateType.map(({ title, key }) => (
+                <DatePick
+                  title={title}
+                  key={key}
+                  handleDateChange={handleDateChange}
+                  keyValue={key}
+                  value={orderInfo?.[key]}
+                />
+              ))}
+            </div>
           </div>
           {/* Right col */}
           <div className="right-col">
             <h5>{orderInfo?.lobby}</h5>
             <p className="shift">{orderInfo?.shift}</p>
-            <Rows render={editOrderRight} handleChange={handleChange} />
+            <div className="rows">
+              {editOrderRight.map(({ title, key, openModal }) => (
+                <TextRow
+                  value={orderInfo?.[key]}
+                  title={title}
+                  keyValue={key}
+                  key={key}
+                  openModal={openModal}
+                />
+              ))}
+            </div>
           </div>
         </div>
-        <div className="btn-wrap">
+        <div className="btn-wrapper">
           <button className="btn delete">delete</button>
           <button className="btn" onClick={handleSubmit}>
             save
