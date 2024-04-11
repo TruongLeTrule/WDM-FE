@@ -8,7 +8,7 @@ const FSheader_Content = ({ setPage }) => {
         inputRef.current.focus();
     };
     return (
-        <div class="fsheader">
+        <div className="fsheader">
             <div className="left">
                 <button onClick={() => setPage("1")} className="food"><PiForkKnifeBold /> FOOD</button>
                 <button onClick={() => setPage("2")} className="service"><PiGuitarDuotone /> SERVICE</button>
