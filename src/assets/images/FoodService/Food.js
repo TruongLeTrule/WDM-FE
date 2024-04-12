@@ -1,10 +1,11 @@
 import Food from './food.jpeg';
 
 const foodlists = Array.from({ length: 15 }, (_, index) => ({
-    id: index + 1, // Unique id
+    id: index + 1, 
     title: "Shrimp",
     price: 200,
-    image: Food, // Reference to the food image
+    status: "OK", 
+    image: Food, 
     slug: "food",
 }));
 

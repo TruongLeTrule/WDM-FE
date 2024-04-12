@@ -1,14 +1,15 @@
 import Service from './service.jpeg';
 
 const servicelists = Array.from({ length: 15 }, (_, index) => ({
-    id: index + 1, // Unique id
+    id: index + 1, 
     title: "Piano",
     price: 200,
-    image: Service, // Reference to the service image
+    status: "OK",
+    image: Service, 
     slug: "service",
 }));
 
-const getAllServices = () => servicelists; // Return servicelists instead of foodlists
+const getAllServices = () => servicelists; 
 
 const getServiceById = (id) =>
     servicelists.find((element) => element.id === id);
