@@ -1,5 +1,6 @@
-import styled from "styled-components"
-import { useState } from "react"
+import { useEffect, useState } from "react";
+import { InformationBlock, InformationBoard } from "./Styled";
+
 const Information = ({ display, setIsDisplayInformationBlock, type, editrow, accountInformation, setAccountInformation, accountInformationInput }) => {
   const [tempData, setTempData] = useState({
     ID: "",
@@ -7,53 +8,115 @@ const Information = ({ display, setIsDisplayInformationBlock, type, editrow, acc
     UserName: "",
     Password: "",
     Permission: "",
-  })
-  const updateTempData = (name, data) => {
-    const newData = { ...tempData };
-    newData[name] = data;
-    setTempData(newData);
-  }
+  });
+
   const [inputValue, setInputValue] = useState(accountInformationInput);
-  const updateInputValue = (name, value) => {
-    const tempData = { ...inputValue }
-    tempData[name] = value;
-    setInputValue(tempData);
-  }
+  const [selectValue, setSelectValue] = useState(inputValue.Permission);
+
+  const updateTempData = (name, data) => {
+    const newData = { ...tempData, [name]: data };
+    setTempData(newData);
+  };
+
+  const updateInput = (value) => {
+    setInputValue(value);
+  };
+
+  const handleSaveButton = () => {
+    if (type === "Edit") {
+      handleEditSave();
+    } else {
+      handleCreateSave();
+    }
+  };
+
+  const handleEditSave = () => {
+    setIsDisplayInformationBlock(false);
+    const newData = [...accountInformation];
+    let newTempData = Object.values(tempData);
+    newTempData = newTempData.map((value, index) => value === '' ? newData[editrow][index] : value);
+    newData[editrow] = newTempData;
+    setAccountInformation(newData);
+  };
+
+  const handleCreateSave = () => {
+    const tempDataWithoutFirstElement = { ...tempData };
+    delete tempDataWithoutFirstElement[Object.keys(tempDataWithoutFirstElement)[0]];
+    const allInputsFilled = Object.values(tempDataWithoutFirstElement).every(value => value !== '');
+
+    if (allInputsFilled) {
+      setIsDisplayInformationBlock(false);
+      const newData = [...accountInformation, Object.values(tempData)];
+      setAccountInformation(newData);
+    } else {
+      alert("Hãy điền đủ thông tin !!");
+    }
+  };
+
+  const handleSelectChange = (e) => {
+    const value = e.target.value;
+    updateTempData("Permission", value);
+    setSelectValue(value);
+  };
+
+  useEffect(() => {
+    setTempData({
+      ID: "",
+      DisplayName: "",
+      UserName: "",
+      Password: "",
+      Permission: "",
+    });
+    setInputValue(accountInformationInput);
+    setSelectValue(accountInformationInput.Permission);
+  }, [display, accountInformationInput]);
+
   return (
     <InformationBlock display={display.toString()}>
       <InformationBoard>
-        <h4 onClick={() => { console.log(type) }}>Account Information</h4>
+        <h4 onClick={() => console.log(type)}>Account Information</h4>
         <table className="boardInput">
           <tbody>
             <tr>
-              <td className="informationTitle"><p>ID :</p> </td>
+              <td className="informationTitle"><p>Name :</p> </td>
               <td>
                 <input
-                  value={inputValue.ID}
+                  value={inputValue["DisplayName"]}
                   onChange={(e) => {
-                    updateTempData("ID", e.target.value)
-                    updateInputValue("ID", e.target.value)
-                  }
-                  } >
-                </input>
+                    updateInput(e.target.value);
+                    updateTempData("DisplayName", e.target.value);
+                  }}
+                ></input>
               </td>
             </tr>
             <tr>
-              <td className="informationTitle"><p>Name :</p> </td>
-              <td><input placeholder={accountInformationInput.DisplayName} onChange={(e) => updateTempData("DisplayName", e.target.value)}></input></td>
-            </tr>
-            <tr>
               <td className="informationTitle"><p>Username :</p> </td>
-              <td><input placeholder={accountInformationInput.UserName} onChange={(e) => updateTempData("UserName", e.target.value)}></input></td>
+              <td>
+                <input
+                  value={inputValue["UserName"]}
+                  onChange={(e) => {
+                    updateInput(e.target.value);
+                    updateTempData("UserName", e.target.value);
+                  }}
+                ></input>
+              </td>
             </tr>
             <tr>
               <td className="informationTitle"><p>Password :</p> </td>
-              <td><input placeholder={accountInformationInput.Password} onChange={(e) => updateTempData("Password", e.target.value)} type="password"></input></td>
+              <td>
+                <input
+                  value={inputValue["Password"]}
+                  onChange={(e) => {
+                    updateInput(e.target.value);
+                    updateTempData("Password", e.target.value);
+                  }}
+                ></input>
+              </td>
             </tr>
             <tr>
               <td className="informationTitle"><p>Permission :</p></td>
               <td>
-                <select value={tempData} onChange={(e) => updateTempData("Permission", e.target.value)}>
+                <select value={selectValue} onChange={(e) => handleSelectChange(e)}>
                   <option value="">Select an option</option>
                   <option value="Super Admin">Super Admin</option>
                   <option value="Admin">Admin</option>
@@ -68,114 +131,14 @@ const Information = ({ display, setIsDisplayInformationBlock, type, editrow, acc
           <button className="cancelButton" onClick={() => setIsDisplayInformationBlock(false)}>Cancel</button>
           <button
             className="saveButton"
-            onClick={() => {
-              setIsDisplayInformationBlock(false);
-              const newData = [...accountInformation];
-              let newTempData = Object.values(tempData)
-              newTempData = newTempData.map((value, index) => {
-                if (value === '') value = newData[editrow][index];
-                return value;
-              });
-              newData[editrow] = newTempData;
-              setAccountInformation(newData);
-            }}
+            onClick={handleSaveButton}
           >
             Save
           </button>
-
         </div>
       </InformationBoard>
     </InformationBlock>
-  )
-}
+  );
+};
 
 export default Information;
-
-const InformationBlock = styled.div`
-  z-index: 2;
-  position: fixed;
-  top: 0; 
-  left: 12%; 
-  height: 100vh;
-  width: 88%;
-  background-color: rgb(0, 0, 0, 50%);
-  display: ${props => props.display === "true" ? 'flex' : 'none'};
-  justify-content: center;
-  align-items: center;
-`;
-
-const InformationBoard = styled.div`
-  width: 40%;
-  height: 60%;
-  display: flex;
-  flex-direction: column;
-  border-radius: 15px;
-  justify-content: space-around;
-  background-color: white;
-
-h4{
-  height: 10%;
-  display: flex;
-  justify-content: center;
-  align-items: end;
-  font-weight: bold;
-}
-
-.boardInput{
-  flex: 1;
-  width: 100%;
-  tr{
-    .informationTitle{
-     width : 35% ;
-    }
-  }
-  td{
-    p{
-      height: 100%;
-      display: flex;
-      justify-content: end;
-      align-items: center;
-      font-size: 1.15em;
-      font-weight: bold;
-    }
-    input{
-      width: 65%;
-      margin-left: 5% ;
-      font-size: 1.15em;
-      font-weight: bold;
-      border-bottom: 1px black solid;
-    }
-    select{
-      margin-left: 5%;
-      width: 65%;
-      border-radius: 5px;
-      font-size: 1.15em;
-    }
-  }
-}
-
-  .cancelSaveCombination{
-    width: 100%;
-    height: 15%;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    button{
-      width: 15%;
-      height: 50%;
-      border-radius: 12px;
-      color: white;
-      &:hover{
-        cursor: pointer;
-      }
-    }
-    .cancelButton{
-      background-color: #c4c4c4;
-      margin-left: 2%;
-    }
-    .saveButton{
-      background-color: #1814f3;
-      margin-right: 2%;
-    }
-  }
-`
