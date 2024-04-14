@@ -62,8 +62,8 @@ const FContent = () => {
     
     const foodAPI = async () => {
         try {
-            // const foods = await getFoods();
-            // console.log(foods )
+            const foods = await getFoods();
+            setFoodLists(foods.data)
 
         } catch (error) {
             console.log(error);
@@ -74,13 +74,13 @@ const FContent = () => {
         <FoodContext.Provider value={{ selectedFood, setSelectedFood }}>
             <div className="fcontent">
                 <div className="map_container">
-                    <div className="food_box_add_food">
-                        <IoMdAddCircleOutline className="icon" onClick={showModal} />
+                    <div className="food_box_add_food" onClick={showModal}>
+                        <IoMdAddCircleOutline className="icon" />
                     </div>
                     {foodlists.map((food) => (
                         <div key={food.id} className="food_box">
                             <div className="food_img">
-                                <img src={food.image} alt={food.title} className="image" />
+                                <img src={food.image} alt={food.name} className="image" />
                             </div>
                             <p className="title">{food.title}</p>
                             <p>{food.price}$</p>
@@ -96,7 +96,7 @@ const FContent = () => {
                     ))}
                 </div>
                 <Modal
-                    visible={modalVisible}
+                    open={modalVisible}
                     onOk={handleOk}
                     onCancel={handleCancel}
                     footer={[
