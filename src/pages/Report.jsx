@@ -375,5 +375,7 @@ const FollowByBox = styled.div`
 `;
 const LineChartContainer = styled.div`
   height: 620px;
+  display: flex;
+  justify-content: center;
 `;
 export default Report;

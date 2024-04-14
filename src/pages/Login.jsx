@@ -1,32 +1,28 @@
-import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
+import { useState } from 'react';
 import styled from "styled-components";
 import Wedding from "../assets/images/image";
-import axios from 'axios';
+import { login } from '../api/auth.api';
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
-  const handleLoginSubmit = (e) => {
+  const handleLoginSubmit = async (e) => {
     e.preventDefault();
+    try {
+      const res = await login(username, password)
+      const token = res.data.access_token;
+      localStorage.setItem('token', token);
+      setUsername('');
+      setPassword('');
+      navigate('/dashboard', { replace: true });
 
-    axios.post('http://localhost:8080/api/v1/auth/login', {
-      username: username,
-      password: password
-    })
-      .then(response => {
-        if (response.status === 200) {
-          const token = response.data.data.token;
-          if (token) {
-            setUsername('');
-            setPassword('');
-            window.location.href = 'http://localhost:5173/dashboard';
-          }
-        }
-      })
-      .catch(error => {
-        alert(error.response.data.msg);
-      });
+    } catch (error) {
+      console.log(error);
+      alert(error.message);
+    }
   };
 
   const handleUserNameChange = (e) => {

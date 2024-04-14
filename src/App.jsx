@@ -1,6 +1,7 @@
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { Suspense } from 'react';
 import {
   HomeLayout,
   Error,
@@ -56,7 +57,7 @@ const router = createBrowserRouter([
 const App = () => {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <RouterProvider router={router} />
+        <RouterProvider router={router} />
     </LocalizationProvider>
   );
 };
