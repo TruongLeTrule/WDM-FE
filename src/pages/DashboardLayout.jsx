@@ -6,16 +6,16 @@ import Loading from '../components/Loading';
 
 const DashboardLayout = () => {
   return (
-    <Wrapper>
-      <div className="dashboard">
-        <Sidebar />
-          <Suspense fallback={<Loading minsize="35px"/> }>
-            <div className="dashboard-page">
-                <Outlet />
-            </div>
-          </Suspense>
-      </div>
-    </Wrapper>
+      <Wrapper>
+        <div className="dashboard">
+          <Sidebar />
+            <Suspense fallback={<Loading minsize="35px"/> }>
+              <div className="dashboard-page">
+                  <Outlet />
+              </div>
+            </Suspense>
+        </div>
+      </Wrapper>
   );
 };
 export default DashboardLayout;

@@ -228,12 +228,16 @@ const Report = () => {
         </Space>
         {getChart === "1" &&
           <LineChartContainer>
-            <Line data={ChartDataMonth} options={options} />
+            <div className="inner">
+              <Line data={ChartDataMonth} options={options} />
+            </div>
           </LineChartContainer>
         }
         {getChart === "2" &&
           <LineChartContainer>
-            <Line data={ChartDataYear} options={options} />
+            <div className="inner">
+              <Line data={ChartDataYear} options={options} />
+            </div>
           </LineChartContainer>
         }
         {getChart === "1" &&
@@ -374,8 +378,14 @@ const FollowByBox = styled.div`
   margin-top: 16px;
 `;
 const LineChartContainer = styled.div`
-  height: 620px;
+  margin: 40px; 
   display: flex;
   justify-content: center;
+
+  .inner {
+    max-width: 1200px;
+    width: 100%;
+  }
+
 `;
 export default Report;

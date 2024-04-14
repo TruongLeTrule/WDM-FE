@@ -1,8 +1,9 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { Modal, Button, Input, Upload, Select } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import foodData from "../../assets/images/FoodService/Food.js";
+import { getFoods } from "../../api/food.api.js";
 
 const FoodContext = React.createContext();
 
@@ -54,6 +55,20 @@ const FContent = () => {
         setTempStatus("OK");
         setModalVisible(true);
     };
+
+    useEffect(() => {
+        foodAPI();
+    }, [])
+    
+    const foodAPI = async () => {
+        try {
+            // const foods = await getFoods();
+            // console.log(foods )
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
     
     return (
         <FoodContext.Provider value={{ selectedFood, setSelectedFood }}>

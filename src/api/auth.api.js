@@ -12,9 +12,13 @@ export const changePassword = (username, password, oldPassword) => {
   return axiosClient.patch('auth/change-password', { username, password, oldPassword });
 };
 
-export const CheckUserPermissionWithPage = (id, page) => {
+export const checkUserPermissionWithPage = (id, page) => {
   return axiosClient.get(`auth/check-permission/${id}`, { 
     params: { page, },
   });
+};
+
+export const verifyToken = () => {
+  return axiosClient.get('auth/verify-token');
 };
 

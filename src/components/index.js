@@ -1,23 +1,21 @@
-import React from 'react';
-
 // Sidebar components
-export const Sidebar = React.lazy(() => import('./Sidebar'));
-export const Logo = React.lazy(() => import('./Logo'));
-export const NavLinks = React.lazy(() => import('./NavLinks'));
-export const UserRole = React.lazy(() => import('./UserRole'));
+export { default as Sidebar } from './Sidebar';
+export { default as Logo } from './Logo';
+export { default as NavLinks } from './NavLinks';
+export { default as UserRole } from './UserRole';
 
-// Common components
-export const Header = React.lazy(() => import('./Header'));
-export const SearchBox = React.lazy(() => import('./SearchBox'));
-export const Table = React.lazy(() => import('./Table'));
-export const Modal = React.lazy(() => import('./Modal'));
-export const DatePick = React.lazy(() => import('./DatePick'));
-export const TextInput = React.lazy(() => import('./TextInput'));
-export const CheckBox = React.lazy(() => import('./CheckBox'));
-export const TextRow = React.lazy(() => import('./TextRow'));
-export const Radio = React.lazy(() => import('./Radio'));
+// common components
+export { default as Header } from './Header';
+export { default as SearchBox } from './SearchBox';
+export { default as Table } from './Table';
+export { default as Modal } from './Modal';
+export { default as DatePick } from './DatePick';
+export { default as TextInput } from './TextInput';
+export { default as CheckBox } from './CheckBox';
+export { default as TextRow } from './TextRow';
+export { default as Radio } from './Radio';
 
-// Food and service components
-export const FSheader = React.lazy(() => import('../components/Foodandservice/FSheader'));
-export const FContent = React.lazy(() => import('../components/Foodandservice/FContent'));
-export const SContent = React.lazy(() => import('../components/Foodandservice/SContent'));
+// food and service components
+export { default as FSheader } from '../components/Foodandservice/FSheader';
+export { default as FContent } from '../components/Foodandservice/FContent';
+export { default as SContent } from '../components/Foodandservice/SContent';

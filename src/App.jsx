@@ -1,7 +1,8 @@
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { Suspense } from 'react';
+import RequireAuth from './components/RequireAuth'
+
 import {
   HomeLayout,
   Error,
@@ -13,6 +14,7 @@ import {
   FoodAndService,
   User,
 } from './pages';
+import { AuthProvider } from './context/auth.context';
 
 const router = createBrowserRouter([
   {
@@ -26,7 +28,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'dashboard',
-        element: <DashboardLayout />,
+        element: <AuthProvider><RequireAuth><DashboardLayout /></RequireAuth></AuthProvider>,
         children: [
           {
             index: true,
@@ -55,6 +57,8 @@ const router = createBrowserRouter([
 ]);
 
 const App = () => {
+
+
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
         <RouterProvider router={router} />
