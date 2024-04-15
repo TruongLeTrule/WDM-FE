@@ -1,9 +1,10 @@
 import React, { useState, useContext, useEffect } from "react";
 import { IoMdAddCircleOutline } from "react-icons/io";
-import { Modal, Button, Input, Upload, Select } from "antd";
+import { Modal, Button, Input, Upload, Select, message } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import foodData from "../../assets/images/FoodService/Food.js";
-import { getFoods } from "../../api/food.api.js";
+import { createFood, deleteFood, getFoods, updateFood } from "../../api/food.api.js";
+import { uploadFoodImage } from "../../api/file.api.js"
 
 const FoodContext = React.createContext();
 
@@ -17,29 +18,69 @@ const FContent = () => {
     const [tempName, setTempName] = useState("");
     const [tempPrice, setTempPrice] = useState("");
     const [tempStatus, setTempStatus] = useState("OK");
+    const [tempFile, setTempFile] = useState(null)
+    const [tempInventory, setInventory] = useState()
+    const [isEdit, setIsEdit] = useState(false)
     
+    const prepareFileUploaded = (file) => {
+        console.log(file)
+        setTempFile(file)
+    }
+
     const handleEdit = (food) => {
+        console.log(food)
         setSelectedFood(food);
-        setTempName(food.title);
+        setIsEdit(true);
+        setTempName(food.name);
         setTempPrice(food.price.toString());
-        setTempStatus(food.status);
+        setInventory(food.inventory)
+        setTempStatus(food.status ? "OK" : "NOT");
         setModalVisible(true);
     };
     
-    const handleDelete = (id) => {
+    const handleDelete = async (id) => {
         const updatedFoodLists = foodlists.filter((food) => food.id !== id);
         setFoodLists(updatedFoodLists);
+        await deleteFood(id)
+
     };
     
-    const handleOk = () => {
-        const updatedFood = { ...selectedFood, title: tempName, price: tempPrice, status: tempStatus };
-        const index = foodlists.findIndex((food) => food.id === selectedFood.id);
-        const updatedFoodLists = [...foodlists.slice(0, index), updatedFood, ...foodlists.slice(index + 1)];
-        setFoodLists(updatedFoodLists);
-        setModalVisible(false);
-        setTempName("");
-        setTempPrice("");
-        setTempStatus("OK");
+    const handleOk = async () => {
+        try{
+            const updatedFood = { name: tempName, price: Number(tempPrice), status: tempStatus==="OK", inventory: Number(tempInventory) };
+         
+            // console.log("updatedFood", updatedFood)
+            let food = {};
+            let updatedFoodLists = {}
+            if(isEdit) {
+                food = await updateFood(selectedFood.id, updatedFood)
+                const index = foodlists.findIndex((food) => food.id === selectedFood.id);
+                updatedFoodLists = [...foodlists.slice(0, index), updatedFood, ...foodlists.slice(index + 1)];
+                setFoodLists(updatedFoodLists);
+            }
+            else {
+                food = await createFood(updatedFood)
+                // thêm logic để thêm data ảo render cái food data mới added
+            }
+
+
+            // upload image file 
+            if(tempFile) {
+                console.log(tempFile)
+                await uploadFoodImage(tempFile, food.id)
+            }
+            
+            
+            setModalVisible(false);
+            setTempName("");
+            setTempPrice("");
+            setTempStatus("OK");
+
+        } catch(error) {
+            console.log(error.message);
+        } finally {
+            setIsEdit(false)
+        }
     };
     
     const handleCancel = () => {
@@ -80,9 +121,9 @@ const FContent = () => {
                     {foodlists.map((food) => (
                         <div key={food.id} className="food_box">
                             <div className="food_img">
-                                <img src={food.image} alt={food.name} className="image" />
+                                <img src={food.url} alt={food.name} className="image" />
                             </div>
-                            <p className="title">{food.title}</p>
+                            <p className="title">{food.name}</p>
                             <p>{food.price}$</p>
                             <div className="actions">
                                 <button className="edit" onClick={() => handleEdit(food)}>
@@ -116,6 +157,9 @@ const FContent = () => {
                         setTempPrice={setTempPrice}
                         tempStatus={tempStatus}
                         setTempStatus={setTempStatus}
+                        prepareFileUploaded={prepareFileUploaded}
+                        setInventory={setInventory}
+                        tempInventory={tempInventory}
                     />
                 </Modal>
             </div>
@@ -123,12 +167,17 @@ const FContent = () => {
     );
 };
 
-const FoodModalContent = ({ tempName, setTempName, tempPrice, setTempPrice, tempStatus, setTempStatus }) => {
-    const { selectedFood } = useContext(FoodContext);
+const FoodModalContent = (p) => {
+    const { tempName, setTempName, tempPrice, setTempPrice, tempStatus, setTempStatus, prepareFileUploaded,tempInventory, setInventory  } = p
+    // const { selectedFood } = useContext(FoodContext);
 
     return (
         <div>
-            <Upload>
+            <Upload multiple={false} maxCount={1} onChange={(e) => {
+                const file = e.file.originFileObj
+                file.filename = file.name
+                prepareFileUploaded(file)
+            }}>
                 <Button icon={<UploadOutlined />}>Upload</Button>
             </Upload>
             <Input
@@ -144,6 +193,12 @@ const FoodModalContent = ({ tempName, setTempName, tempPrice, setTempPrice, temp
                 suffix="USD"
                 value={tempPrice}
                 onChange={(e) => setTempPrice(e.target.value)}
+            />
+            <Input
+                placeholder="Inventory"
+                style={{ marginTop: 10 }}
+                value={tempInventory}
+                onChange={(e) => setInventory(e.target.value)}
             />
             <Select
                 defaultValue="OK"
