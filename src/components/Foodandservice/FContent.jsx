@@ -3,7 +3,7 @@ import { IoMdAddCircleOutline } from "react-icons/io";
 import { Modal, Button, Input, Upload, Select, message } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import foodData from "../../assets/images/FoodService/Food.js";
-import { getFoods } from "../../api/food.api.js";
+import { createFood, deleteFood, getFoods, updateFood } from "../../api/food.api.js";
 import { uploadFoodImage } from "../../api/file.api.js"
 
 const FoodContext = React.createContext();
@@ -18,7 +18,9 @@ const FContent = () => {
     const [tempName, setTempName] = useState("");
     const [tempPrice, setTempPrice] = useState("");
     const [tempStatus, setTempStatus] = useState("OK");
-    const [tempFile, setTempFile] = useState({})
+    const [tempFile, setTempFile] = useState(null)
+    const [tempInventory, setInventory] = useState()
+    const [isEdit, setIsEdit] = useState(false)
     
     const prepareFileUploaded = (file) => {
         console.log(file)
@@ -28,37 +30,57 @@ const FContent = () => {
     const handleEdit = (food) => {
         console.log(food)
         setSelectedFood(food);
+        setIsEdit(true);
         setTempName(food.name);
         setTempPrice(food.price.toString());
+        setInventory(food.inventory)
         setTempStatus(food.status ? "OK" : "NOT");
         setModalVisible(true);
     };
     
-    const handleDelete = (id) => {
+    const handleDelete = async (id) => {
         const updatedFoodLists = foodlists.filter((food) => food.id !== id);
         setFoodLists(updatedFoodLists);
+        await deleteFood(id)
+
     };
     
     const handleOk = async () => {
-
-        // upload image file 
-        if(tempFile) {
-            try{
-                console.log(tempFile)
-                await uploadFoodImage(tempFile, selectedFood.id)
-            } catch(error) {
-                console.log(error);
+        try{
+            const updatedFood = { name: tempName, price: Number(tempPrice), status: tempStatus==="OK", inventory: Number(tempInventory) };
+         
+            // console.log("updatedFood", updatedFood)
+            let food = {};
+            let updatedFoodLists = {}
+            if(isEdit) {
+                food = await updateFood(selectedFood.id, updatedFood)
+                const index = foodlists.findIndex((food) => food.id === selectedFood.id);
+                updatedFoodLists = [...foodlists.slice(0, index), updatedFood, ...foodlists.slice(index + 1)];
+                setFoodLists(updatedFoodLists);
             }
-        }
+            else {
+                food = await createFood(updatedFood)
+                // thêm logic để thêm data ảo render cái food data mới added
+            }
 
-        const updatedFood = { ...selectedFood, name: tempName, price: tempPrice, status: tempStatus };
-        const index = foodlists.findIndex((food) => food.id === selectedFood.id);
-        const updatedFoodLists = [...foodlists.slice(0, index), updatedFood, ...foodlists.slice(index + 1)];
-        setFoodLists(updatedFoodLists);
-        setModalVisible(false);
-        setTempName("");
-        setTempPrice("");
-        setTempStatus("OK");
+
+            // upload image file 
+            if(tempFile) {
+                console.log(tempFile)
+                await uploadFoodImage(tempFile, food.id)
+            }
+            
+            
+            setModalVisible(false);
+            setTempName("");
+            setTempPrice("");
+            setTempStatus("OK");
+
+        } catch(error) {
+            console.log(error.message);
+        } finally {
+            setIsEdit(false)
+        }
     };
     
     const handleCancel = () => {
@@ -136,6 +158,8 @@ const FContent = () => {
                         tempStatus={tempStatus}
                         setTempStatus={setTempStatus}
                         prepareFileUploaded={prepareFileUploaded}
+                        setInventory={setInventory}
+                        tempInventory={tempInventory}
                     />
                 </Modal>
             </div>
@@ -144,7 +168,7 @@ const FContent = () => {
 };
 
 const FoodModalContent = (p) => {
-    const { tempName, setTempName, tempPrice, setTempPrice, tempStatus, setTempStatus, prepareFileUploaded  } = p
+    const { tempName, setTempName, tempPrice, setTempPrice, tempStatus, setTempStatus, prepareFileUploaded,tempInventory, setInventory  } = p
     // const { selectedFood } = useContext(FoodContext);
 
     return (
@@ -169,6 +193,12 @@ const FoodModalContent = (p) => {
                 suffix="USD"
                 value={tempPrice}
                 onChange={(e) => setTempPrice(e.target.value)}
+            />
+            <Input
+                placeholder="Inventory"
+                style={{ marginTop: 10 }}
+                value={tempInventory}
+                onChange={(e) => setInventory(e.target.value)}
             />
             <Select
                 defaultValue="OK"
