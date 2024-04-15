@@ -1,15 +1,14 @@
-import { createContext, useContext, useMemo, useState } from 'react';
-import Wrapper from '../assets/wrappers/OrderWrapper';
+import React, { createContext, useContext, useMemo, useState, Suspense } from 'react';
 import { Header, Table } from '../components';
-import {
-  EditOrderInfoModal,
-  OrderInfoModal,
-  PayRemainderModal,
-  BillModal,
-  ServiceModal,
-  CreateOrderModalContainer,
-} from '../components/Order';
+const Wrapper = React.lazy(() => import('../assets/wrappers/OrderWrapper'));
+const EditOrderInfoModal = React.lazy(() => import('../components/Order/EditOrderInfoModal'));
+const OrderInfoModal = React.lazy(() => import('../components/Order/OrderInfoModal'));
+const PayRemainderModal = React.lazy(() => import('../components/Order/PayRemainderModal'));
+const BillModal = React.lazy(() => import('../components/Order/BillModal'));
+const ServiceModal = React.lazy(() => import('../components/Order/ServiceModal'));
+const CreateOrderModalContainer = React.lazy(() => import('../components/Order/CreateOrderModalContainer'));
 import { orderList, food, service } from '../utils/orderTestData';
+import Loading from '../components/Loading';
 
 const OrderContext = createContext();
 
@@ -115,19 +114,21 @@ const Order = () => {
               pagination
             />
           </div>
-          {/* Modal */}
-          {orderModalState?.info && <OrderInfoModal />}
-          {orderModalState?.edit && <EditOrderInfoModal />}
-          {orderModalState?.payRemainder && <PayRemainderModal />}
-          {orderModalState?.bill && <BillModal />}
-          {orderModalState?.food && (
-            <ServiceModal type="food" title="food" data={food} />
-          )}
-          {orderModalState?.service && (
-            <ServiceModal type="service" title="service" data={service} />
-          )}
-          {/* Create new order modal container */}
-          <CreateOrderModalContainer />
+          {/* Suspense wrapping all conditional modals */}
+          <Suspense fallback={<Loading minsize="35px"/> }>
+            {orderModalState?.info && <OrderInfoModal />}
+            {orderModalState?.edit && <EditOrderInfoModal />}
+            {orderModalState?.payRemainder && <PayRemainderModal />}
+            {orderModalState?.bill && <BillModal />}
+            {orderModalState?.food && (
+              <ServiceModal type="food" title="food" data={food} />
+            )}
+            {orderModalState?.service && (
+              <ServiceModal type="service" title="service" data={service} />
+            )}
+            {/* Create new order modal container always present, also wrapped in Suspense */}
+            <CreateOrderModalContainer />
+          </Suspense>
         </main>
       </Wrapper>
     </OrderContext.Provider>

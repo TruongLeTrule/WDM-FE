@@ -1,8 +1,9 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { Modal, Button, Input, Upload, Select } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import foodData from "../../assets/images/FoodService/Food.js";
+import { getFoods } from "../../api/food.api.js";
 
 const FoodContext = React.createContext();
 
@@ -54,18 +55,32 @@ const FContent = () => {
         setTempStatus("OK");
         setModalVisible(true);
     };
+
+    useEffect(() => {
+        foodAPI();
+    }, [])
+    
+    const foodAPI = async () => {
+        try {
+            const foods = await getFoods();
+            setFoodLists(foods.data)
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
     
     return (
         <FoodContext.Provider value={{ selectedFood, setSelectedFood }}>
             <div className="fcontent">
                 <div className="map_container">
-                    <div className="food_box_add_food">
-                        <IoMdAddCircleOutline className="icon" onClick={showModal} />
+                    <div className="food_box_add_food" onClick={showModal}>
+                        <IoMdAddCircleOutline className="icon" />
                     </div>
                     {foodlists.map((food) => (
                         <div key={food.id} className="food_box">
                             <div className="food_img">
-                                <img src={food.image} alt={food.title} className="image" />
+                                <img src={food.image} alt={food.name} className="image" />
                             </div>
                             <p className="title">{food.title}</p>
                             <p>{food.price}$</p>
@@ -81,7 +96,7 @@ const FContent = () => {
                     ))}
                 </div>
                 <Modal
-                    visible={modalVisible}
+                    open={modalVisible}
                     onOk={handleOk}
                     onCancel={handleCancel}
                     footer={[

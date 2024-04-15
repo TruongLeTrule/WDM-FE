@@ -1,15 +1,17 @@
-export { default as OrderInfoModal } from './OrderInfoModal';
-export { default as EditOrderInfoModal } from './EditOrderInfoModal';
-export { default as PayRemainderModal } from './PayRemainderModal';
-export { default as BillModal } from './BillModal';
-export { default as ServiceModal } from './ServiceModal';
+import React from 'react';
+
+export const OrderInfoModal = React.lazy(() => import('./OrderInfoModal'));
+export const EditOrderInfoModal = React.lazy(() => import('./EditOrderInfoModal'));
+export const PayRemainderModal = React.lazy(() => import('./PayRemainderModal'));
+export const BillModal = React.lazy(() => import('./BillModal'));
+export const ServiceModal = React.lazy(() => import('./ServiceModal'));
 // create new order modal
-export { default as CreateOrderModalContainer } from './CreateOrderModalContainer';
-export { default as PickDateModal } from './PickDateModal';
-export { default as PickLobTypeModal } from './PickLobTypeModal';
-export { default as PickLobbyModal } from './PickLobbyModal';
-export { default as GetUserInfoModal } from './GetUserInfoModal';
-export { default as PickFoodServiceModal } from './PickFoodServiceModal';
-export { default as PaymentModal } from './PaymentModal';
-export { default as ReviewModal } from './ReviewModal';
-export { default as SuccessModal } from './SuccessModal';
+export const CreateOrderModalContainer = React.lazy(() => import('./CreateOrderModalContainer'));
+export const PickDateModal = React.lazy(() => import('./PickDateModal'));
+export const PickLobTypeModal = React.lazy(() => import('./PickLobTypeModal'));
+export const PickLobbyModal = React.lazy(() => import('./PickLobbyModal'));
+export const GetUserInfoModal = React.lazy(() => import('./GetUserInfoModal'));
+export const PickFoodServiceModal = React.lazy(() => import('./PickFoodServiceModal'));
+export const PaymentModal = React.lazy(() => import('./PaymentModal'));
+export const ReviewModal = React.lazy(() => import('./ReviewModal'));
+export const SuccessModal = React.lazy(() => import('./SuccessModal'));

@@ -4,7 +4,19 @@ import sassPlugin from 'vite-plugin-sass'; // Import the sass plugin
 
 export default defineConfig({
   plugins: [
-    react(),
+    react({
+      babel: {
+        plugins: [
+          [
+            'babel-plugin-styled-components',
+            {
+              displayName: true,
+              fileName: false
+            }
+          ]
+        ]
+      }
+    }),
     sassPlugin() 
   ],
   resolve: {
