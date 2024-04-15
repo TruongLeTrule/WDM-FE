@@ -1,9 +1,10 @@
 import React, { useState, useContext, useEffect } from "react";
 import { IoMdAddCircleOutline } from "react-icons/io";
-import { Modal, Button, Input, Upload, Select } from "antd";
+import { Modal, Button, Input, Upload, Select, message } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import foodData from "../../assets/images/FoodService/Food.js";
 import { getFoods } from "../../api/food.api.js";
+import { uploadFoodImage } from "../../api/file.api.js"
 
 const FoodContext = React.createContext();
 
@@ -17,12 +18,19 @@ const FContent = () => {
     const [tempName, setTempName] = useState("");
     const [tempPrice, setTempPrice] = useState("");
     const [tempStatus, setTempStatus] = useState("OK");
+    const [tempFile, setTempFile] = useState({})
     
+    const prepareFileUploaded = (file) => {
+        console.log(file)
+        setTempFile(file)
+    }
+
     const handleEdit = (food) => {
+        console.log(food)
         setSelectedFood(food);
-        setTempName(food.title);
+        setTempName(food.name);
         setTempPrice(food.price.toString());
-        setTempStatus(food.status);
+        setTempStatus(food.status ? "OK" : "NOT");
         setModalVisible(true);
     };
     
@@ -31,8 +39,19 @@ const FContent = () => {
         setFoodLists(updatedFoodLists);
     };
     
-    const handleOk = () => {
-        const updatedFood = { ...selectedFood, title: tempName, price: tempPrice, status: tempStatus };
+    const handleOk = async () => {
+
+        // upload image file 
+        if(tempFile) {
+            try{
+                console.log(tempFile)
+                await uploadFoodImage(tempFile, selectedFood.id)
+            } catch(error) {
+                console.log(error);
+            }
+        }
+
+        const updatedFood = { ...selectedFood, name: tempName, price: tempPrice, status: tempStatus };
         const index = foodlists.findIndex((food) => food.id === selectedFood.id);
         const updatedFoodLists = [...foodlists.slice(0, index), updatedFood, ...foodlists.slice(index + 1)];
         setFoodLists(updatedFoodLists);
@@ -80,9 +99,9 @@ const FContent = () => {
                     {foodlists.map((food) => (
                         <div key={food.id} className="food_box">
                             <div className="food_img">
-                                <img src={food.image} alt={food.name} className="image" />
+                                <img src={food.url} alt={food.name} className="image" />
                             </div>
-                            <p className="title">{food.title}</p>
+                            <p className="title">{food.name}</p>
                             <p>{food.price}$</p>
                             <div className="actions">
                                 <button className="edit" onClick={() => handleEdit(food)}>
@@ -116,6 +135,7 @@ const FContent = () => {
                         setTempPrice={setTempPrice}
                         tempStatus={tempStatus}
                         setTempStatus={setTempStatus}
+                        prepareFileUploaded={prepareFileUploaded}
                     />
                 </Modal>
             </div>
@@ -123,12 +143,17 @@ const FContent = () => {
     );
 };
 
-const FoodModalContent = ({ tempName, setTempName, tempPrice, setTempPrice, tempStatus, setTempStatus }) => {
-    const { selectedFood } = useContext(FoodContext);
+const FoodModalContent = (p) => {
+    const { tempName, setTempName, tempPrice, setTempPrice, tempStatus, setTempStatus, prepareFileUploaded  } = p
+    // const { selectedFood } = useContext(FoodContext);
 
     return (
         <div>
-            <Upload>
+            <Upload multiple={false} maxCount={1} onChange={(e) => {
+                const file = e.file.originFileObj
+                file.filename = file.name
+                prepareFileUploaded(file)
+            }}>
                 <Button icon={<UploadOutlined />}>Upload</Button>
             </Upload>
             <Input
