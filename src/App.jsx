@@ -15,6 +15,7 @@ import {
   User,
 } from './pages';
 import { AuthProvider } from './context/auth.context';
+import AutoRedirect from './components/AutoRedirect';
 
 const router = createBrowserRouter([
   {
@@ -24,7 +25,7 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Login />,
+        element: <AutoRedirect><Login /></AutoRedirect>,
       },
       {
         path: 'dashboard',
