@@ -36,7 +36,7 @@ export const updateService = (id, updateData) => {
 };
 
 export const deleteService = (id) => {
-  return axiosClient.delete(`service/${id}`);
+  return axiosClient.patch(`service/delete/${id}`);
 };
 
 

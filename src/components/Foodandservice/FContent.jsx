@@ -1,36 +1,37 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { IoMdAddCircleOutline } from "react-icons/io";
-import { Modal, Button, Input, Upload, Select, message } from "antd";
+import { Modal, Button, Input, Upload, Select } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-import foodData from "../../assets/images/FoodService/Food.js";
 import { createFood, deleteFood, getFoods, updateFood } from "../../api/food.api.js";
 import { uploadFoodImage } from "../../api/file.api.js"
+import { getFileBlobUrl } from "../../utils/index.js";
 
 const FoodContext = React.createContext();
 
 const { Option } = Select;
-const { TextArea } = Input;
+// const { TextArea } = Input;
 
 const FContent = () => {
-    const [foodlists, setFoodLists] = useState(foodData.getAllFoods());
+    const [foodlists, setFoodLists] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedFood, setSelectedFood] = useState(null);
+
     const [tempName, setTempName] = useState("");
     const [tempPrice, setTempPrice] = useState("");
     const [tempStatus, setTempStatus] = useState("OK");
     const [tempFile, setTempFile] = useState(null)
     const [tempInventory, setInventory] = useState()
-    const [isEdit, setIsEdit] = useState(false)
+
+
+    const isEdit = useRef(false)
     
     const prepareFileUploaded = (file) => {
-        console.log(file)
         setTempFile(file)
     }
 
     const handleEdit = (food) => {
-        console.log(food)
         setSelectedFood(food);
-        setIsEdit(true);
+        isEdit.current = true
         setTempName(food.name);
         setTempPrice(food.price.toString());
         setInventory(food.inventory)
@@ -44,42 +45,68 @@ const FContent = () => {
         await deleteFood(id)
 
     };
-    
+    const updateFoodListItemById = (foodId, foodData) => {
+        const newList = foodlists.map(item => {
+            // Check if the current item's id matches the foodId
+            if (item.id === foodId) {
+                return {...item, ...foodData};
+            }
+            // If it doesn't match, return the item unchanged
+            return item;
+        });
+
+        // Return the updated list to update the state
+
+        setFoodLists(newList);
+    }
+    const UpdateFoodListWithNewData = (foodData) => {
+        const newList = [foodData, ...foodlists]
+        setFoodLists(newList);
+    }
+
     const handleOk = async () => {
         try{
             const updatedFood = { name: tempName, price: Number(tempPrice), status: tempStatus==="OK", inventory: Number(tempInventory) };
          
             // console.log("updatedFood", updatedFood)
-            let food = {};
-            let updatedFoodLists = {}
-            if(isEdit) {
-                food = await updateFood(selectedFood.id, updatedFood)
-                const index = foodlists.findIndex((food) => food.id === selectedFood.id);
-                updatedFoodLists = [...foodlists.slice(0, index), updatedFood, ...foodlists.slice(index + 1)];
-                setFoodLists(updatedFoodLists);
+            let foodData = {};
+            if(isEdit.current) {
+                const res = await updateFood(selectedFood.id, updatedFood)
+
+                foodData = res.data
+                if(tempFile) {
+                    console.log(tempFile)
+                    
+                    await uploadFoodImage(tempFile, foodData.id)
+                    const url = getFileBlobUrl(tempFile)
+                    foodData.url = url
+                }
+                updateFoodListItemById(foodData.id, foodData)
             }
             else {
-                food = await createFood(updatedFood)
-                // thêm logic để thêm data ảo render cái food data mới added
+                const res = await createFood(updatedFood)
+                foodData = res.data
+                console.log(foodData)
+                if(tempFile) {
+                    console.log(tempFile)
+                    
+                    await uploadFoodImage(tempFile, foodData.id)
+                    const url = getFileBlobUrl(tempFile)
+                    foodData.url = url
+                }
+                UpdateFoodListWithNewData(foodData)
             }
 
-
-            // upload image file 
-            if(tempFile) {
-                console.log(tempFile)
-                await uploadFoodImage(tempFile, food.id)
-            }
-            
-            
             setModalVisible(false);
             setTempName("");
             setTempPrice("");
+            setInventory()
             setTempStatus("OK");
 
         } catch(error) {
             console.log(error.message);
         } finally {
-            setIsEdit(false)
+            isEdit.current = false
         }
     };
     
@@ -88,6 +115,7 @@ const FContent = () => {
         setTempName("");
         setTempPrice("");
         setTempStatus("OK");
+        isEdit.current = false;
     };
     
     const showModal = () => {
@@ -118,13 +146,13 @@ const FContent = () => {
                     <div className="food_box_add_food" onClick={showModal}>
                         <IoMdAddCircleOutline className="icon" />
                     </div>
-                    {foodlists.map((food) => (
+                    {foodlists && foodlists.length > 0 && foodlists.map((food) => (
                         <div key={food.id} className="food_box">
                             <div className="food_img">
                                 <img src={food.url} alt={food.name} className="image" />
                             </div>
                             <p className="title">{food.name}</p>
-                            <p>{food.price}$</p>
+                            <p>{food.price} VND</p>
                             <div className="actions">
                                 <button className="edit" onClick={() => handleEdit(food)}>
                                     Edit
@@ -189,8 +217,8 @@ const FoodModalContent = (p) => {
             <Input
                 placeholder="Price"
                 style={{ marginTop: 10 }}
-                prefix="$"
-                suffix="USD"
+                prefix="vnd"
+                suffix="VND"
                 value={tempPrice}
                 onChange={(e) => setTempPrice(e.target.value)}
             />

@@ -12,7 +12,10 @@ export const uploadFoodImage = (file, food_id) => {
   });
 };
 
-export const uploadServiceImage = (formData) => {
+export const uploadServiceImage = (file, service_id) => {
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('service_id', service_id);
   return axiosClient.post('file/upload/service-image',formData,{
     headers: {
       'Content-Type': 'multipart/form-data'
