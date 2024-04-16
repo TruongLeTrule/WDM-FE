@@ -59,7 +59,6 @@ const router = createBrowserRouter([
 
 const App = () => {
 
-
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
         <RouterProvider router={router} />

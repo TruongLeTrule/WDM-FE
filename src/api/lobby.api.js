@@ -7,6 +7,7 @@ export const getLobbyTypes = (includeDeleted=false) => {
   return axiosClient.get('lobby/types',{ params: { includeDeleted } });
 };
 
+
 export const getLobbyTypeByID = (id) => {
   return axiosClient.get(`lobby/type/${id}`);
 };

@@ -8,11 +8,11 @@ export const getWeddingById = (id, includedBill=false) => {
   return axiosClient.get(`wedding/${id}`,{ params: { bill: includedBill, }, });
 };
 
-export const createWedding = (dataCreate) => {
+export const createWedding = (dataCreate) => { //step 1 
   return axiosClient.post('wedding/create', dataCreate);
 };
 
-export const orderFood = (weddingId, foods) => {
+export const orderFood = (weddingId, foods) => { // 2
   return axiosClient.post('create/wedding/food', { weddingId, foods });
 };
 
