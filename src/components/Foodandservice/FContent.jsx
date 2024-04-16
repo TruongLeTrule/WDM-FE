@@ -1,8 +1,7 @@
-import React, { useState, useContext, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { IoMdAddCircleOutline } from "react-icons/io";
-import { Modal, Button, Input, Upload, Select, message } from "antd";
+import { Modal, Button, Input, Upload, Select } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-import foodData from "../../assets/images/FoodService/Food.js";
 import { createFood, deleteFood, getFoods, updateFood } from "../../api/food.api.js";
 import { uploadFoodImage } from "../../api/file.api.js"
 import { getFileBlobUrl } from "../../utils/index.js";
@@ -10,7 +9,7 @@ import { getFileBlobUrl } from "../../utils/index.js";
 const FoodContext = React.createContext();
 
 const { Option } = Select;
-const { TextArea } = Input;
+// const { TextArea } = Input;
 
 const FContent = () => {
     const [foodlists, setFoodLists] = useState([]);
@@ -71,20 +70,18 @@ const FContent = () => {
          
             // console.log("updatedFood", updatedFood)
             let foodData = {};
-            let updatedFoodLists = {}
             if(isEdit.current) {
                 const res = await updateFood(selectedFood.id, updatedFood)
 
                 foodData = res.data
-                setFoodLists(updatedFoodLists);
                 if(tempFile) {
                     console.log(tempFile)
                     
                     await uploadFoodImage(tempFile, foodData.id)
                     const url = getFileBlobUrl(tempFile)
                     foodData.url = url
-                    updateFoodListItemById(foodData.id, foodData)
                 }
+                updateFoodListItemById(foodData.id, foodData)
             }
             else {
                 const res = await createFood(updatedFood)
@@ -103,6 +100,7 @@ const FContent = () => {
             setModalVisible(false);
             setTempName("");
             setTempPrice("");
+            setInventory()
             setTempStatus("OK");
 
         } catch(error) {
@@ -154,7 +152,7 @@ const FContent = () => {
                                 <img src={food.url} alt={food.name} className="image" />
                             </div>
                             <p className="title">{food.name}</p>
-                            <p>{food.price}$</p>
+                            <p>{food.price} VND</p>
                             <div className="actions">
                                 <button className="edit" onClick={() => handleEdit(food)}>
                                     Edit
@@ -219,8 +217,8 @@ const FoodModalContent = (p) => {
             <Input
                 placeholder="Price"
                 style={{ marginTop: 10 }}
-                prefix="$"
-                suffix="USD"
+                prefix="vnd"
+                suffix="VND"
                 value={tempPrice}
                 onChange={(e) => setTempPrice(e.target.value)}
             />

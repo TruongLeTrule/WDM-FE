@@ -1,59 +1,147 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { IoMdAddCircleOutline } from "react-icons/io";
-import { Modal, Button, Input, Upload, message, Select } from "antd";
+import { Modal, Button, Input, Upload, Select } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-import serviceData from "../../assets/images/FoodService/Service.js";
+import { createService, deleteService, getServices, updateService } from "../../api/service.api.js";
+import { uploadServiceImage } from "../../api/file.api.js";
+import { getFileBlobUrl } from "../../utils/index.js";
 
 const { Option } = Select;
-const { TextArea } = Input;
+// const { TextArea } = Input;
 
 const ServiceContext = React.createContext(); 
 
 const SContent = () => {
-    const [servicelists, setServiceLists] = useState(serviceData.getAllServices());
+    const [servicelists, setServiceLists] = useState();
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedService, setSelectedService] = useState(null);
     const [tempName, setTempName] = useState("");
     const [tempPrice, setTempPrice] = useState("");
     const [tempStatus, setTempStatus] = useState("OK");
+    const [tempInventory, setInventory] = useState();
+    const [tempFile, setTempFile] = useState(null)
+    const isEdit = useRef(false)
+
+    const prepareFileUploaded = (file) => {
+        setTempFile(file)
+    }
+
+    const updateServiceListItemById = (serviceId, serviceData) => {
+        const newList = servicelists.map(item => {
+            // Check if the current item's id matches the serviceId
+            if (item.id === serviceId) {
+                return {...item, ...serviceData};
+            }
+            // If it doesn't match, return the item unchanged
+            return item;
+        });
+
+        // Return the updated list to update the state
+
+        setServiceLists(newList);
+    }
+    const UpdateServiceListWithNewData = (serviceData) => {
+        const newList = [serviceData, ...servicelists]
+        setServiceLists(newList);
+    }
 
     const handleEdit = (service) => {
+
         setSelectedService(service);
-        setTempName(service.title);
+        isEdit.current = true
+        setTempFile()
+        setTempName(service.name);
         setTempPrice(service.price.toString());
-        setTempStatus(service.status);
+        setTempStatus(service.status ? "OK" : "NOT");
+        setInventory(service.inventory)
         setModalVisible(true);
+        
     };
 
-    const handleDelete = (id) => {
+    const handleDelete = async (id) => {
         const updatedServiceLists = servicelists.filter((service) => service.id !== id);
         setServiceLists(updatedServiceLists);
+        await deleteService(id)
     };
 
     const showModal = () => {
+        setTempFile()
         setTempName("");
         setTempPrice("");
         setTempStatus("OK");
         setModalVisible(true);
     };
 
-    const handleOk = () => {
-        const updatedService = { ...selectedService, title: tempName, price: tempPrice, status: tempStatus };
-        const index = servicelists.findIndex((service) => service.id === selectedService.id);
-        const updatedServiceLists = [...servicelists.slice(0, index), updatedService, ...servicelists.slice(index + 1)];
-        setServiceLists(updatedServiceLists); 
-        setModalVisible(false);
-        setTempName("");
-        setTempPrice("");
-        setTempStatus("OK");
+    const handleOk = async () => {
+        try{
+            const updatedService = { name: tempName, price: Number(tempPrice), status: tempStatus==="OK", inventory: Number(tempInventory) };
+         
+            // console.log("updatedService", updatedService)
+            let serviceData = {};
+            let updatedServiceLists = {}
+            if(isEdit.current) {
+                const res = await updateService(selectedService.id, updatedService)
+
+                serviceData = res.data
+                setServiceLists(updatedServiceLists);
+                if(tempFile) {
+                    console.log(tempFile)
+                    
+                    await uploadServiceImage(tempFile, serviceData.id)
+                    const url = getFileBlobUrl(tempFile)
+                    serviceData.url = url
+                }
+                updateServiceListItemById(serviceData.id, serviceData)
+            }
+            else {
+                const res = await createService(updatedService)
+                serviceData = res.data
+                console.log(serviceData)
+                if(tempFile) {
+                    console.log(tempFile)
+                    
+                    await uploadServiceImage(tempFile, serviceData.id)
+                    const url = getFileBlobUrl(tempFile)
+                    serviceData.url = url
+                }
+                UpdateServiceListWithNewData(serviceData)
+            }
+
+            setModalVisible(false);
+            setTempName("");
+            setTempPrice("");
+            setInventory()
+            setTempStatus("OK");
+
+        } catch(error) {
+            console.log(error.message);
+        } finally {
+            isEdit.current = false
+        }
     };
 
     const handleCancel = () => {
         setModalVisible(false);
         setTempName("");
         setTempPrice("");
+        setInventory(null);
         setTempStatus("OK");
+        isEdit.current = false;
     };
+
+    useEffect(() => {
+        serviceAPI();
+    }, [])
+    
+    const serviceAPI = async () => {
+        try {
+            const services = await getServices();
+            setServiceLists(services.data)
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     return (
         <ServiceContext.Provider value={{ selectedService, setSelectedService }}>
@@ -62,12 +150,12 @@ const SContent = () => {
                     <div className="service_box_add_service" onClick={showModal}>
                         <IoMdAddCircleOutline className="icon" />
                     </div>
-                    {servicelists.map((service) => (
+                    {servicelists && servicelists.length > 0 && servicelists.map((service) => (
                         <div key={service.id} className="service_box">
                             <div className="service_img">
-                                <img src={service.image} alt={service.title} className="image" />
+                                <img src={service.url} alt={service.name} className="image" />
                             </div>
-                            <p className="title">{service.title}</p>
+                            <p className="title">{service.name}</p>
                             <p>{service.price}$</p>
                             <div className="actions">
                                 <button className="edit" onClick={() => handleEdit(service)}>
@@ -81,7 +169,7 @@ const SContent = () => {
                     ))}
                 </div>
                 <Modal
-                    visible={modalVisible}
+                    open={modalVisible}
                     onOk={handleOk}
                     onCancel={handleCancel}
                     footer={[
@@ -101,6 +189,9 @@ const SContent = () => {
                         setTempPrice={setTempPrice}
                         tempStatus={tempStatus}
                         setTempStatus={setTempStatus}
+                        tempInventory={tempInventory}
+                        setInventory={setInventory}
+                        prepareFileUploaded={prepareFileUploaded}
                     />
                 </Modal>
             </div>
@@ -108,12 +199,17 @@ const SContent = () => {
     );
 };
 
-const ServiceModalContent = ({ tempName, setTempName, tempPrice, setTempPrice, tempStatus, setTempStatus }) => {
-    const { selectedService } = useContext(ServiceContext);
+const ServiceModalContent = (p) => {
+    const { tempName, setTempName, tempPrice, setTempPrice, tempStatus, setTempStatus, tempInventory, setInventory, prepareFileUploaded } = p
+    // const { selectedService } = useContext(ServiceContext);
 
     return (
         <div>
-            <Upload>
+            <Upload multiple={false} maxCount={1} onChange={(e) => {
+                const file = e.file.originFileObj
+                file.filename = file.name
+                prepareFileUploaded(file)
+            }}>
                 <Button icon={<UploadOutlined />}>Upload</Button>
             </Upload>
             <Input
@@ -129,6 +225,12 @@ const ServiceModalContent = ({ tempName, setTempName, tempPrice, setTempPrice, t
                 suffix="USD"
                 value={tempPrice}
                 onChange={(e) => setTempPrice(e.target.value)}
+            />
+            <Input
+                placeholder="Inventory"
+                style={{ marginTop: 10 }}
+                value={tempInventory}
+                onChange={(e) => setInventory(e.target.value)}
             />
             <Select
                 defaultValue="OK"
