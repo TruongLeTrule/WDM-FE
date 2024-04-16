@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SearchBox from "../components/SearchBox";
 import Information from "../components/Users/Information";
 import { UserBlock, StyledAccountInformationTable, StyledPermissionAccountTable, CreateSaveCombination } from "../components/Users/Styled";
@@ -21,6 +21,8 @@ const User = () => {
     ["QT005", "Le Tan Hoa", "hoale", "9dCt4PvW", "Staff"],
   ]);
 
+  const [accountInformationTableFilter, setAccountInformationTableFilter] = useState(accountInformation);
+
   const [accountInformationInput, setAccountInformationInput] = useState({
     ID: "",
     DisplayName: "",
@@ -31,6 +33,7 @@ const User = () => {
 
   const [boardType, setBoardType] = useState("");
   const [row, setRow] = useState();
+  const [searchValue, setSearchValue] = useState();
 
   const updatePermission = (rowIndex, cellIndex) => {
     const newPermissionAccount = [...permissionAccount];
@@ -40,7 +43,6 @@ const User = () => {
 
   const updateInformation = () => {
     alert("Saved!!");
-    // Avoid hard reloading, manage state to update UI
   };
 
   const handleCreate = () => {
@@ -77,6 +79,29 @@ const User = () => {
     setRow(row);
   };
 
+  const handleSearchBox = (value) => {
+    if (typeof value === 'string') {
+      const trimmedValue = value.trim();
+      setSearchValue(trimmedValue);
+    }
+  };
+  const checkRow = (row, searchValue) => {
+    return row.some(cell => {
+      if (typeof cell === 'string' && typeof searchValue === 'string') {
+        return cell.toLowerCase().includes(searchValue.toLowerCase())
+      }
+    }
+    );
+  };
+  useEffect(() => {
+    if (!searchValue) setAccountInformationTableFilter(accountInformation)
+    else {
+      const filteredData = accountInformation.slice(1).filter(row => checkRow(row, searchValue));
+      filteredData.unshift(accountInformation[0])
+      setAccountInformationTableFilter(filteredData);
+    }
+  }, [searchValue, accountInformation]);
+
   return (
     <UserBlock>
       <h4 className="blockTitle" onClick={() => console.log()}>
@@ -87,10 +112,10 @@ const User = () => {
         <h4 className="blockTitle" onClick={() => console.log(accountInformation)}>
           Account Information
         </h4>
-        <SearchBox />
+        <SearchBox onChange={handleSearchBox} />
       </div>
       <StyledAccountInformationTable
-        data={accountInformation}
+        data={accountInformationTableFilter}
         deleteRow={deleteInformation}
         editRow={editInformation}
       />

@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Icon } from "../../assets/icon";
 export const AccountInformationTable = ({ className, data, deleteRow, editRow }) => {
   return (
@@ -12,15 +13,17 @@ export const AccountInformationTable = ({ className, data, deleteRow, editRow })
         </tr>
       </thead>
       <tbody>
-        {data.slice(1).map((row, rowIndex) => (
-          <tr key={rowIndex}>
-            {row.map((cell, cellIndex) => (
-              <td key={cellIndex}>{cell}</td>
-            ))}
-            <td className="pencilIcon" onClick={() => editRow(rowIndex + 1)}><Icon.pencil /></td>
-            <td className="deleteIcon" onClick={() => deleteRow(rowIndex + 1)}><Icon.delete /></td>
-          </tr>
-        ))}
+        {data.slice(1).map((row, rowIndex) => {
+          return (
+            <tr key={rowIndex}>
+              {row.map((cell, cellIndex) => (
+                <td key={cellIndex}>{cell}</td>
+              ))}
+              <td className="pencilIcon" onClick={() => editRow(rowIndex + 1)}><Icon.pencil /></td>
+              <td className="deleteIcon" onClick={() => deleteRow(rowIndex + 1)}><Icon.delete /></td>
+            </tr>
+          );
+        })}
       </tbody>
     </table>
   );
