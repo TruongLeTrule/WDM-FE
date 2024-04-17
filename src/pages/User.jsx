@@ -45,6 +45,10 @@ const User = () => {
     });
   };
 
+  const handleSave = () => {
+    console.log(1)
+  }
+
   const deleteInformation = (row) => {
     if (window.confirm("Bạn muốn xóa?")) {
       const newAccountInformation = [...accountInformation];
@@ -90,7 +94,8 @@ const User = () => {
         const res = await getUsers();
         if (res && res.data) {
           const data = res.data;
-          const tempAccountInformation = [...accountInformation];
+          const tempAccountInformation = [];
+          tempAccountInformation.push(["ID", "Display Name", "Username", "Password", "Permission", ""])
           data.forEach((value) => {
             let subArray = [];
             subArray.push(value["id"]);
@@ -110,6 +115,7 @@ const User = () => {
       }
     };
     fetchData();
+    return;
   }, []);
 
   const checkRow = (row, searchValue) => {
@@ -140,6 +146,7 @@ const User = () => {
       />
       <CreateSaveCombination>
         <button className="createButton" onClick={handleCreate}>Create</button>
+        <button className="saveButton" onClick={handleSave}>Save</button>
       </CreateSaveCombination>
       <Information
         display={isDisplayInfomationBlock}

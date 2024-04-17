@@ -57,30 +57,38 @@ export const StyledPermissionAccountTable = styled(PermissonAccountTable)`
 `;
 
 export const StyledAccountInformationTable = styled(AccountInformationTable)`
-  width: 100%;
+  width: 85vw;
   margin-top: 20px;
   margin-bottom: 20px;
-  padding-right: 5%;
+  border-collapse: separate; 
+  border-spacing: 10px; 
   tr{
     height: 7vh;
   }
   th{
     width: auto;
+    max-width: 20vw;
     text-align: center;
     font-size: 1.5em;
     color: #718ebf;
   }
   td{
     width: auto;
+    max-width: 20vw;
+    overflow: hidden;
+    white-space: nowrap; 
+    text-overflow: ellipsis;
     text-align: center;
     font-size: 1.25em;
   }
   .pencilIcon{
+    width: 3vw;
     &:hover{
       cursor: pointer;
     }
   }
   .deleteIcon{
+    width: 3vw;
     &:hover{
       cursor: pointer;
     }

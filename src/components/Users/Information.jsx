@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { InformationBlock, InformationBoard } from "./Styled";
+import { updateUserDisplayName } from "../../api/user.api";
 
 const Information = ({ display, setIsDisplayInformationBlock, type, editrow, accountInformation, setAccountInformation, accountInformationInput }) => {
   const [tempData, setTempData] = useState({
