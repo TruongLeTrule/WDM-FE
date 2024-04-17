@@ -5,10 +5,10 @@ export const getUsers = () => {
 };
 
 export const findUserByName = (name) => {
-  return axiosClient.get('users/find',{ params: { name, }, });
+  return axiosClient.get('users/find', { params: { name, }, });
 };
 
 export const updateUserDisplayName = (id, display_name) => {
-  return axiosClient.patch(`users/create/${id}`, { display_name });
+  return axiosClient.patch(`users/${id}/update`, { display_name });
 };
 

@@ -22,10 +22,28 @@ export const UserBlock = styled.div`
     width: 100%;
     height: 8vh;
     padding-left: 2%;
-    font-weight: 600;
     display: flex;
     align-items: center;
   }
+  .blockTitle{
+      .title{
+        font-weight: 600;
+      }
+      .plus{
+        height: 100%;
+        display: flex;
+        justify-content: left;
+        align-items: center;
+        margin-left: 10px;
+        &:hover{
+          cursor: pointer;
+        }
+        svg{
+          height: 35px;
+          width: 35px;
+        }
+      }
+    }
   .TitleSearchCombination{
     width: 100%;
     display: flex;
@@ -94,32 +112,6 @@ export const StyledAccountInformationTable = styled(AccountInformationTable)`
     }
   }
 `;
-
-export const CreateSaveCombination = styled.div`
-  height: 9vh;
-  display: flex;
-  padding-left: 5%;
-  padding-right: 5%;
-  justify-content: space-between;
-  align-items: center;
-  button{
-    width: 10%;
-    height: 50%;
-    border-radius: 15px;
-    color: white;
-    font-size: 15px;
-    &:hover{
-      cursor: pointer;
-    }
-  }
-  .createButton{
-    background-color: gray;
-  }
-  .saveButton{
-    background-color: blue;
-  }
-`
-
 
 export const InformationBlock = styled.div`
   z-index: 2;

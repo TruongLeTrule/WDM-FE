@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import SearchBox from "../components/SearchBox";
 import Information from "../components/Users/Information";
-import { UserBlock, StyledAccountInformationTable, StyledPermissionAccountTable, CreateSaveCombination } from "../components/Users/Styled";
+import { UserBlock, StyledAccountInformationTable, StyledPermissionAccountTable } from "../components/Users/Styled";
 import { getUsers } from "../api/user.api";
+import { Icon } from "../assets/icon";
 
 const User = () => {
   const [isDisplayInfomationBlock, setIsDisplayInformationBlock] = useState(false);
@@ -46,7 +47,6 @@ const User = () => {
   };
 
   const handleSave = () => {
-    console.log(1)
   }
 
   const deleteInformation = (row) => {
@@ -128,14 +128,24 @@ const User = () => {
 
   return (
     <UserBlock>
-      <h4 className="blockTitle" onClick={() => console.log(permissionAccount)}>
-        Permissions of account groups
-      </h4>
+      <div className="blockTitle">
+        <h4 className="title" onClick={() => console.log(accountInformation)}>
+          Permissions of account groups
+        </h4>
+        <div className="plus">
+          <Icon.plus className="iconPlus"></Icon.plus>
+        </div>
+      </div>
       <StyledPermissionAccountTable data={permissionAccount} action={updatePermission} />
       <div className="TitleSearchCombination">
-        <h4 className="blockTitle" onClick={() => console.log(accountInformation)}>
-          Account Information
-        </h4>
+        <div className="blockTitle">
+          <h4 className="title" onClick={() => console.log(accountInformation)}>
+            Account Information
+          </h4>
+          <div className="plus">
+            <Icon.plus className="iconPlus" onClick={handleCreate}></Icon.plus>
+          </div>
+        </div>
         <SearchBox onChange={handleSearchBox} />
       </div>
       <StyledAccountInformationTable
@@ -144,10 +154,6 @@ const User = () => {
         deleteRow={deleteInformation}
         editRow={editInformation}
       />
-      <CreateSaveCombination>
-        <button className="createButton" onClick={handleCreate}>Create</button>
-        <button className="saveButton" onClick={handleSave}>Save</button>
-      </CreateSaveCombination>
       <Information
         display={isDisplayInfomationBlock}
         setIsDisplayInformationBlock={setIsDisplayInformationBlock}

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { InformationBlock, InformationBoard } from "./Styled";
 import { updateUserDisplayName } from "../../api/user.api";
+import { register } from "../../api/auth.api";
 
 const Information = ({ display, setIsDisplayInformationBlock, type, editrow, accountInformation, setAccountInformation, accountInformationInput }) => {
   const [tempData, setTempData] = useState({
@@ -30,20 +31,17 @@ const Information = ({ display, setIsDisplayInformationBlock, type, editrow, acc
     setIsDisplayInformationBlock(false);
     const newData = [...accountInformation];
     newData[editrow] = Object.values(tempData).map((value, index) => value === '' ? newData[editrow][index] : value);
+    console.log(newData[editrow])
+    updateUserDisplayName(newData[editrow][0], newData[editrow][1])
     setAccountInformation(newData);
   };
 
   const handleCreateSave = () => {
     const tempDataWithoutFirstElement = { ...tempData };
     delete tempDataWithoutFirstElement[Object.keys(tempDataWithoutFirstElement)[0]];
-    const allInputsFilled = Object.values(tempDataWithoutFirstElement).every(value => value !== '');
-
-    if (allInputsFilled) {
-      setIsDisplayInformationBlock(false);
-      setAccountInformation([...accountInformation, Object.values(tempData)]);
-    } else {
-      alert("Hãy điền đủ thông tin !!");
-    }
+    setIsDisplayInformationBlock(false);
+    setAccountInformation([...accountInformation, Object.values(tempData)]);
+    register(Object.values(tempData)[1], Object.values(tempData)[2], Object.values(tempData)[3]);
   };
 
   const handleSelectChange = (e) => {
@@ -88,6 +86,7 @@ const Information = ({ display, setIsDisplayInformationBlock, type, editrow, acc
                 updateInput(e.target.value);
                 updateTempData("UserName", e.target.value);
               }}
+              disabled={type === "Edit"}
             ></input>
           </td>
         </tr>
@@ -100,13 +99,14 @@ const Information = ({ display, setIsDisplayInformationBlock, type, editrow, acc
                 updateInput(e.target.value);
                 updateTempData("Password", e.target.value);
               }}
+              disabled={type === "Edit"}
             ></input>
           </td>
         </tr>
         <tr>
           <td className="informationTitle"><p>Permission :</p></td>
           <td>
-            <select value={selectValue} onChange={(e) => handleSelectChange(e)}>
+            <select value={selectValue} onChange={(e) => handleSelectChange(e)} disabled>
               <option value="">Select an option</option>
               <option value="Super Admin">Super Admin</option>
               <option value="Admin">Admin</option>
