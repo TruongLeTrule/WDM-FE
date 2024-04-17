@@ -39,4 +39,8 @@ export const deleteService = (id) => {
   return axiosClient.patch(`service/delete/${id}`);
 };
 
-
+export const findServiceByName = (name) => {
+  return axiosClient.get(`service/find`, {
+    params: { q: name, },
+  });
+}
