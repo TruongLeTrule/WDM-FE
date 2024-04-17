@@ -12,3 +12,4 @@ export const updateUserDisplayName = (id, display_name) => {
   return axiosClient.patch(`users/${id}/update`, { display_name });
 };
 
+
