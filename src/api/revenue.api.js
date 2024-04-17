@@ -15,3 +15,7 @@ export const getMonthWedding = (year, month) => {
     params: { year, month, },
   });
 };
+
+export const getListRevenue = () => {
+  return axiosClient.get('revenue/list-revenue');
+};

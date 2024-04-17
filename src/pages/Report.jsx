@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { DatePicker, Divider, Statistic, Space, Typography, Radio } from "antd";
 import { ReloadOutlined, SettingOutlined } from "@ant-design/icons";
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import { Line } from "react-chartjs-2";
+import { Line, getDatasetAtEvent, getElementAtEvent } from "react-chartjs-2";
 import Chart from 'chart.js/auto';
+import { getListRevenue } from "../api/revenue.api"
 
 dayjs.extend(customParseFormat);
 
@@ -14,9 +15,6 @@ const monthFormat = 'YYYY/MM';
 const yearFormat = 'YYYY';
 
 const Report = () => {
-  const [showFollowBy, setShowFollowBy] = useState(false);
-  const [showMonthPicker, setShowMonthPicker] = useState(true);
-  const [selectedDate, setSelectedDate] = useState(dayjs());
   const [data, setData] = useState([
     { day: "01-04-2024", weddingnumber: 2, revenue: 200 },
     { day: "02-04-2024", weddingnumber: 1, revenue: 250 },
@@ -83,6 +81,35 @@ const Report = () => {
     { day: "7-06-2024", weddingnumber: 5, revenue: 800 },
     { day: "20-06-2024", weddingnumber: 4, revenue: 200 },
   ]);
+
+  useEffect(() => {
+    const fetchDataRevenue = async () => {
+      try{
+        const res = await getListRevenue();
+        setData(res.data)
+
+      } catch(error) {
+        console.log(error.message);
+      }
+
+    }
+
+    fetchDataRevenue()
+  },[])
+
+  if(data) {
+    return (
+      <ReportInner data={data} />
+    )
+  }
+}
+
+const ReportInner = (p) => {
+  const { data } = p
+  const [showFollowBy, setShowFollowBy] = useState(false);
+  const [showMonthPicker, setShowMonthPicker] = useState(true);
+  const [selectedDate, setSelectedDate] = useState(dayjs());
+
   const [getChart, setChart] = useState("1");
   const handleSettingClick = () => {
     setShowFollowBy(!showFollowBy);
@@ -98,6 +125,7 @@ const Report = () => {
   const handleReloadClick = () => {
     window.location.reload();
   };
+
   const filteredData = data.filter(item => {
     if (showMonthPicker) {
       return dayjs(item.day, "DD-MM-YYYY").format("YYYY-MM") === selectedDate.format("YYYY-MM");
@@ -105,6 +133,7 @@ const Report = () => {
       return dayjs(item.day, "DD-MM-YYYY").format("YYYY") === selectedDate.format("YYYY");
     }
   });
+
   const monthlyData = filteredData.reduce((acc, cur) => {
     const monthYear = dayjs(cur.day, "DD-MM-YYYY").format("MM/YYYY");
     if (!acc[monthYear]) {
@@ -114,6 +143,7 @@ const Report = () => {
     acc[monthYear].revenue += cur.revenue;
     return acc;
   }, {});
+
 
   const monthlyLabels = Object.keys(monthlyData);
   const monthlyWeddingNumbers = monthlyLabels.map(label => monthlyData[label].weddingNumber);
@@ -197,17 +227,34 @@ const Report = () => {
         },
       },
     },
+    onClick: function(e) {   
+      // const canvasPosition = Chart.helpers.getRelativePosition(e, chart);
+
+      // // Substitute the appropriate scale IDs
+      // const dataX = chart.scales.x.getValueForPixel(canvasPosition.x);
+      // const dataY = chart.scales.y.getValueForPixel(canvasPosition.y);
+    }
   };
+
+  const chartRef = useRef();
+
+  const handleClickChart = (e) => {
+    const point = getElementAtEvent(chartRef.current, e);
+    console.log(point[0].element.$context);
+  }
+
+
 
   return (
     <Container>
       <Card>
         <Space align="baseline" style={{ marginBottom: 24 }}>
           <Statistic title="Wedding Number" value={totalWeddingNumber} />
-          <Statistic title="Revenue" value={totalRevenue} prefix="$" />
+          <Statistic title="Current Revenue" value={totalRevenue} prefix="VND" />
+          <Statistic title="Estimate Revenue" value={totalRevenue} prefix="VND" />
           <Divider type="vertical" style={{ height: "auto" }} />
           {showMonthPicker ? (
-            <DatePicker value={selectedDate} onChange={handleDateChange} picker="month" />
+            <DatePicker value={selectedDate} onChange={handleDateChange} picker="month"/>
           ) : (
             <DatePicker value={selectedDate} onChange={handleDateChange} picker="year" />
           )}
@@ -229,7 +276,7 @@ const Report = () => {
         {getChart === "1" &&
           <LineChartContainer>
             <div className="inner">
-              <Line data={ChartDataMonth} options={options} />
+              <Line data={ChartDataMonth} options={options} onClick={handleClickChart} ref={chartRef}/>
             </div>
           </LineChartContainer>
         }
