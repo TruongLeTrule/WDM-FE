@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { getUserInfo } from '../../utils/orderRenderArr';
 import { TextInput } from '../';
+import { createWedding } from '../../api/wedding.api';
 import Modal from '../Modal';
 import Wrapper from '../../assets/wrappers/Order/GetUserInfoWrapper';
 
@@ -22,7 +23,7 @@ const customStyle = {
 const GetUserInfoModal = ({
   isOpen,
   setModalClose,
-  setUserInfoValue,
+  newOrder,
   setNextModalOpen,
 }) => {
   const [formState, setFormState] = useState({
@@ -38,9 +39,10 @@ const GetUserInfoModal = ({
     });
   };
 
-  const handleNextBtnClick = () => {
-    setUserInfoValue(formState);
-    setNextModalOpen();
+  const handleNextBtnClick = async () => {
+    const newWedding = await createWedding({ ...formState, ...newOrder });
+    console.log(newWedding);
+    // setNextModalOpen();
   };
 
   return (

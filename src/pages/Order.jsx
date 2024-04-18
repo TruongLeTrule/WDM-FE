@@ -1,12 +1,30 @@
-import React, { createContext, useContext, useMemo, useState, Suspense } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useMemo,
+  useState,
+  useEffect,
+  Suspense,
+} from 'react';
 import { Header, Table } from '../components';
 const Wrapper = React.lazy(() => import('../assets/wrappers/OrderWrapper'));
-const EditOrderInfoModal = React.lazy(() => import('../components/Order/EditOrderInfoModal'));
-const OrderInfoModal = React.lazy(() => import('../components/Order/OrderInfoModal'));
-const PayRemainderModal = React.lazy(() => import('../components/Order/PayRemainderModal'));
+const EditOrderInfoModal = React.lazy(() =>
+  import('../components/Order/EditOrderInfoModal')
+);
+const OrderInfoModal = React.lazy(() =>
+  import('../components/Order/OrderInfoModal')
+);
+const PayRemainderModal = React.lazy(() =>
+  import('../components/Order/PayRemainderModal')
+);
 const BillModal = React.lazy(() => import('../components/Order/BillModal'));
-const ServiceModal = React.lazy(() => import('../components/Order/ServiceModal'));
-const CreateOrderModalContainer = React.lazy(() => import('../components/Order/CreateOrderModalContainer'));
+const ServiceModal = React.lazy(() =>
+  import('../components/Order/ServiceModal')
+);
+const CreateOrderModalContainer = React.lazy(() =>
+  import('../components/Order/CreateOrderModalContainer')
+);
+import { getWeddings } from '../api/wedding.api';
 import { orderList, food, service } from '../utils/orderTestData';
 import Loading from '../components/Loading';
 
@@ -90,6 +108,11 @@ const Order = () => {
     });
   };
 
+  // useEffect(async () => {
+  //   const list = await getWeddings();
+  //   console.log(list.data);
+  // }, []);
+
   return (
     <OrderContext.Provider
       value={{
@@ -115,7 +138,7 @@ const Order = () => {
             />
           </div>
           {/* Suspense wrapping all conditional modals */}
-          <Suspense fallback={<Loading minsize="35px"/> }>
+          <Suspense fallback={<Loading minsize="35px" />}>
             {orderModalState?.info && <OrderInfoModal />}
             {orderModalState?.edit && <EditOrderInfoModal />}
             {orderModalState?.payRemainder && <PayRemainderModal />}
