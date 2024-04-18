@@ -1,11 +1,15 @@
 import { useState, useRef, useEffect } from 'react';
 import { FaShoppingCart, FaRegTrashAlt } from 'react-icons/fa';
-import { foodList, serviceList } from '../../utils/orderTestData';
+import { getFoods } from '../../api/food.api';
+import { getServices } from '../../api/service.api';
+import { orderFood, orderService } from '../../api/wedding.api';
 import Modal from '../Modal';
 import FoodServiceCard from './FoodServiceCard';
 import beefImg from '../../assets/images/beef.png';
 import balletImg from '../../assets/images/ballet.jpg';
 import Wrapper from '../../assets/wrappers/Order/CardGroupWrapper';
+import Loading from '../Loading';
+import { useOrderContext } from '../../pages/Order';
 
 const customStyle = {
   content: {
@@ -25,29 +29,37 @@ const customStyle = {
 const PickFoodServiceModal = ({
   isOpen,
   setModalClose,
-  setValue,
   setNextModalOpen,
   type,
 }) => {
+  const { newOrder } = useOrderContext();
   const [renderList, setRenderList] = useState([]);
   const cartRef = useRef(null);
   const [pickedItem, setPickItem] = useState([]);
   const [showPickedItemList, setShowPickedItemList] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const total = pickedItem.reduce(
     (acc, item) => acc + item.quantity * item.price,
     0
   );
 
-  const handleNextBtnClick = () => {
-    console.log(pickedItem);
-    if (type === 'food') setValue({ food: pickedItem, pricePerTable: total });
-    if (type === 'service')
-      setValue({ service: pickedItem, serviceFee: total });
-    setNextModalOpen();
+  const handleNextBtnClick = async () => {
+    const reqBody = pickedItem.map(({ id, quantity }) => ({
+      id,
+      count: quantity,
+    }));
+    if (type === 'food') {
+      // const test = await orderFood({ foods: reqBody, weddingId: newOrder.id });
+      console.log({ foods: reqBody, weddingId: newOrder.id });
+    }
+    // if (type === 'service')
+    //   setValue({ service: pickedItem, serviceFee: total });
+    // setNextModalOpen();
   };
 
   const handleAddBtnClick = (newItem) => {
+    // If item existed in picked list, set new quantity
     if (pickedItem.find((item) => item.id === newItem.id)) {
       const itemList = pickedItem.map((item) =>
         item.id === newItem.id ? newItem : item
@@ -68,6 +80,20 @@ const PickFoodServiceModal = ({
     }
   };
 
+  const fetchData = async (type) => {
+    try {
+      const data = type === 'food' ? await getFoods() : await getServices();
+      setRenderList(data.data);
+      setIsLoading(false);
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchData(type);
+  }, []);
+
   useEffect(() => {
     document.addEventListener('mousedown', handleOutsideClick);
     return () => {
@@ -75,83 +101,82 @@ const PickFoodServiceModal = ({
     };
   });
 
-  useEffect(() => {
-    if (type === 'food') setRenderList(foodList);
-    if (type === 'service') setRenderList(serviceList);
-  }, []);
-
   return (
     <Modal
       isOpen={isOpen}
       setModalClose={setModalClose}
       customStyle={customStyle}
     >
-      <Wrapper>
-        <div className="header">
-          <h4>choose {type}</h4>
-          <div
-            className="cart-wrapper"
-            ref={cartRef}
-            onClick={() => {
-              setShowPickedItemList(true);
-            }}
-          >
-            {!showPickedItemList ? (
-              <>
-                <FaShoppingCart className="icon" />
-                <span className="badge">{pickedItem.length}</span>
-              </>
-            ) : (
-              <>
-                <div className="food-list">
-                  <h6>{type} list</h6>
-                  {pickedItem.length ? (
-                    <>
-                      <div className="food-container">
-                        {pickedItem.map(({ id, quantity, name, price }) => (
-                          <div className="food" key={id}>
-                            <img
-                              src={type === 'food' ? beefImg : balletImg}
-                              alt={name}
-                            />
-                            <div className="col">
-                              <span>{name}</span>
-                              <span className="quantity">{quantity}</span>
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <Wrapper>
+          <div className="header">
+            <h4>choose {type}</h4>
+            <div
+              className="cart-wrapper"
+              ref={cartRef}
+              onClick={() => {
+                setShowPickedItemList(true);
+              }}
+            >
+              {!showPickedItemList ? (
+                <>
+                  <FaShoppingCart className="icon" />
+                  <span className="badge">{pickedItem.length}</span>
+                </>
+              ) : (
+                <>
+                  <div className="food-list">
+                    <h6>{type} list</h6>
+                    {pickedItem.length ? (
+                      <>
+                        <div className="food-container">
+                          {pickedItem.map(({ id, quantity, name, price }) => (
+                            <div className="food" key={id}>
+                              <img
+                                src={type === 'food' ? beefImg : balletImg}
+                                alt={name}
+                              />
+                              <div className="col">
+                                <span>{name}</span>
+                                <span className="quantity">{quantity}</span>
+                              </div>
+                              <span>{price * quantity}$</span>
+                              <FaRegTrashAlt
+                                className="trash"
+                                onClick={() => handleTrashClick(id)}
+                              />
                             </div>
-                            <span>{price * quantity}$</span>
-                            <FaRegTrashAlt
-                              className="trash"
-                              onClick={() => handleTrashClick(id)}
-                            />
-                          </div>
-                        ))}
-                      </div>
-                      <strong>total {total}$</strong>
-                      <button className="btn" onClick={handleNextBtnClick}>
-                        next: {type === 'food' ? 'choose service' : 'payment'}
-                      </button>
-                    </>
-                  ) : (
-                    <p>please choose some {type}s</p>
-                  )}
-                </div>
-              </>
-            )}
+                          ))}
+                        </div>
+                        <strong>total {total}$</strong>
+                        <button className="btn" onClick={handleNextBtnClick}>
+                          next: {type === 'food' ? 'choose service' : 'payment'}
+                        </button>
+                      </>
+                    ) : (
+                      <p>please choose some {type}s</p>
+                    )}
+                  </div>
+                </>
+              )}
+            </div>
           </div>
-        </div>
-        <div className="container">
-          {renderList.map(({ id, name, price }) => (
-            <FoodServiceCard
-              img={type === 'food' ? beefImg : balletImg}
-              key={id}
-              id={id}
-              name={name}
-              price={price}
-              handleAddBtnClick={handleAddBtnClick}
-            />
-          ))}
-        </div>
-      </Wrapper>
+          <div className="container">
+            {renderList.map(({ id, name, price }) => (
+              <FoodServiceCard
+                img={type === 'food' ? beefImg : balletImg}
+                key={id}
+                id={id}
+                name={name}
+                price={price}
+                handleAddBtnClick={handleAddBtnClick}
+              />
+            ))}
+          </div>
+        </Wrapper>
+      )}
     </Modal>
   );
 };

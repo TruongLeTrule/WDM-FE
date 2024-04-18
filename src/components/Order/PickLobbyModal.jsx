@@ -1,7 +1,11 @@
+import { lobby } from '../../utils/orderTestData';
+import { getLobbies } from '../../api/lobby.api';
+import { useOrderContext } from '../../pages/Order';
 import Modal from '../Modal';
 import Wrapper from '../../assets/wrappers/Order/LobWrapper';
-import { lobby } from '../../utils/orderTestData';
 import LobCard from './LobCard';
+import { useEffect, useState } from 'react';
+import Loading from '../Loading';
 
 const customStyle = {
   content: {
@@ -18,13 +22,25 @@ const customStyle = {
   },
 };
 
-const PickLobbyModal = ({
-  isOpen,
-  setModalClose,
-  setLobValue,
-  setShiftValue,
-  setNextModalOpen,
-}) => {
+const PickLobbyModal = ({ isOpen, setModalClose, setNextModalOpen }) => {
+  const { newOrder } = useOrderContext();
+  const [lobbyList, setLobbyList] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const fetchLobby = async () => {
+    try {
+      const lobbies = await getLobbies(newOrder.lob_type_id);
+      setLobbyList(lobbies.data);
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchLobby();
+  }, []);
+
   return (
     <Modal
       isOpen={isOpen}
@@ -32,18 +48,22 @@ const PickLobbyModal = ({
       customStyle={customStyle}
     >
       <Wrapper>
-        <h4>choose lobby</h4>
-        <div className="container">
-          {lobby.map((lobby) => (
-            <LobCard
-              lobby={lobby}
-              key={lobby.id}
-              setLobValue={setLobValue}
-              setShiftValue={setShiftValue}
-              setNextModalOpen={setNextModalOpen}
-            />
-          ))}
-        </div>
+        {isLoading ? (
+          <Loading />
+        ) : (
+          <>
+            <h4>choose lobby</h4>
+            <div className="container">
+              {lobbyList.map((lobby) => (
+                <LobCard
+                  lobby={lobby}
+                  key={lobby.id}
+                  setNextModalOpen={setNextModalOpen}
+                />
+              ))}
+            </div>
+          </>
+        )}
       </Wrapper>
     </Modal>
   );

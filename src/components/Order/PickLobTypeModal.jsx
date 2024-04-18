@@ -1,7 +1,8 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { getLobbyTypes } from '../../api/lobby.api';
+import Loading from '../Loading';
 import Modal from '../Modal';
 import Wrapper from '../../assets/wrappers/Order/LobTypeWrapper';
-import { lobType } from '../../utils/orderTestData';
 import Table from '../Table';
 
 const customStyle = {
@@ -22,10 +23,11 @@ const customStyle = {
 const PickLobTypeModal = ({
   isOpen,
   setModalClose,
-  setValue,
   setNextModalOpen,
+  setLobType,
 }) => {
-  const data = useMemo(() => lobType, []);
+  const [isLoading, setIsLoading] = useState(true);
+  const [data, setData] = useState([]);
   const columns = useMemo(
     () => [
       {
@@ -34,26 +36,40 @@ const PickLobTypeModal = ({
       },
       {
         Header: 'Type',
-        accessor: 'typeName',
+        accessor: 'type_name',
       },
       {
         Header: 'Max table',
-        accessor: 'maxTable',
+        accessor: 'max_table_count',
       },
       {
         Header: 'Min price',
-        accessor: 'minPrice',
+        accessor: 'min_table_price',
       },
       {
         Header: 'Required deposit',
-        accessor: 'requiredDeposit',
+        accessor: 'deposit_percent',
       },
     ],
     []
   );
 
-  const handleRowClick = (value) => {
-    setValue(value.id);
+  const fetchLobTypes = async () => {
+    try {
+      const lobType = await getLobbyTypes();
+      setData(lobType.data);
+      setIsLoading(false);
+    } catch (error) {
+      alert(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchLobTypes();
+  }, []);
+
+  const handleRowClick = (lobType) => {
+    setLobType(lobType.id);
     setNextModalOpen();
   };
 
@@ -64,15 +80,21 @@ const PickLobTypeModal = ({
       customStyle={customStyle}
     >
       <Wrapper>
-        <h4>choose lobby type</h4>
-        <div className="container">
-          <Table
-            data={data}
-            columns={columns}
-            handleRowClick={handleRowClick}
-            pagination
-          />
-        </div>
+        {isLoading ? (
+          <Loading />
+        ) : (
+          <>
+            <h4>choose lobby type</h4>
+            <div className="container">
+              <Table
+                data={data}
+                columns={columns}
+                handleRowClick={handleRowClick}
+                pagination
+              />
+            </div>
+          </>
+        )}
       </Wrapper>
     </Modal>
   );

@@ -15,5 +15,11 @@ const Wrapper = styled.div`
     font-weight: 600;
     margin-right: 1rem;
   }
+  .text-danger {
+    display: block;
+    margin-top: 0.5rem;
+    font-size: 0.7rem;
+    color: var(--red-dark);
+  }
 `;
 export default Wrapper;

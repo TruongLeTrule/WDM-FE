@@ -67,10 +67,16 @@ export const getUserInfo = [
   {
     key: 'phone',
     title: 'contact phone',
+    type: 'number',
   },
   {
-    key: 'totalTable',
+    key: 'table_count',
     title: 'total table',
+    type: 'number',
+  },
+  {
+    key: 'note',
+    title: 'note',
   },
 ];
 
@@ -93,3 +99,5 @@ export const paymentOption = [
   { title: 'deposit', key: 'payOption', value: 'deposit' },
   { title: 'pay in full', key: 'payOption', value: 'full' },
 ];
+
+export const shift = ['evening', 'noon'];

@@ -41,7 +41,7 @@ const CreateOrderModalContainer = () => {
         <PickDateModal
           isOpen={createOrderModalState?.pickDate}
           setModalClose={() => setModalState('pickDate', false)}
-          setValue={(newValue) => setNewOrder({ occurDate: newValue })}
+          setValue={(newValue) => setNewOrder({ wedding_date: newValue })}
           setNextModalOpen={() =>
             setModalState('pickDate', false, 'lobType', true)
           }
@@ -51,7 +51,9 @@ const CreateOrderModalContainer = () => {
         <PickLobTypeModal
           isOpen={createOrderModalState?.lobType}
           setModalClose={() => setModalState('lobType', false)}
-          setValue={(value) => setNewOrder({ ...newOrder, lobType: value })}
+          setLobType={(lob_type_id) =>
+            setNewOrder({ ...newOrder, lob_type_id })
+          }
           setNextModalOpen={() =>
             setModalState('lobType', false, 'lobby', true)
           }
@@ -61,8 +63,6 @@ const CreateOrderModalContainer = () => {
         <PickLobbyModal
           isOpen={createOrderModalState?.lobby}
           setModalClose={() => setModalState('lobby', false)}
-          setLobValue={(value) => setNewOrder({ ...newOrder, lobby: value })}
-          setShiftValue={(value) => setNewOrder({ ...newOrder, shift: value })}
           setNextModalOpen={() =>
             setModalState('lobby', false, 'userInfo', true)
           }
@@ -72,7 +72,6 @@ const CreateOrderModalContainer = () => {
         <GetUserInfoModal
           isOpen={createOrderModalState?.userInfo}
           setModalClose={() => setModalState('userInfo', false)}
-          newOrder={newOrder}
           setNextModalOpen={() =>
             setModalState('userInfo', false, 'food', true)
           }

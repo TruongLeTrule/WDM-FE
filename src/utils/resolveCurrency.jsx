@@ -5,7 +5,7 @@ const moneyAttribute = [
   'deposit',
   'remainder',
   'extraFee',
-  'minPrice',
+  'min_table_price',
 ];
 
 export default (data) => {

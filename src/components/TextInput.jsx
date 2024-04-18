@@ -1,6 +1,14 @@
 import Wrapper from '../assets/wrappers/TextInputWrapper';
 
-const TextInput = ({ keyValue, title, value, handleChange, type }) => {
+const TextInput = ({
+  keyValue,
+  title,
+  value,
+  handleChange,
+  type,
+  register,
+  error,
+}) => {
   const preventDefault = (e) => {
     if (!/[0-9]/.test(e.key) && e.key !== 'Backspace') {
       e.preventDefault();
@@ -17,7 +25,9 @@ const TextInput = ({ keyValue, title, value, handleChange, type }) => {
         value={value}
         onChange={handleChange}
         onKeyDown={type === 'number' ? (e) => preventDefault(e) : null}
+        {...register}
       />
+      {error && <span className="text-danger">{error.message}</span>}
     </Wrapper>
   );
 };
