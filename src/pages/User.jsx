@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import SearchBox from "../components/SearchBox";
 import Information from "../components/Users/Information";
-import { UserBlock, StyledAccountInformationTable, StyledPermissionAccountTable, CreateSaveCombination } from "../components/Users/Styled";
+import { UserBlock, StyledAccountInformationTable, StyledPermissionAccountTable } from "../components/Users/Styled";
+import { getUsers } from "../api/user.api";
+import { Icon } from "../assets/icon";
 
 const User = () => {
   const [isDisplayInfomationBlock, setIsDisplayInformationBlock] = useState(false);
@@ -11,18 +13,10 @@ const User = () => {
     ["Manager", false, false, false, false, true],
     ["Staff", true, true, true, false, false]
   ]);
-
   const [accountInformation, setAccountInformation] = useState([
     ["ID", "Display Name", "Username", "Password", "Permission", ""],
-    ["QT001", "Nguyen Hoang Quy", "frwkHoangQuy", "vG3qk7bF", "Super Admin"],
-    ["QT002", "Pham Doan Canh", "canhngu", "1V6r8QWd", "Admin"],
-    ["QT003", "Nguyen Tue Minh", "minhtue", "pMfzLYho", "Manager"],
-    ["QT004", "Le Quang Truong", "truongle", "2nUfGx5K", "Staff"],
-    ["QT005", "Le Tan Hoa", "hoale", "9dCt4PvW", "Staff"],
   ]);
-
   const [accountInformationTableFilter, setAccountInformationTableFilter] = useState(accountInformation);
-
   const [accountInformationInput, setAccountInformationInput] = useState({
     ID: "",
     DisplayName: "",
@@ -30,7 +24,6 @@ const User = () => {
     Password: "",
     Permission: "",
   });
-
   const [boardType, setBoardType] = useState("");
   const [row, setRow] = useState();
   const [searchValue, setSearchValue] = useState();
@@ -39,10 +32,6 @@ const User = () => {
     const newPermissionAccount = [...permissionAccount];
     newPermissionAccount[rowIndex + 1][cellIndex] = !permissionAccount[rowIndex + 1][cellIndex];
     setPermissionAccount(newPermissionAccount);
-  };
-
-  const updateInformation = () => {
-    alert("Saved!!");
   };
 
   const handleCreate = () => {
@@ -56,6 +45,9 @@ const User = () => {
       Permission: "",
     });
   };
+
+  const handleSave = () => {
+  }
 
   const deleteInformation = (row) => {
     if (window.confirm("Bạn muốn xóa?")) {
@@ -85,44 +77,83 @@ const User = () => {
       setSearchValue(trimmedValue);
     }
   };
-  const checkRow = (row, searchValue) => {
-    return row.some(cell => {
-      if (typeof cell === 'string' && typeof searchValue === 'string') {
-        return cell.toLowerCase().includes(searchValue.toLowerCase())
-      }
-    }
-    );
-  };
+
   useEffect(() => {
-    if (!searchValue) setAccountInformationTableFilter(accountInformation)
-    else {
+    if (!searchValue) {
+      setAccountInformationTableFilter(accountInformation);
+    } else {
       const filteredData = accountInformation.slice(1).filter(row => checkRow(row, searchValue));
-      filteredData.unshift(accountInformation[0])
+      filteredData.unshift(accountInformation[0]);
       setAccountInformationTableFilter(filteredData);
     }
   }, [searchValue, accountInformation]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await getUsers();
+        if (res && res.data) {
+          const data = res.data;
+          const tempAccountInformation = [];
+          tempAccountInformation.push(["ID", "Display Name", "Username", "Password", "Permission", ""])
+          data.forEach((value) => {
+            let subArray = [];
+            subArray.push(value["id"]);
+            subArray.push(value["display_name"]);
+            subArray.push(value["username"]);
+            subArray.push(value["password"]);
+            subArray.push(value["role"]);
+            tempAccountInformation.push(subArray);
+          });
+          setAccountInformation(tempAccountInformation);
+        } else {
+          console.log('nodata');
+        }
+      } catch (error) {
+        console.error(error);
+        alert(error.message);
+      }
+    };
+    fetchData();
+    return;
+  }, []);
+
+  const checkRow = (row, searchValue) => {
+    return row.some(cell => {
+      if (typeof cell === 'string' && typeof searchValue === 'string') {
+        return cell.toLowerCase().includes(searchValue.toLowerCase());
+      }
+    });
+  };
+
   return (
     <UserBlock>
-      <h4 className="blockTitle" onClick={() => console.log()}>
-        Permissions of account groups
-      </h4>
+      <div className="blockTitle">
+        <h4 className="title" onClick={() => console.log(accountInformation)}>
+          Permissions of account groups
+        </h4>
+        <div className="plus">
+          <Icon.plus className="iconPlus"></Icon.plus>
+        </div>
+      </div>
       <StyledPermissionAccountTable data={permissionAccount} action={updatePermission} />
       <div className="TitleSearchCombination">
-        <h4 className="blockTitle" onClick={() => console.log(accountInformation)}>
-          Account Information
-        </h4>
+        <div className="blockTitle">
+          <h4 className="title" onClick={() => console.log(accountInformation)}>
+            Account Information
+          </h4>
+          <div className="plus">
+            <Icon.plus className="iconPlus" onClick={handleCreate}></Icon.plus>
+          </div>
+        </div>
         <SearchBox onChange={handleSearchBox} />
       </div>
       <StyledAccountInformationTable
         data={accountInformationTableFilter}
+        preData={accountInformation}
         deleteRow={deleteInformation}
         editRow={editInformation}
       />
-      <CreateSaveCombination>
-        <button className="createButton" onClick={handleCreate}>Create</button>
-        <button className="saveButton" onClick={updateInformation}>Save</button>
-      </CreateSaveCombination>
       <Information
         display={isDisplayInfomationBlock}
         setIsDisplayInformationBlock={setIsDisplayInformationBlock}

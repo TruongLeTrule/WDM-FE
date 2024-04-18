@@ -1,5 +1,26 @@
 import { Checkbox } from "./Styled";
+
 export const PermissonAccountTable = ({ className, data, action }) => {
+  const renderTableRows = () => {
+    return data.slice(1).map((row, rowIndex) => (
+      <tr key={rowIndex}>
+        {row.map((cell, cellIndex) => {
+          if (cellIndex === 0) return <td key={cellIndex}>{cell}</td>;
+          return (
+            <td key={cellIndex}>
+              <Checkbox
+                onChange={() => action(rowIndex, cellIndex)}
+                type="checkbox"
+                id="myCheckbox"
+                checked={cell}
+              />
+            </td>
+          );
+        })}
+      </tr>
+    ));
+  };
+
   return (
     <table className={className}>
       <thead>
@@ -9,22 +30,7 @@ export const PermissonAccountTable = ({ className, data, action }) => {
           ))}
         </tr>
       </thead>
-      <tbody>
-        {data.slice(1).map((row, rowIndex) => (
-          <tr key={rowIndex}>
-            {row.map((cell, cellIndex) => {
-              if (cellIndex === 0) return <td key={cellIndex}>{cell}</td>
-              return <td key={cellIndex}>
-                <Checkbox
-                  onChange={() => action(rowIndex, cellIndex)}
-                  type="checkbox"
-                  id="myCheckbox"
-                  checked={cell} />
-              </td>
-            })}
-          </tr>
-        ))}
-      </tbody>
+      <tbody>{renderTableRows()}</tbody>
     </table>
   );
 };

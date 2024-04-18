@@ -35,3 +35,9 @@ export const updateFood = (id, updateData) => {
 export const deleteFood = (id) => {
   return axiosClient.patch(`food/delete/${id}`);
 }
+
+export const findFoodByName = (name) => {
+  return axiosClient.get(`food/find`, {
+    params: { q: name, },
+  });
+}
