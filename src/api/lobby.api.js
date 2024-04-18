@@ -27,12 +27,24 @@ export const deleteLobType = (id) => {
 =================== LOBBY ===================
 */
 
-export const getLobbies = (lobTypeId) => {
-  return axiosClient.get(`lobby?lob_type_id=${lobTypeId}`);
+export const getLobbies = (date, lob_type_id) => {
+  const params = {};
+  if (date) {
+    params.date = params;
+  }
+  if (lob_type_id) {
+    params.lob_type_id = lob_type_id;
+  }
+
+  return axiosClient.get('lobby', {
+    params,
+  });
 };
 
-export const getLobbyById = (id) => {
-  return axiosClient.get(`lobby/${id}`);
+export const getLobbyById = (id, includeDeleted = false) => {
+  return axiosClient.get(`lobby/${id}`, {
+    params: { includeDeleted },
+  });
 };
 
 export const createLobby = (dataCreate) => {

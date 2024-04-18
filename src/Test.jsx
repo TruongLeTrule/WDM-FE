@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { getFoods, deleteFood } from './api/food.api';
 import { createService } from './api/service.api';
+import { getUsers } from './api/user.api';
 
 
 const Test = () => {
@@ -14,7 +15,7 @@ const Test = () => {
         "inventory": 100
     }
     
-    createService(data).then(res => {
+    getUsers(data).then(res => {
       console.log(res)
     });
   }
