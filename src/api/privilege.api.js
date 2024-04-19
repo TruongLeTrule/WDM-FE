@@ -22,7 +22,7 @@ export const updatePermissionForRole = (roleID, permissionID) => {
 };
 
 export const removePermissionFromRole = (roleID, permissionID) => {
-  return axiosClient.delete(`privilege/role/delete`, { roleID, permissionID });
+  return axiosClient.delete(`privilege/role/delete`, {data: { roleID, permissionID, }, });
 };
 
 export const createRole = (name, permissionList) => {
