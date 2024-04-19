@@ -1,4 +1,5 @@
 import { Icon } from "../../assets/icon";
+import { deleteUser } from "../../api/user.api";
 
 export const AccountInformationTable = ({ className, data, deleteRow, editRow, preData }) => {
   const handleEdit = (row) => {
@@ -7,6 +8,7 @@ export const AccountInformationTable = ({ className, data, deleteRow, editRow, p
 
   const handleDelete = (row) => {
     deleteRow(preData.indexOf(row));
+    deleteUser(row[0]);
   };
 
   const renderTableHeader = () => (

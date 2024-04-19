@@ -13,7 +13,6 @@ export const Checkbox = styled.input`
 `
 
 export const UserBlock = styled.div`
-  user-select: none;
   background-color: white;
   width: 100%;
   height: 100vh;
@@ -114,6 +113,7 @@ export const StyledAccountInformationTable = styled(AccountInformationTable)`
 `;
 
 export const InformationBlock = styled.div`
+  display: ${props => props.display === "true" ? 'flex' : 'none'};
   z-index: 2;
   position: fixed;
   top: 0; 
@@ -121,7 +121,6 @@ export const InformationBlock = styled.div`
   height: 100vh;
   width: 88%;
   background-color: rgb(0, 0, 0, 50%);
-  display: ${props => props.display === "true" ? 'flex' : 'none'};
   justify-content: center;
   align-items: center;
 `;
@@ -201,3 +200,16 @@ h4{
     }
   }
 `;
+
+export const PermissionBlock = styled.div`
+  display: ${(props) => props.display};
+  z-index: 2;
+  position: fixed;
+  top: 0; 
+  left: 12%; 
+  height: 100vh;
+  width: 88%;
+  background-color: rgb(0, 0, 0, 50%);
+  justify-content: center;
+  align-items: center;
+`

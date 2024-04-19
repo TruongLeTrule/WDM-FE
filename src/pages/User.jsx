@@ -1,18 +1,20 @@
 import { useEffect, useState } from "react";
 import SearchBox from "../components/SearchBox";
 import Information from "../components/Users/Information";
+import Permission from "../components/Users/Permission";
 import { UserBlock, StyledAccountInformationTable, StyledPermissionAccountTable } from "../components/Users/Styled";
 import { getUsers } from "../api/user.api";
+import { getRoles } from "../api/privilege.api";
 import { Icon } from "../assets/icon";
+import { updatePermissionForRole, removePermissionFromRole } from "../api/privilege.api";
 
 const User = () => {
   const [isDisplayInfomationBlock, setIsDisplayInformationBlock] = useState(false);
+  const [isDisplayPermissionBlock, setIsDisplayPermissionBlock] = useState("none")
   const [permissionAccount, setPermissionAccount] = useState([
     ["Account Groups", "Lobby", "Order", "Food & Service", "Report", "User"],
-    ["Super Admin", true, true, true, true, true],
-    ["Manager", false, false, false, false, true],
-    ["Staff", true, true, true, false, false]
   ]);
+  const [roles, setRoles] = useState();
   const [accountInformation, setAccountInformation] = useState([
     ["ID", "Display Name", "Username", "Password", "Permission", ""],
   ]);
@@ -28,13 +30,49 @@ const User = () => {
   const [row, setRow] = useState();
   const [searchValue, setSearchValue] = useState();
 
-  const updatePermission = (rowIndex, cellIndex) => {
+  const getRoleIdByName = (name) => {
+    const role = roles.find((value) => value.name === name);
+    if (role) {
+      return role.id;
+    } else {
+      return null;
+    }
+  };
+
+  const getPermissionsIdByName = (name) => {
+    const PermissionsId = {
+      "Report": "perm1",
+      "User": "perm2",
+      "Lobby": "perm3",
+      "Order": "perm4",
+      "Food & Service": "perm5"
+    }
+    return PermissionsId[name];
+  }
+
+  const updateRolePermission = async (rowIndex, cellIndex) => {
     const newPermissionAccount = [...permissionAccount];
     newPermissionAccount[rowIndex + 1][cellIndex] = !permissionAccount[rowIndex + 1][cellIndex];
     setPermissionAccount(newPermissionAccount);
+
+    const roleId = getRoleIdByName(permissionAccount[rowIndex + 1][0]);
+    const permissionId = getPermissionsIdByName(permissionAccount[0][cellIndex]);
+
+    const permission = permissionAccount[rowIndex + 1][cellIndex];
+
+    if (permission) {
+      await updatePermissionForRole(roleId, permissionId);
+    } else {
+      await removePermissionFromRole(roleId, permissionId);
+    }
   };
 
-  const handleCreate = () => {
+  const handlePermissionCreate = () => {
+
+  }
+
+
+  const handleInformationCreate = () => {
     setIsDisplayInformationBlock(true);
     setBoardType("Create");
     setAccountInformationInput({
@@ -45,9 +83,6 @@ const User = () => {
       Permission: "",
     });
   };
-
-  const handleSave = () => {
-  }
 
   const deleteInformation = (row) => {
     if (window.confirm("Bạn muốn xóa?")) {
@@ -89,7 +124,33 @@ const User = () => {
   }, [searchValue, accountInformation]);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchPermissionsAccount = async () => {
+      try {
+        const res = await getRoles();
+        if (res && res.data) {
+          setRoles(res.data);
+          const data = res.data;
+          const tempPermission = [];
+          tempPermission.push(["Account Groups", "Lobby", "Order", "Food & Service", "Report", "User"])
+          const pages = ["lobby", "order", "food_service", "report", "user"];
+          data.forEach((role) => {
+            let subArray = [];
+            subArray.push(role.name);
+            pages.forEach((page) => {
+              const hasPermission = role.permissions.some(permission => permission.page === page);
+              subArray.push(hasPermission);
+            });
+            tempPermission.push(subArray);
+          });
+          setPermissionAccount(tempPermission);
+        }
+      } catch (error) {
+        console.error(error);
+        alert(error.message);
+      }
+    }
+
+    const fetchDataAccountInformation = async () => {
       try {
         const res = await getUsers();
         if (res && res.data) {
@@ -114,7 +175,8 @@ const User = () => {
         alert(error.message);
       }
     };
-    fetchData();
+    fetchPermissionsAccount();
+    fetchDataAccountInformation();
     return;
   }, []);
 
@@ -133,17 +195,18 @@ const User = () => {
           Permissions of account groups
         </h4>
         <div className="plus">
-          <Icon.plus className="iconPlus"></Icon.plus>
+          <Icon.plus className="iconPlus" onClick={handlePermissionCreate}></Icon.plus>
         </div>
       </div>
-      <StyledPermissionAccountTable data={permissionAccount} action={updatePermission} />
+      <StyledPermissionAccountTable data={permissionAccount} action={updateRolePermission} />
+      <Permission display={isDisplayPermissionBlock} />
       <div className="TitleSearchCombination">
         <div className="blockTitle">
           <h4 className="title" onClick={() => console.log(accountInformation)}>
             Account Information
           </h4>
           <div className="plus">
-            <Icon.plus className="iconPlus" onClick={handleCreate}></Icon.plus>
+            <Icon.plus className="iconPlus" onClick={handleInformationCreate}></Icon.plus>
           </div>
         </div>
         <SearchBox onChange={handleSearchBox} />

@@ -31,9 +31,8 @@ const Information = ({ display, setIsDisplayInformationBlock, type, editrow, acc
     setIsDisplayInformationBlock(false);
     const newData = [...accountInformation];
     newData[editrow] = Object.values(tempData).map((value, index) => value === '' ? newData[editrow][index] : value);
-    console.log(newData[editrow])
-    updateUserDisplayName(newData[editrow][0], newData[editrow][1])
     setAccountInformation(newData);
+    updateUserDisplayName(newData[editrow][0], newData[editrow][1]);
   };
 
   const handleCreateSave = () => {
@@ -106,7 +105,7 @@ const Information = ({ display, setIsDisplayInformationBlock, type, editrow, acc
         <tr>
           <td className="informationTitle"><p>Permission :</p></td>
           <td>
-            <select value={selectValue} onChange={(e) => handleSelectChange(e)} disabled>
+            <select value={selectValue} onChange={(e) => handleSelectChange(e)}>
               <option value="">Select an option</option>
               <option value="Super Admin">Super Admin</option>
               <option value="Admin">Admin</option>
