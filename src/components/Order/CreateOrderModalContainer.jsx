@@ -51,8 +51,8 @@ const CreateOrderModalContainer = () => {
         <PickLobTypeModal
           isOpen={createOrderModalState?.lobType}
           setModalClose={() => setModalState('lobType', false)}
-          setLobType={(lob_type_id) =>
-            setNewOrder({ ...newOrder, lob_type_id })
+          setLobType={(lob_type_id, deposit_percent) =>
+            setNewOrder({ ...newOrder, lob_type_id, deposit_percent })
           }
           setNextModalOpen={() =>
             setModalState('lobType', false, 'lobby', true)
@@ -101,7 +101,6 @@ const CreateOrderModalContainer = () => {
         <PaymentModal
           isOpen={createOrderModalState?.payment}
           setModalClose={() => setModalState('payment', false)}
-          setPaymentValue={(value) => setNewOrder({ ...newOrder, ...value })}
           setNextModalOpen={() =>
             setModalState('payment', false, 'review', true)
           }

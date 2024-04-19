@@ -35,10 +35,17 @@ const GetUserInfoModal = ({ isOpen, setModalClose, setNextModalOpen }) => {
       delete newOrder['lob_type_id'];
       const { data } = await createWedding({
         ...formResult,
-        ...newOrder,
+        lobby_id: newOrder.lobby_id,
+        shift: newOrder.shift,
+        wedding_date: newOrder.wedding_date,
         table_count: tableCount,
       });
-      setNewOrder({ ...newOrder, id: data.id });
+      setNewOrder({
+        ...newOrder,
+        ...formResult,
+        id: data.id,
+        table_count: tableCount,
+      });
       setNextModalOpen();
     } catch (error) {
       alert(error.message);

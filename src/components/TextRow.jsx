@@ -3,7 +3,7 @@ import resolveCurrency from '../utils/resolveCurrency';
 import { useOrderContext } from '../pages/Order';
 import Wrapper from '../assets/wrappers/TextRowWrapper';
 
-const TextRow = ({ title, keyValue, value, openModal }) => {
+const TextRow = ({ title, keyValue, value, openModal, type }) => {
   const { setOrderModalState } = useOrderContext();
 
   const resolveClass = () => {
@@ -35,11 +35,21 @@ const TextRow = ({ title, keyValue, value, openModal }) => {
     );
   }
 
+  if (type === 'date') {
+    const date = new Date(value);
+    return (
+      <Wrapper className="text-row">
+        <span className="title">{title}</span>
+        <span>{date.toLocaleDateString()}</span>
+      </Wrapper>
+    );
+  }
+
   return (
     <Wrapper className="text-row">
       <span className={`title  ${resolveClass()}`}>{title}</span>
       <span className={resolveClass()}>
-        {value}
+        {typeof value === 'number' ? value.toFixed(1) : value}
         {resolveCurrency(keyValue)}
       </span>
     </Wrapper>

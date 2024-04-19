@@ -1,16 +1,19 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import lobImg from '../../assets/images/lobby.jpg';
 import { shift } from '../../utils/orderRenderArr';
 import { useOrderContext } from '../../pages/Order';
 
-// temp
-const bookedShift = [];
-
-const LobCard = ({ lobby, setNextModalOpen }) => {
+const LobCard = ({ lobby, setNextModalOpen, Wedding }) => {
   const { setNewOrder, newOrder } = useOrderContext();
   const { id, name } = lobby;
   const [showShiftModal, setShowShiftModal] = useState(false);
   const cardRef = useRef(null);
+
+  // Get lobby booked shift
+  const bookedShift = useMemo(
+    () => Wedding.map(({ shift }) => shift),
+    [Wedding]
+  );
 
   const resolveBusyShift = (shift, bookedShift) => {
     if (bookedShift.includes(shift)) return 'busy';
@@ -21,7 +24,7 @@ const LobCard = ({ lobby, setNextModalOpen }) => {
   };
 
   const handleShiftClick = (shift) => {
-    setNewOrder({ ...newOrder, lobby_id: id, shift });
+    setNewOrder({ ...newOrder, lobby_id: id, shift, lobby_name: name });
     setNextModalOpen();
   };
 

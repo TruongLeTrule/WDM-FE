@@ -30,7 +30,7 @@ export const deleteLobType = (id) => {
 export const getLobbies = (date, lob_type_id) => {
   const params = {};
   if (date) {
-    params.date = params;
+    params.date = date;
   }
   if (lob_type_id) {
     params.lob_type_id = lob_type_id;

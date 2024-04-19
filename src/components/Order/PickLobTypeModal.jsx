@@ -69,7 +69,7 @@ const PickLobTypeModal = ({
   }, []);
 
   const handleRowClick = (lobType) => {
-    setLobType(lobType.id);
+    setLobType(lobType.id, lobType.deposit_percent);
     setNextModalOpen();
   };
 

@@ -4,6 +4,7 @@ import { orderInfoLeft, orderInfoRight } from '../../utils/orderRenderArr';
 import { Modal } from '../';
 import TextRow from '../TextRow';
 import Wrapper from '../../assets/wrappers/Order/OrderInfoWrapper';
+import { useMemo } from 'react';
 
 const OrderInfoModal = () => {
   const { orderInfo, orderModalState, setOrderModalState } = useOrderContext();
@@ -38,12 +39,13 @@ const OrderInfoModal = () => {
           <div>
             <h5>Customer information</h5>
             <div className="rows">
-              {orderInfoLeft.map(({ title, key }) => (
+              {orderInfoLeft.map(({ title, key, type }) => (
                 <TextRow
                   title={title}
                   keyValue={key}
                   key={key}
-                  value={orderInfo?.[key]}
+                  type={type}
+                  value={rightColumnData?.[key]}
                 />
               ))}
             </div>

@@ -1,7 +1,7 @@
 import axiosClient from './axiosClient';
 
 export const getWeddings = () => {
-  return axiosClient.get('wedding/list');
+  return axiosClient.get('wedding');
 };
 
 export const getWeddingById = (id, includedBill = false) => {
@@ -17,7 +17,10 @@ export const orderFood = (weddingId, foods) => {
 };
 
 export const orderService = (weddingId, services) => {
-  return axiosClient.post('create/wedding/service', { weddingId, services });
+  return axiosClient.post('wedding/create/wedding/service', {
+    weddingId,
+    services,
+  });
 };
 
 export const depositOrder = (weddingId, transaction_amount) => {

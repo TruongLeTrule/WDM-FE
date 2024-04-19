@@ -1,10 +1,9 @@
-import { lobby } from '../../utils/orderTestData';
+import { useEffect, useState } from 'react';
 import { getLobbies } from '../../api/lobby.api';
 import { useOrderContext } from '../../pages/Order';
 import Modal from '../Modal';
 import Wrapper from '../../assets/wrappers/Order/LobWrapper';
 import LobCard from './LobCard';
-import { useEffect, useState } from 'react';
 import Loading from '../Loading';
 
 const customStyle = {
@@ -27,18 +26,21 @@ const PickLobbyModal = ({ isOpen, setModalClose, setNextModalOpen }) => {
   const [lobbyList, setLobbyList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const fetchLobby = async () => {
+  const fetchLobbies = async () => {
     try {
-      const lobbies = await getLobbies(newOrder.lob_type_id);
+      const lobbies = await getLobbies(
+        newOrder.wedding_date,
+        newOrder.lob_type_id
+      );
       setLobbyList(lobbies.data);
       setIsLoading(false);
     } catch (error) {
-      console.log(error);
+      alert(error.message);
     }
   };
 
   useEffect(() => {
-    fetchLobby();
+    fetchLobbies();
   }, []);
 
   return (
@@ -56,6 +58,7 @@ const PickLobbyModal = ({ isOpen, setModalClose, setNextModalOpen }) => {
             <div className="container">
               {lobbyList.map((lobby) => (
                 <LobCard
+                  Wedding={lobby.Wedding}
                   lobby={lobby}
                   key={lobby.id}
                   setNextModalOpen={setNextModalOpen}

@@ -1,7 +1,8 @@
-import { useState, useRef, useEffect } from 'react';
-import { FaShoppingCart, FaRegTrashAlt } from 'react-icons/fa';
 import { getFoods } from '../../api/food.api';
 import { getServices } from '../../api/service.api';
+import { useOrderContext } from '../../pages/Order';
+import { useState, useRef, useEffect } from 'react';
+import { FaShoppingCart, FaRegTrashAlt } from 'react-icons/fa';
 import { orderFood, orderService } from '../../api/wedding.api';
 import Modal from '../Modal';
 import FoodServiceCard from './FoodServiceCard';
@@ -9,7 +10,6 @@ import beefImg from '../../assets/images/beef.png';
 import balletImg from '../../assets/images/ballet.jpg';
 import Wrapper from '../../assets/wrappers/Order/CardGroupWrapper';
 import Loading from '../Loading';
-import { useOrderContext } from '../../pages/Order';
 
 const customStyle = {
   content: {
@@ -32,7 +32,7 @@ const PickFoodServiceModal = ({
   setNextModalOpen,
   type,
 }) => {
-  const { newOrder } = useOrderContext();
+  const { newOrder, setNewOrder } = useOrderContext();
   const [renderList, setRenderList] = useState([]);
   const cartRef = useRef(null);
   const [pickedItem, setPickItem] = useState([]);
@@ -45,17 +45,35 @@ const PickFoodServiceModal = ({
   );
 
   const handleNextBtnClick = async () => {
-    const reqBody = pickedItem.map(({ id, quantity }) => ({
+    let itemTotalPrice;
+    const handledList = pickedItem.map(({ id, quantity }) => ({
       id,
       count: quantity,
     }));
-    if (type === 'food') {
-      // const test = await orderFood({ foods: reqBody, weddingId: newOrder.id });
-      console.log({ foods: reqBody, weddingId: newOrder.id });
+    const pricePerTable = pickedItem.reduce(
+      (acc, item) => acc + item.quantity * item.price,
+      0
+    );
+    try {
+      if (type === 'food') {
+        itemTotalPrice = await orderFood(newOrder.id, handledList);
+        setNewOrder({
+          ...newOrder,
+          pricePerTable,
+        });
+      }
+      if (type === 'service') {
+        itemTotalPrice = await orderService(newOrder.id, handledList);
+        setNewOrder({
+          ...newOrder,
+          total: itemTotalPrice.data.totalPrice,
+          serviceFee: itemTotalPrice.data.service.servicePrice,
+        });
+      }
+      setNextModalOpen();
+    } catch (error) {
+      alert(error.message);
     }
-    // if (type === 'service')
-    //   setValue({ service: pickedItem, serviceFee: total });
-    // setNextModalOpen();
   };
 
   const handleAddBtnClick = (newItem) => {

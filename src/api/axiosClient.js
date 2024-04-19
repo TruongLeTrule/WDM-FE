@@ -1,41 +1,45 @@
-import axios from "axios";
-import { API_BASE_URL } from "../config/base_url.js";
-
+import axios from 'axios';
+import { API_BASE_URL } from '../config/base_url.js';
 
 const axiosClient = axios.create({
-    baseURL: API_BASE_URL,
-    headers: {
-      'content-type': 'application/json',
-    }
-})
+  baseURL: API_BASE_URL,
+  headers: {
+    'content-type': 'application/json',
+  },
+});
 
 // Request interceptor to insert auth token if available
 axiosClient.interceptors.request.use(
-  config => {
+  (config) => {
     const token = localStorage.getItem('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
-  error => Promise.reject(error)
+  (error) => Promise.reject(error)
 );
 
-axiosClient.interceptors.request.use(async config => {
+axiosClient.interceptors.request.use(
+  async (config) => {
     return config;
   },
-  error => {
-    Promise.reject(error)
-})
+  (error) => {
+    Promise.reject(error);
+  }
+);
 
-axiosClient.interceptors.response.use((res) => {
-    if( res && res.data ){
-      return res
+axiosClient.interceptors.response.use(
+  (res) => {
+    if (res && res.data) {
+      return res;
     }
 
-    return res
-}, error => {
-    throw error.response.data
-})
+    return res;
+  },
+  (error) => {
+    throw error.response.data;
+  }
+);
 
-export default axiosClient
+export default axiosClient;
