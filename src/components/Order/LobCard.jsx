@@ -1,23 +1,30 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import lobImg from '../../assets/images/lobby.jpg';
-const shift = ['morning', 'afternoon', 'evening'];
+import { shift } from '../../utils/orderRenderArr';
+import { useOrderContext } from '../../pages/Order';
 
-const LobCard = ({ lobby, setLobValue, setShiftValue, setNextModalOpen }) => {
-  const { id, lobName, bookedShift } = lobby;
+const LobCard = ({ lobby, setNextModalOpen, Wedding }) => {
+  const { setNewOrder, newOrder } = useOrderContext();
+  const { id, name } = lobby;
   const [showShiftModal, setShowShiftModal] = useState(false);
   const cardRef = useRef(null);
+
+  // Get lobby booked shift
+  const bookedShift = useMemo(
+    () => Wedding.map(({ shift }) => shift),
+    [Wedding]
+  );
 
   const resolveBusyShift = (shift, bookedShift) => {
     if (bookedShift.includes(shift)) return 'busy';
   };
 
   const handleCardClick = () => {
-    setLobValue(id);
     setShowShiftModal(true);
   };
 
   const handleShiftClick = (shift) => {
-    setShiftValue(shift);
+    setNewOrder({ ...newOrder, lobby_id: id, shift, lobby_name: name });
     setNextModalOpen();
   };
 
@@ -36,9 +43,9 @@ const LobCard = ({ lobby, setLobValue, setShiftValue, setNextModalOpen }) => {
 
   return (
     <div className="card" ref={cardRef} onClick={handleCardClick}>
-      <img src={lobImg} alt={lobName} className="lob-img" />
+      <img src={lobImg} alt={name} className="lob-img" />
       <div className="content">
-        <h5>{lobName}</h5>
+        <h5>{name}</h5>
         <div className="shift-wrapper">
           {shift.map((shift) => (
             <span

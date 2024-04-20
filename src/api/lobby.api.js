@@ -1,12 +1,11 @@
-import axiosClient from "./axiosClient"
+import axiosClient from './axiosClient';
 
 /*
 =================== LOBBY TYPE ===================
 */
-export const getLobbyTypes = (includeDeleted=false) => {
-  return axiosClient.get('lobby/types',{ params: { includeDeleted } });
+export const getLobbyTypes = (includeDeleted = false) => {
+  return axiosClient.get('lobby/types', { params: { includeDeleted } });
 };
-
 
 export const getLobbyTypeByID = (id) => {
   return axiosClient.get(`lobby/type/${id}`);
@@ -28,12 +27,24 @@ export const deleteLobType = (id) => {
 =================== LOBBY ===================
 */
 
-export const getLobbies = () => {
-  return axiosClient.get('lobby');
+export const getLobbies = (date, lob_type_id) => {
+  const params = {};
+  if (date) {
+    params.date = date;
+  }
+  if (lob_type_id) {
+    params.lob_type_id = lob_type_id;
+  }
+
+  return axiosClient.get('lobby', {
+    params,
+  });
 };
 
-export const getLobbyById = (id) => {
-  return axiosClient.get(`lobby/${id}`);
+export const getLobbyById = (id, includeDeleted = false) => {
+  return axiosClient.get(`lobby/${id}`, {
+    params: { includeDeleted },
+  });
 };
 
 export const createLobby = (dataCreate) => {

@@ -2,8 +2,8 @@ import styled from 'styled-components';
 
 const Wrapper = styled.section`
   .dashboard {
-    display: grid;
-    grid-template-columns: 12% auto;
+    display: flex;
+    /* grid-template-columns: 12% auto; */
   }
   .dashboard-page {
     width: 100%;

@@ -1,19 +1,38 @@
-import React, { createContext, useContext, useMemo, useState, Suspense } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useMemo,
+  useState,
+  useEffect,
+  Suspense,
+} from 'react';
 import { Header, Table } from '../components';
 const Wrapper = React.lazy(() => import('../assets/wrappers/OrderWrapper'));
-const EditOrderInfoModal = React.lazy(() => import('../components/Order/EditOrderInfoModal'));
-const OrderInfoModal = React.lazy(() => import('../components/Order/OrderInfoModal'));
-const PayRemainderModal = React.lazy(() => import('../components/Order/PayRemainderModal'));
+const EditOrderInfoModal = React.lazy(() =>
+  import('../components/Order/EditOrderInfoModal')
+);
+const OrderInfoModal = React.lazy(() =>
+  import('../components/Order/OrderInfoModal')
+);
+const PayRemainderModal = React.lazy(() =>
+  import('../components/Order/PayRemainderModal')
+);
 const BillModal = React.lazy(() => import('../components/Order/BillModal'));
-const ServiceModal = React.lazy(() => import('../components/Order/ServiceModal'));
-const CreateOrderModalContainer = React.lazy(() => import('../components/Order/CreateOrderModalContainer'));
-import { orderList, food, service } from '../utils/orderTestData';
+const ServiceModal = React.lazy(() =>
+  import('../components/Order/ServiceModal')
+);
+const CreateOrderModalContainer = React.lazy(() =>
+  import('../components/Order/CreateOrderModalContainer')
+);
+import { getWeddings } from '../api/wedding.api';
+import { food, service } from '../utils/orderTestData';
 import Loading from '../components/Loading';
 
 const OrderContext = createContext();
 
 const Order = () => {
-  const data = useMemo(() => orderList, []);
+  const [isLoading, setIsLoading] = useState(true);
+  const [orderList, setOrderList] = useState([]);
   const columns = useMemo(
     () => [
       {
@@ -22,15 +41,11 @@ const Order = () => {
       },
       {
         Header: 'Customer',
-        accessor: 'customerName',
+        accessor: 'customer_name',
       },
       {
         Header: 'Phone',
         accessor: 'phone',
-      },
-      {
-        Header: 'Lobby',
-        accessor: 'lobby',
       },
       {
         Header: 'Shift',
@@ -38,11 +53,11 @@ const Order = () => {
       },
       {
         Header: 'Date',
-        accessor: 'occurDate',
+        accessor: 'wedding_date',
       },
       {
         Header: 'Tol.table',
-        accessor: 'totalTable',
+        accessor: 'table_count',
       },
       {
         Header: 'Status',
@@ -51,7 +66,6 @@ const Order = () => {
     ],
     []
   );
-
   const [orderInfo, setOrderInfo] = useState();
   const [newOrder, setNewOrder] = useState();
   const [orderModalState, setOrderModalState] = useState({
@@ -90,6 +104,25 @@ const Order = () => {
     });
   };
 
+  const fetchWeddings = async () => {
+    try {
+      const list = await getWeddings();
+      const handledList = list.data.map((wedding) => ({
+        ...wedding,
+        customer_name: wedding.Customer.name,
+        phone: wedding.Customer.phone,
+      }));
+      setOrderList(handledList);
+      setIsLoading(false);
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchWeddings();
+  }, []);
+
   return (
     <OrderContext.Provider
       value={{
@@ -103,34 +136,38 @@ const Order = () => {
         setNewOrder,
       }}
     >
-      <Wrapper>
-        <Header handleAddBtnClick={handleAddBtnClick} />
-        <main>
-          <div className="container">
-            <Table
-              data={data}
-              columns={columns}
-              handleRowClick={handleRowClick}
-              pagination
-            />
-          </div>
-          {/* Suspense wrapping all conditional modals */}
-          <Suspense fallback={<Loading minsize="35px"/> }>
-            {orderModalState?.info && <OrderInfoModal />}
-            {orderModalState?.edit && <EditOrderInfoModal />}
-            {orderModalState?.payRemainder && <PayRemainderModal />}
-            {orderModalState?.bill && <BillModal />}
-            {orderModalState?.food && (
-              <ServiceModal type="food" title="food" data={food} />
-            )}
-            {orderModalState?.service && (
-              <ServiceModal type="service" title="service" data={service} />
-            )}
-            {/* Create new order modal container always present, also wrapped in Suspense */}
-            <CreateOrderModalContainer />
-          </Suspense>
-        </main>
-      </Wrapper>
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <Wrapper>
+          <Header handleAddBtnClick={handleAddBtnClick} />
+          <main>
+            <div className="container">
+              <Table
+                data={orderList}
+                columns={columns}
+                handleRowClick={handleRowClick}
+                pagination
+              />
+            </div>
+            {/* Suspense wrapping all conditional modals */}
+            <Suspense fallback={<Loading minsize="35px" />}>
+              {orderModalState?.info && <OrderInfoModal />}
+              {orderModalState?.edit && <EditOrderInfoModal />}
+              {orderModalState?.payRemainder && <PayRemainderModal />}
+              {orderModalState?.bill && <BillModal />}
+              {orderModalState?.food && (
+                <ServiceModal type="food" title="food" data={food} />
+              )}
+              {orderModalState?.service && (
+                <ServiceModal type="service" title="service" data={service} />
+              )}
+              {/* Create new order modal container always present, also wrapped in Suspense */}
+              <CreateOrderModalContainer />
+            </Suspense>
+          </main>
+        </Wrapper>
+      )}
     </OrderContext.Provider>
   );
 };

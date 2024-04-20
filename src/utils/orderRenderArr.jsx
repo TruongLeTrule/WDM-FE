@@ -2,17 +2,34 @@ export const orderInfoLeft = [
   { title: 'groom', key: 'groom' },
   { title: 'bride', key: 'bride' },
   { title: 'phone', key: 'phone' },
-  { title: 'order date', key: 'orderDate' },
-  { title: 'occur date', key: 'occurDate' },
+  { title: 'order date', key: 'created_at', type: 'date' },
+  { title: 'occur date', key: 'wedding_date', type: 'date' },
 ];
 
 export const orderInfoRight = [
-  { title: 'total table', key: 'totalTable' },
-  { title: 'price/table', key: 'pricePerTable', openModal: 'food' },
-  { title: 'service fee', key: 'serviceFee', openModal: 'service' },
-  { title: 'total', key: 'total' },
-  { title: 'deposit', key: 'deposit' },
-  { title: 'remainder', key: 'remainder' },
+  { title: 'total table', key: 'table_count' },
+  { title: 'total food price', key: 'foodPrice', openModal: 'food' },
+  { title: 'total service price', key: 'servicePrice', openModal: 'service' },
+  { title: 'total', key: 'totalPrice' },
+  { title: 'deposit', key: 'deposit_amount' },
+  { title: 'remainder', key: 'remain' },
+];
+
+export const reviewOrderLeft = [
+  { title: 'groom', key: 'groom' },
+  { title: 'bride', key: 'bride' },
+  { title: 'phone', key: 'phone' },
+  { title: 'order date', key: 'created_at', type: 'date' },
+  { title: 'occur date', key: 'wedding_date', type: 'date' },
+];
+
+export const reviewOrderRight = [
+  { title: 'total table', key: 'table_count' },
+  { title: 'total food price', key: 'foodPrice' },
+  { title: 'total service price', key: 'servicePrice' },
+  { title: 'total', key: 'totalPrice' },
+  { title: 'deposit', key: 'deposit_amount' },
+  { title: 'remainder', key: 'remain' },
 ];
 
 export const editOrderLeft = [
@@ -67,16 +84,22 @@ export const getUserInfo = [
   {
     key: 'phone',
     title: 'contact phone',
+    type: 'number',
   },
   {
-    key: 'totalTable',
+    key: 'table_count',
     title: 'total table',
+    type: 'number',
+  },
+  {
+    key: 'note',
+    title: 'note',
   },
 ];
 
 export const paymentOverall = [
   {
-    key: 'totalTable',
+    key: 'table_count',
     title: 'total table',
   },
   {
@@ -87,9 +110,15 @@ export const paymentOverall = [
     key: 'serviceFee',
     title: 'service fee',
   },
+  {
+    key: 'requiredDeposit',
+    title: 'min deposit',
+  },
 ];
 
 export const paymentOption = [
   { title: 'deposit', key: 'payOption', value: 'deposit' },
   { title: 'pay in full', key: 'payOption', value: 'full' },
 ];
+
+export const shift = ['evening', 'noon'];

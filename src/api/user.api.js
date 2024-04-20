@@ -15,3 +15,4 @@ export const updateUserDisplayName = (id, display_name) => {
 export const deleteUser = (id) => {
   return axiosClient.delete(`users/${id}/delete`);
 };
+

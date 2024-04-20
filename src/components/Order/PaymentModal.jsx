@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useOrderContext } from '../../pages/Order';
+import { TextRow, TextInput, Radio } from '../';
+import { depositOrder, fullPayOrder } from '../../api/wedding.api';
 import { paymentOverall, paymentOption } from '../../utils/orderRenderArr';
 import Modal from '../Modal';
-import { TextRow, TextInput, Radio } from '../';
 import Wrapper from '../../assets/wrappers/Order/PaymentWrapper';
 
 const customStyle = {
@@ -20,22 +21,48 @@ const customStyle = {
   },
 };
 
-const PaymentModal = ({
-  isOpen,
-  setModalClose,
-  setValue,
-  setNextModalOpen,
-}) => {
-  const { newOrder } = useOrderContext();
-  const [payValue, setPayValue] = useState(0);
+const PaymentModal = ({ isOpen, setModalClose, setNextModalOpen }) => {
+  const { newOrder, setNewOrder } = useOrderContext();
+  const [payValue, setPayValue] = useState();
   const [payOption, setPayOption] = useState('deposit');
 
-  const handleNextBtnClick = () => {
-    setNextModalOpen();
+  const handleOptionChange = (value) => {
+    setPayOption(value);
+    setPayValue(
+      value === 'deposit' ? newOrder.requiredDeposit : newOrder.total
+    );
   };
 
-  const total =
-    newOrder?.totalTable * newOrder?.pricePerTable + newOrder?.serviceFee;
+  const handleNextBtnClick = async () => {
+    const intPayValue = Number(payValue);
+    let result;
+    try {
+      if (payOption === 'deposit')
+        result = await depositOrder(newOrder.id, intPayValue);
+      if (payOption === 'full')
+        result = await fullPayOrder(newOrder.id, intPayValue);
+      if (result.data.msg) throw new Error(result.data.msg);
+      setNewOrder({
+        ...result.data,
+        ...result.data.weddingData,
+        phone: newOrder.phone,
+        lobby_name: newOrder.lobby_name,
+      });
+      setNextModalOpen();
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
+  useEffect(() => {
+    const requiredDeposit =
+      (Number(newOrder.deposit_percent) / 100) * Number(newOrder.total);
+    setNewOrder({
+      ...newOrder,
+      requiredDeposit,
+    });
+    setPayValue(requiredDeposit);
+  }, []);
 
   return (
     <Modal
@@ -57,17 +84,22 @@ const PaymentModal = ({
                 value={newOrder?.[key]}
               />
             ))}
-            <TextRow title="total" value={total} keyValue={'remainder'} />
+            <TextRow
+              title="total"
+              value={newOrder.total}
+              keyValue={'remainder'}
+            />
           </div>
           {/* Payment block */}
           <div className="payment">
             <h5>payment option</h5>
             {paymentOption.map(({ key, value, title }) => (
               <Radio
+                key={value}
                 title={title}
                 keyValue={key}
                 value={value}
-                handleChange={() => setPayOption(value)}
+                handleChange={() => handleOptionChange(value)}
                 currValue={payOption}
               />
             ))}
@@ -76,7 +108,6 @@ const PaymentModal = ({
               keyValue="payRemainder"
               value={Number(payValue).toString()}
               handleChange={(e) => setPayValue(e.target.value)}
-              type="number"
             />
           </div>
         </div>

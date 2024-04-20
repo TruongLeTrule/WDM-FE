@@ -1,14 +1,14 @@
 import { TextRow } from '../';
-import { orderInfoLeft, orderInfoRight } from '../../utils/orderRenderArr';
-import { orderList } from '../../utils/orderTestData';
+import { useOrderContext } from '../../pages/Order';
+import { reviewOrderLeft, reviewOrderRight } from '../../utils/orderRenderArr';
 import Modal from '../Modal';
 import Wrapper from '../../assets/wrappers/Order/ReviewWrapper';
 
-const newOrder = orderList[0];
-
 const ReviewModal = ({ isOpen, setModalClose, setNextModalOpen }) => {
+  const { newOrder, setNewOrder } = useOrderContext();
   const handleNextBtnClick = () => {
     setNextModalOpen();
+    setNewOrder(null);
   };
 
   return (
@@ -20,22 +20,23 @@ const ReviewModal = ({ isOpen, setModalClose, setNextModalOpen }) => {
           <div>
             <h5>Customer information</h5>
             <div className="rows">
-              {orderInfoLeft.map(({ title, key }) => (
+              {reviewOrderLeft.map(({ title, key, type }) => (
                 <TextRow
                   title={title}
                   keyValue={key}
                   key={key}
-                  value={newOrder?.[key]}
+                  value={newOrder[key]}
+                  type={type}
                 />
               ))}
             </div>
           </div>
           {/* Right col */}
           <div>
-            <h5>{newOrder?.lobby}</h5>
+            <h5>{newOrder?.lobby_name}</h5>
             <p className="shift">{newOrder?.shift}</p>
             <div className="rows">
-              {orderInfoRight.map(({ title, key, openModal }) => (
+              {reviewOrderRight.map(({ title, key, openModal }) => (
                 <TextRow
                   value={newOrder?.[key]}
                   title={title}
