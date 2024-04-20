@@ -119,9 +119,9 @@ export const InformationBlock = styled.div`
   z-index: 2;
   position: fixed;
   top: 0; 
-  left: 12%; 
+  left: 10%; 
   height: 100vh;
-  width: 88%;
+  width: 90%;
   background-color: rgb(0, 0, 0, 50%);
   justify-content: center;
   align-items: center;
@@ -213,9 +213,9 @@ export const PermissionBlock = styled.div`
   z-index: 2;
   position: fixed;
   top: 0; 
-  left: 12%; 
+  left: 10%; 
   height: 100vh;
-  width: 88%;
+  width: 90%;
   background-color: rgb(0, 0, 0, 50%);
   justify-content: center;
   align-items: center;
