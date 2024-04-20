@@ -13,6 +13,7 @@ export const PermissonAccountTable = ({ className, data, action }) => {
                 type="checkbox"
                 id="myCheckbox"
                 checked={cell}
+                disabled={row[0] === "Admin"}
               />
             </td>
           );

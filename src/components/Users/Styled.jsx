@@ -1,6 +1,8 @@
 import styled from "styled-components"
 import { AccountInformationTable } from "./AccountInformationTable";
 import { PermissonAccountTable } from "./PermissonAccountTable";
+import styledEngineSc from "@mui/styled-engine-sc";
+import Permission from "./Permission";
 
 export const Checkbox = styled.input`
   outline: none;
@@ -13,7 +15,6 @@ export const Checkbox = styled.input`
 `
 
 export const UserBlock = styled.div`
-  user-select: none;
   background-color: white;
   width: 100%;
   height: 100vh;
@@ -114,6 +115,7 @@ export const StyledAccountInformationTable = styled(AccountInformationTable)`
 `;
 
 export const InformationBlock = styled.div`
+  display: ${props => props.display === "true" ? 'flex' : 'none'};
   z-index: 2;
   position: fixed;
   top: 0; 
@@ -121,7 +123,6 @@ export const InformationBlock = styled.div`
   height: 100vh;
   width: 88%;
   background-color: rgb(0, 0, 0, 50%);
-  display: ${props => props.display === "true" ? 'flex' : 'none'};
   justify-content: center;
   align-items: center;
 `;
@@ -195,9 +196,95 @@ h4{
       background-color: #c4c4c4;
       margin-left: 2%;
     }
-    .saveButton{
-      background-color: #1814f3;
+/*     .saveButton{
+      background-color: ${(props) => (props.disabled ? 'gray' : 'blue')};
       margin-right: 2%;
-    }
+    } */
   }
 `;
+
+export const SaveButton = styled.button`
+      background-color: ${(props) => (props.disabled ? 'gray' : 'blue')};
+      margin-right: 2%;
+`
+
+export const PermissionBlock = styled.div`
+  display: ${(props) => props.display};
+  z-index: 2;
+  position: fixed;
+  top: 0; 
+  left: 12%; 
+  height: 100vh;
+  width: 88%;
+  background-color: rgb(0, 0, 0, 50%);
+  justify-content: center;
+  align-items: center;
+`
+
+export const PermissionForm = styled.div`
+  width: 40%;
+  height: 30%;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  border-radius: 20px;
+  .formTitle{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 30%;
+    font-weight: bold;
+  }
+`
+export const PermissionInput = styled.div`
+  height: 50%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .inputTitle{
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    width: 30%;
+    font-size: 1.5em;
+    font-weight: bold;
+  }
+  .input{
+    width: 70%;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    padding-left: 3%;
+    input{
+      width: 80%;
+      border-bottom: 1px gray solid;
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+  }
+`
+
+export const PermissionCancelandSave = styled.div`
+  display: flex;
+  height: 40%;
+  justify-content: space-around;
+  align-items: center;
+  button{
+    width: 20%;
+    height: 50%;
+    border-radius: 10px;
+    &:hover{
+      cursor: pointer;
+    }
+  }
+  .buttonCancel{
+    color: white;
+    background-color: gray;
+
+  }
+  .buttonSave{
+    color: white;
+    background-color: blue;
+  }
+`

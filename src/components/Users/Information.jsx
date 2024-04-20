@@ -1,19 +1,31 @@
 import { useEffect, useState } from "react";
-import { InformationBlock, InformationBoard } from "./Styled";
+import { InformationBlock, InformationBoard, SaveButton } from "./Styled";
 import { updateUserDisplayName } from "../../api/user.api";
 import { register } from "../../api/auth.api";
+import { updateRoleforUser } from "../../api/privilege.api";
+import { findUserByUserName } from "../../api/user.api";
 
-const Information = ({ display, setIsDisplayInformationBlock, type, editrow, accountInformation, setAccountInformation, accountInformationInput }) => {
+const Information = ({
+  display,
+  setIsDisplayInformationBlock,
+  type,
+  editrow,
+  accountInformation,
+  accountInformationInput,
+  getRoleIdByName
+}) => {
+  const [inputValue, setInputValue] = useState(accountInformationInput);
   const [tempData, setTempData] = useState({
     ID: "",
     DisplayName: "",
     UserName: "",
     Password: "",
-    Permission: "",
+    Permission: accountInformationInput.Permission,
   });
 
-  const [inputValue, setInputValue] = useState(accountInformationInput);
   const [selectValue, setSelectValue] = useState(inputValue.Permission);
+  const [isSaveDisabled, setIsSaveDisabled] = useState(true);
+  const [isModified, setIsModified] = useState(false);
 
   const updateTempData = (name, data) => {
     setTempData(prevData => ({ ...prevData, [name]: data }));
@@ -21,46 +33,61 @@ const Information = ({ display, setIsDisplayInformationBlock, type, editrow, acc
 
   const updateInput = (value) => {
     setInputValue(value);
+    setIsModified(true)
   };
 
   const handleSaveButton = () => {
     type === "Edit" ? handleEditSave() : handleCreateSave();
   };
 
-  const handleEditSave = () => {
+  const handleEditSave = async () => {
     setIsDisplayInformationBlock(false);
     const newData = [...accountInformation];
     newData[editrow] = Object.values(tempData).map((value, index) => value === '' ? newData[editrow][index] : value);
-    console.log(newData[editrow])
-    updateUserDisplayName(newData[editrow][0], newData[editrow][1])
-    setAccountInformation(newData);
+    await updateRoleforUser(getRoleIdByName(newData[editrow][4]), newData[editrow][0])
+    await updateUserDisplayName(newData[editrow][0], newData[editrow][1]);
+    window.location.reload();
   };
 
-  const handleCreateSave = () => {
-    const tempDataWithoutFirstElement = { ...tempData };
-    delete tempDataWithoutFirstElement[Object.keys(tempDataWithoutFirstElement)[0]];
+  const handleCreateSave = async () => {
     setIsDisplayInformationBlock(false);
-    setAccountInformation([...accountInformation, Object.values(tempData)]);
-    register(Object.values(tempData)[1], Object.values(tempData)[2], Object.values(tempData)[3]);
+    await register(Object.values(tempData)[2], Object.values(tempData)[3], Object.values(tempData)[1]);
+    const res = await findUserByUserName(Object.values(tempData)[2]);
+    await updateRoleforUser(getRoleIdByName(Object.values(tempData)[4]), res.data.id)
+    window.location.reload();
   };
 
   const handleSelectChange = (e) => {
     const value = e.target.value;
     updateTempData("Permission", value);
     setSelectValue(value);
+    setIsModified(true);
   };
 
   useEffect(() => {
     setTempData({
       ID: "",
-      DisplayName: "",
+      DisplayName: accountInformationInput.DisplayName,
       UserName: "",
       Password: "",
-      Permission: "",
-    });
+      Permission: accountInformationInput.Permission,
+    })
+    setIsModified(false);
     setInputValue(accountInformationInput);
     setSelectValue(accountInformationInput.Permission);
   }, [display, accountInformationInput]);
+
+  useEffect(() => {
+    if (type === "Edit") {
+      if (tempData.Permission === accountInformationInput.Permission && tempData.DisplayName === accountInformationInput.DisplayName) {
+        setIsSaveDisabled(true);
+      }
+      else if (tempData.DisplayName === "") setIsSaveDisabled(true)
+      else setIsSaveDisabled(false);
+    } else {
+      setIsSaveDisabled(!(tempData.DisplayName && tempData.Password && tempData.Permission && tempData.UserName));
+    }
+  }, [type, tempData, inputValue]);
 
   const renderInputs = () => {
     return (
@@ -71,7 +98,7 @@ const Information = ({ display, setIsDisplayInformationBlock, type, editrow, acc
             <input
               value={inputValue["DisplayName"]}
               onChange={(e) => {
-                updateInput(e.target.value);
+                updateInput(e.target.value, "DisplayName");
                 updateTempData("DisplayName", e.target.value);
               }}
             ></input>
@@ -83,7 +110,7 @@ const Information = ({ display, setIsDisplayInformationBlock, type, editrow, acc
             <input
               value={inputValue["UserName"]}
               onChange={(e) => {
-                updateInput(e.target.value);
+                updateInput(e.target.value, "UserName");
                 updateTempData("UserName", e.target.value);
               }}
               disabled={type === "Edit"}
@@ -96,7 +123,7 @@ const Information = ({ display, setIsDisplayInformationBlock, type, editrow, acc
             <input
               value={inputValue["Password"]}
               onChange={(e) => {
-                updateInput(e.target.value);
+                updateInput(e.target.value, "Password");
                 updateTempData("Password", e.target.value);
               }}
               disabled={type === "Edit"}
@@ -106,11 +133,9 @@ const Information = ({ display, setIsDisplayInformationBlock, type, editrow, acc
         <tr>
           <td className="informationTitle"><p>Permission :</p></td>
           <td>
-            <select value={selectValue} onChange={(e) => handleSelectChange(e)} disabled>
-              <option value="">Select an option</option>
-              <option value="Super Admin">Super Admin</option>
+            <select value={selectValue} onChange={(e) => handleSelectChange(e)}>
+              <option value="" disabled>Select an option</option>
               <option value="Admin">Admin</option>
-              <option value="Manager">Manager</option>
               <option value="Staff">Staff</option>
             </select>
           </td>
@@ -122,21 +147,24 @@ const Information = ({ display, setIsDisplayInformationBlock, type, editrow, acc
   return (
     <InformationBlock display={display.toString()}>
       <InformationBoard>
-        <h4 onClick={() => console.log(type)}>Account Information</h4>
+        <h4>Account Information</h4>
         <table className="boardInput">
           {renderInputs()}
         </table>
         <div className="cancelSaveCombination">
-          <button className="cancelButton" onClick={() => setIsDisplayInformationBlock(false)}>Cancel</button>
-          <button
-            className="saveButton"
+          <button className="cancelButton"
+            onClick={async () => {
+              setIsDisplayInformationBlock(false);
+            }}>Cancel</button>
+          <SaveButton
             onClick={handleSaveButton}
+            disabled={isSaveDisabled}
           >
             Save
-          </button>
+          </SaveButton>
         </div>
       </InformationBoard>
-    </InformationBlock>
+    </InformationBlock >
   );
 };
 
