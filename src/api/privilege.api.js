@@ -29,23 +29,27 @@ export const updatePermissionForRoleByPage = (roleID, Permission_page) => {
   //   order
   //   food_service
   // }
-  return axiosClient.post(`privilege/role/update-by-name`, { roleID, page:Permission_page });
+  return axiosClient.post(`privilege/role/update-by-name`, { roleID, page: Permission_page });
 };
 
 export const removePermissionFromRole = (roleID, permissionID) => {
-  return axiosClient.delete(`privilege/role/delete`, {data: { roleID, permissionID, }, });
+  return axiosClient.delete(`privilege/role/delete`, { data: { roleID, permissionID, }, });
 };
 
 export const removePermissionFromRoleByPage = (roleID, Permission_page) => {
-    // enum Permission_page {
+  // enum Permission_page {
   //   report
   //   user
   //   lobby
   //   order
   //   food_service
   // }
-  return axiosClient.delete(`privilege/role/delete-by-page`, {data: { roleID, page:Permission_page, }, });
+  return axiosClient.delete(`privilege/role/delete-by-page`, { data: { roleID, page: Permission_page, }, });
 };
+
+export const updateRoleforUser = (roleID, userID) => {
+  return axiosClient.post(`privilege/role/user/update`, { roleID, userID });
+}
 
 export const createRole = (name, permissionList) => {
   // permissionList data example = [{id: '123213'}, {id: '23213' }]

@@ -4,8 +4,8 @@ export const getUsers = () => {
   return axiosClient.get('users');
 };
 
-export const findUserByName = (name) => {
-  return axiosClient.get('users/find', { params: { name, }, });
+export const findUserByUserName = (username) => {
+  return axiosClient.get('users/find', { params: { username } });
 };
 
 export const updateUserDisplayName = (id, display_name) => {

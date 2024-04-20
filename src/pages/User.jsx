@@ -32,11 +32,7 @@ const User = () => {
 
   const getRoleIdByName = (name) => {
     const role = roles.find((value) => value.name === name);
-    if (role) {
-      return role.id;
-    } else {
-      return null;
-    }
+    return role ? role.id : null;
   };
 
   const getPermissionsIdByName = (name) => {
@@ -68,7 +64,7 @@ const User = () => {
   };
 
   const handlePermissionCreate = () => {
-
+    setIsDisplayPermissionBlock("flex");
   }
 
 
@@ -159,11 +155,13 @@ const User = () => {
           tempAccountInformation.push(["ID", "Display Name", "Username", "Password", "Permission", ""])
           data.forEach((value) => {
             let subArray = [];
-            subArray.push(value["id"]);
-            subArray.push(value["display_name"]);
-            subArray.push(value["username"]);
-            subArray.push(value["password"]);
-            subArray.push(value["role"]);
+            subArray.push(
+              value["id"],
+              value["display_name"],
+              value["username"],
+              value["password"],
+              value["role"],
+            );
             tempAccountInformation.push(subArray);
           });
           setAccountInformation(tempAccountInformation);
@@ -199,7 +197,7 @@ const User = () => {
         </div>
       </div>
       <StyledPermissionAccountTable data={permissionAccount} action={updateRolePermission} />
-      <Permission display={isDisplayPermissionBlock} />
+      <Permission display={isDisplayPermissionBlock} setIsDisplayPermissionBlock={setIsDisplayPermissionBlock} />
       <div className="TitleSearchCombination">
         <div className="blockTitle">
           <h4 className="title" onClick={() => console.log(accountInformation)}>
@@ -225,6 +223,7 @@ const User = () => {
         accountInformation={accountInformation}
         setAccountInformation={setAccountInformation}
         accountInformationInput={accountInformationInput}
+        getRoleIdByName={getRoleIdByName}
       />
     </UserBlock>
   );
