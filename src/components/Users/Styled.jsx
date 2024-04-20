@@ -274,6 +274,7 @@ export const PermissionCancelandSave = styled.div`
     width: 20%;
     height: 50%;
     border-radius: 10px;
+    font-size: 1em;
     &:hover{
       cursor: pointer;
     }
@@ -281,7 +282,6 @@ export const PermissionCancelandSave = styled.div`
   .buttonCancel{
     color: white;
     background-color: gray;
-
   }
   .buttonSave{
     color: white;
