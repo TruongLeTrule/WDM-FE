@@ -12,6 +12,25 @@ export const createWedding = (dataCreate) => {
   return axiosClient.post('wedding/create/wedding', dataCreate);
 };
 
+export const editWedding = (weddingID, dataEdit) => {
+/*
+Param: weddingID
+Body: {
+    "lobby_id"?: "FgHiJk1-LmNo-2PqRs-3TuVw",
+    "groom"?: "T",
+    "bride"?: "M",
+    "phone"?: "1234565142",
+    "wedding_date"?: "Mon Apr 15 2024 19:58:15 GMT+0700 (Indochina Time)",
+    "note"?: "hello world 3",
+    "shift"?: "evening", // require [evening, noon]
+    "table_count"?: 15
+}
+? is optinal - Add what want to edit
+*/
+
+  return axiosClient.post(`wedding/edit/wedding/${weddingID}`, dataEdit);
+};
+
 export const orderFood = (weddingId, foods) => {
   return axiosClient.post('wedding/create/wedding/food', { weddingId, foods });
 };
