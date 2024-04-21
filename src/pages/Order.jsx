@@ -140,7 +140,7 @@ const Order = () => {
         <Loading />
       ) : (
         <Wrapper>
-          <Header handleAddBtnClick={handleAddBtnClick} />
+          <Header handleAddBtnClick={handleAddBtnClick} headerTitle={"Order"} />
           <main>
             <div className="container">
               <Table
