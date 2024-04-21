@@ -1,9 +1,13 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import usePagination from "./Hooks/usePagination";
 import { LobbyTypeTableStyled } from './Styled';
 import { Icon } from '../../assets/icon';
+import { LobbyContext } from '../../pages/Lobby';
+import TypeTableEdit from './TypeTableEdit';
 
 const LobbyTypeTable = ({ data }) => {
+  const [editData, setEditData] = useState()
+  const [isLobTypeEditDisplay, setIsLobTypeEditDisplay] = useState(false);
   const testData = data ? data : [];
   const pagination = usePagination(testData, 9);
   function createArray(n) {
@@ -39,6 +43,12 @@ const LobbyTypeTable = ({ data }) => {
     pagination.setPage(index);
   })
 
+  const handleEditButton = (value) => {
+    setIsLobTypeEditDisplay(true);
+    console.log(editData);
+    setEditData(value);
+  }
+
   useEffect(() => {
     setMaxPages(createArray(pagination.totalPages + 1))
   }, [pagination.totalPages])
@@ -64,7 +74,7 @@ const LobbyTypeTable = ({ data }) => {
                       )
                     })
                   }
-                  <td><Icon.more></Icon.more></td>
+                  <td><Icon.more onClick={() => handleEditButton(value)}></Icon.more></td>
                 </tr>
               )
             })}
@@ -97,6 +107,13 @@ const LobbyTypeTable = ({ data }) => {
           </div>
         </div>
       </div>
+      {
+        isLobTypeEditDisplay &&
+        <TypeTableEdit
+          setIsLobTypeEditDisplay={setIsLobTypeEditDisplay}
+          editData = {editData}
+        />
+      }
     </LobbyTypeTableStyled>
   );
 }
