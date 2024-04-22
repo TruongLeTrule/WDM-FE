@@ -1,13 +1,18 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { Fragment, useCallback, useContext, useEffect, useState } from 'react';
 import { LobbyContext } from '../../pages/Lobby';
-import { LobbyTypeTableStyled } from './Styled';
 import { Icon } from '../../assets/icon';
 import TypeTableEdit from './TypeTableEdit';
 import TypeTable from './CreateTypeTable';
+import { WrapTable } from './Styled';
 import usePagination from "./Hooks/usePagination";
+import { getLobbies } from '../../api/lobby.api';
 
 const LobbyType = ({ data }) => {
-  const { fetchLobType } = useContext(LobbyContext);
+  const {
+    fetchLobType,
+    setPageDisplay,
+    setLobTypeInformationData
+  } = useContext(LobbyContext);
   const [editData, setEditData] = useState();
   const [isLobTypeEditDisplay, setIsLobTypeEditDisplay] = useState(false);
 
@@ -39,17 +44,44 @@ const LobbyType = ({ data }) => {
     setEditData(value);
   };
 
+  const handleLobTypeClick = (value) => {
+    const id = value[0].replace(".", "").replace("0", "");
+    const type = value[1];
+    fetchLobTypeInformation(id, type);
+    setPageDisplay({
+      previousPage: "LobType",
+      currentPage: "LobTypeInformation",
+    });
+  }
+
+  const fetchLobTypeInformation = async (id, type) => {
+    const res = await getLobbies("", id);
+    const data = res.data;
+    console.log(data)
+    const tempData = [];
+    data.map((value) => {
+      const subData = []
+      subData.push(
+        value.lob_type_id < 10 ? "0" + value.lob_type_id + "." : value.lob_type_id + ".",
+        value.name,
+        type,
+      )
+      tempData.push(subData);
+    })
+    setLobTypeInformationData(tempData);
+  }
+
   useEffect(() => {
     setMaxPages(createArray(pagination.totalPages + 1));
   }, [pagination.totalPages]);
 
   return (
-    <LobbyTypeTableStyled>
-      <div className="wrapTable">
+    <Fragment>
+      <WrapTable>
         <TypeTable
-          className='lobbyTypeTable'
           data={pagination.data}
           handleEditButton={handleEditButton}
+          handleLobTypeClick={handleLobTypeClick}
         />
         <div className='paginationButtonTable'>
           <div className='button previousButton' onClick={onPrevPage} >
@@ -69,7 +101,7 @@ const LobbyType = ({ data }) => {
             <Icon.rightarrow disabled={pagination.page === pagination.totalPages}></Icon.rightarrow>
           </div>
         </div>
-      </div>
+      </WrapTable>
       {isLobTypeEditDisplay && (
         <TypeTableEdit
           setIsLobTypeEditDisplay={setIsLobTypeEditDisplay}
@@ -77,7 +109,7 @@ const LobbyType = ({ data }) => {
           fetchLobType={fetchLobType}
         />
       )}
-    </LobbyTypeTableStyled>
+    </Fragment>
   );
 };
 

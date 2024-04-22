@@ -1,7 +1,8 @@
-import { Icon } from "../../assets/icon"
-import { WrapTable } from "./Styled"
-const TypeTable = ({ data, handleEditButton, handleLobTypeClick }) => {
-  const tableHead = ["ID", "Type", "Max table", "Min price", "Required Deposit", ""]
+import { Icon } from "../../assets/icon";
+const TypeInformTable = ({
+  data
+}) => {
+  const tableHead = ["ID", "Name", "Type"];
   return (
     <table className='lobbyTypeTable'>
       <thead>
@@ -18,11 +19,11 @@ const TypeTable = ({ data, handleEditButton, handleLobTypeClick }) => {
               {
                 value.map((cell, cellIndex) => {
                   return (
-                    <td key={cellIndex} onClick={() => handleLobTypeClick(value)}>{cell}</td>
+                    <td key={cellIndex} onClick={() => { }}>{cell}</td>
                   )
                 })
               }
-              <td><Icon.more onClick={() => handleEditButton(value)}></Icon.more></td>
+              <td><Icon.more onClick={() => { }}></Icon.more></td>
             </tr>
           )
         })}
@@ -30,5 +31,4 @@ const TypeTable = ({ data, handleEditButton, handleLobTypeClick }) => {
     </table>
   )
 }
-
-export default TypeTable;
+export default TypeInformTable;

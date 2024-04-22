@@ -1,11 +1,24 @@
-import { LobbyBlock, LobbyContent } from "../components/Lobby/Styled";
+import { LobbyBlock, LobbyTableStyled } from "../components/Lobby/Styled";
 import { Header } from "../components";
 import { getLobbyTypes } from "../api/lobby.api";
+import { getLobbies } from "../api/lobby.api";
 import { useEffect, useState, createContext } from "react";
 import LobbyType from "../components/Lobby/LobbyTypeTable";
+import LobTypeInformation from "../components/Lobby/LobTypeInformTable";
 export const LobbyContext = createContext();
 const Lobby = () => {
   const [lobTypeData, setLobTypeData] = useState();
+  const [lobTypeInformationData, setLobTypeInformationData] = useState();
+  const [pageDisplay, setPageDisplay] = useState({
+    previousPage: "",
+    currentPage: "",
+  });
+  const handleBackBtn = (previos) => {
+    setPageDisplay({
+      previousPage: "",
+      currentPage: previos
+    })
+  }
   const fetchLobType = async () => {
     const res = await getLobbyTypes();
     const data = res.data;
@@ -23,18 +36,32 @@ const Lobby = () => {
     })
     setLobTypeData(tempData);
   }
+
   useEffect(() => {
+    setPageDisplay({
+      previousPage: "",
+      currentPage: "LobType",
+    });
     fetchLobType();
   }, [])
   const shareValue = {
     setLobTypeData,
-    fetchLobType
+    fetchLobType,
+    setPageDisplay,
+    setLobTypeInformationData
   }
   return (
     <LobbyContext.Provider value={shareValue}>
       <LobbyBlock>
-        <Header headerTitle={"Lobby"}></Header>
-        <LobbyType data={lobTypeData} />
+        <Header
+          headerTitle={"Lobby"}
+          handleBackBtn={() => handleBackBtn(pageDisplay.previousPage)}
+          isBack={pageDisplay.previousPage}
+        />
+        <LobbyTableStyled>
+          {pageDisplay.currentPage === "LobType" && <LobbyType data={lobTypeData} />}
+          {pageDisplay.currentPage === "LobTypeInformation" && <LobTypeInformation data={lobTypeInformationData} />}
+        </LobbyTableStyled>
       </LobbyBlock>
     </LobbyContext.Provider>
   )

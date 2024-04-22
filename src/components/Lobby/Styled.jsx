@@ -9,12 +9,13 @@ export const LobbyContent = styled.div`
   height: 100%;
 `
 
-export const LobbyTypeTableStyled = styled.div`
+export const LobbyTableStyled = styled.div`
   width: 100%;
   height: 88vh;
   background-color: #f5f7fa;
   padding: 2%;
-  .wrapTable{
+`
+export const WrapTable = styled.div`
     background-color: white;
     height: 100%;
     display: flex; 
@@ -22,7 +23,7 @@ export const LobbyTypeTableStyled = styled.div`
     justify-content: space-between;
     border-radius: 10px;
     padding-bottom: 1%;
-    .lobbyTypeTable{
+    table{
       table-layout: fixed;
       width: 100%;
       padding-top: 1%;
@@ -77,7 +78,6 @@ export const LobbyTypeTableStyled = styled.div`
         }
       }
     }
-  }
 `
 export const TypeTableEditBlock = styled.div`
   width: 100%;

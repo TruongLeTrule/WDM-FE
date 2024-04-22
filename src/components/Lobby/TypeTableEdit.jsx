@@ -10,6 +10,7 @@ const TypeTableEdit = ({
   setIsLobTypeEditDisplay,
   editData,
   fetchLobType,
+  handleLobTypeClick
 }) => {
   const [inputValue, setInputValue] = useState({
     type_name: editData[1],
