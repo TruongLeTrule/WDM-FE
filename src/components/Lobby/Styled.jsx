@@ -46,39 +46,43 @@ export const WrapTable = styled.div`
       }
     }
     .paginationButtonTable{
-      user-select: none;
+
+    }
+`
+export const PagePaginationStyled = styled.div`
+    user-select: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    .button{
       display: flex;
-      flex-direction: row;
       justify-content: center;
       align-items: center;
-      .button{
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        svg{
-          width: 30px;
-          height: 30px;
-        }
-        &:hover{
-          cursor: pointer;
-        }
+      svg{
+        width: 30px;
+        height: 30px;
       }
-      .pageNumber{
-        width: 25px;
-        height: 25px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border: 1px solid gray;
-        margin-left: 0.5%;
-        margin-right: 0.5%;
-        border-radius: 3px;
-        &:hover{
-          cursor: pointer;
-        }
+      &:hover{
+        cursor: pointer;
+      }
+    }
+    .pageNumber{
+      width: 25px;
+      height: 25px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 1px solid gray;
+      margin-left: 0.5%;
+      margin-right: 0.5%;
+      border-radius: 3px;
+      &:hover{
+        cursor: pointer;
       }
     }
 `
+
 export const TypeTableEditBlock = styled.div`
   width: 100%;
   height: 100vh;

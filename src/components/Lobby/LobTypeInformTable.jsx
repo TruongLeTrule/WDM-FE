@@ -3,11 +3,11 @@ import { WrapTable } from "./Styled";
 import TypeInformTable from "./CreateTypeInformTable"
 import usePagination from "./Hooks/usePagination";
 import { LobbyContext } from "../../pages/Lobby";
+import PagePagination from "./PagePagination";
 const LobTypeInformation = ({
   data
 }) => {
   const {
-    setPageDisplay
   } = useContext(LobbyContext);
   const testData = data ? data : [];
   const pagination = usePagination(testData, 9);
@@ -16,6 +16,9 @@ const LobTypeInformation = ({
       <WrapTable>
         <TypeInformTable
           data={pagination.data}
+        />
+        <PagePagination
+          pagination={pagination}
         />
       </WrapTable>
     </Fragment>
