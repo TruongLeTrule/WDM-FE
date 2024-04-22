@@ -1,13 +1,33 @@
+import { Modal } from '../';
 import { FaPenToSquare } from 'react-icons/fa6';
 import { useOrderContext } from '../../pages/Order';
 import { orderInfoLeft, orderInfoRight } from '../../utils/orderRenderArr';
-import { Modal } from '../';
 import TextRow from '../TextRow';
 import Wrapper from '../../assets/wrappers/Order/OrderInfoWrapper';
-import { useMemo } from 'react';
+
+const style = {
+  content: {
+    width: '50vw',
+    height: '55vh',
+    left: '50%',
+    top: '50%',
+    padding: 0,
+    transform: 'translate(-50%, -50%)',
+    backgroundColor: '#FFF',
+  },
+  overlay: {
+    backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+};
 
 const OrderInfoModal = () => {
-  const { orderInfo, orderModalState, setOrderModalState } = useOrderContext();
+  const {
+    orderInfo,
+    setOrderInfo,
+    orderModalState,
+    setOrderModalState,
+    setEditOrderModalState,
+  } = useOrderContext();
 
   const handlePayBtnClick = () => {
     setOrderModalState({
@@ -19,19 +39,19 @@ const OrderInfoModal = () => {
 
   return (
     <Modal
+      customStyle={style}
       isOpen={orderModalState?.info}
-      setModalClose={() =>
-        setOrderModalState({ ...orderModalState, info: false })
-      }
+      setModalClose={() => {
+        setOrderModalState({ info: false });
+        setOrderInfo(null);
+      }}
     >
       <Wrapper>
         <div className="header">
           <h4>order {orderInfo?.id}</h4>
           <FaPenToSquare
             className="icon"
-            onClick={() =>
-              setOrderModalState({ ...orderModalState, edit: true })
-            }
+            onClick={() => setEditOrderModalState({ userInfo: true })}
           />
         </div>
         <div className="container">
@@ -45,14 +65,14 @@ const OrderInfoModal = () => {
                   keyValue={key}
                   key={key}
                   type={type}
-                  value={rightColumnData?.[key]}
+                  value={orderInfo?.[key]}
                 />
               ))}
             </div>
           </div>
           {/* Right col */}
           <div>
-            <h5>{orderInfo?.lobby}</h5>
+            <h5>{orderInfo?.lobby_name}</h5>
             <p className="shift">{orderInfo?.shift}</p>
             <div className="rows">
               {orderInfoRight.map(({ title, key, openModal }) => (

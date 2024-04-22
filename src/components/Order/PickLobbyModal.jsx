@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { getLobbies } from '../../api/lobby.api';
-import { useOrderContext } from '../../pages/Order';
 import Modal from '../Modal';
 import Wrapper from '../../assets/wrappers/Order/LobWrapper';
 import LobCard from './LobCard';
@@ -21,17 +20,21 @@ const customStyle = {
   },
 };
 
-const PickLobbyModal = ({ isOpen, setModalClose, setNextModalOpen }) => {
-  const { newOrder } = useOrderContext();
+const PickLobbyModal = ({
+  isOpen,
+  setModalClose,
+  setNextModalOpen,
+  setLobbyInfo,
+  editLobby,
+  wedding_date,
+  lob_type_id,
+}) => {
   const [lobbyList, setLobbyList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchLobbies = async () => {
     try {
-      const lobbies = await getLobbies(
-        newOrder.wedding_date,
-        newOrder.lob_type_id
-      );
+      const lobbies = await getLobbies(wedding_date, lob_type_id);
       setLobbyList(lobbies.data);
       setIsLoading(false);
     } catch (error) {
@@ -58,10 +61,12 @@ const PickLobbyModal = ({ isOpen, setModalClose, setNextModalOpen }) => {
             <div className="container">
               {lobbyList.map((lobby) => (
                 <LobCard
-                  Wedding={lobby.Wedding}
                   lobby={lobby}
                   key={lobby.id}
+                  setLobbyInfo={setLobbyInfo}
                   setNextModalOpen={setNextModalOpen}
+                  setPickLobbyModalClose={setModalClose}
+                  editLobby={editLobby}
                 />
               ))}
             </div>

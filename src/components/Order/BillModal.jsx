@@ -1,15 +1,16 @@
 import { Link } from 'react-router-dom';
+import { FaFilePdf } from 'react-icons/fa6';
 import { useOrderContext } from '../../pages/Order';
+import { customerInfo, weddingInfo } from '../../utils/billTable';
 import Wrapper from '../../assets/wrappers/Order/BillWrapper';
 import Modal from '../Modal';
-import { customerInfo, weddingInfo } from '../../utils/billTable';
-import { FaFilePdf } from 'react-icons/fa6';
 import SpecificOrderTable from './SpecificOrderTable';
+import resolveDate from '../../utils/resolveDate';
 
 const customStyle = {
   content: {
     width: '40vw',
-    height: '90vh',
+    height: '86vh',
     left: '50%',
     top: '50%',
     padding: 0,
@@ -28,9 +29,10 @@ const BillModal = () => {
   return (
     <Modal
       isOpen={orderModalState.bill}
-      setModalClose={() =>
-        setOrderModalState({ ...orderModalState, bill: false })
-      }
+      setModalClose={() => {
+        setOrderModalState({ ...orderModalState, bill: false });
+        setOrderInfo(null);
+      }}
       customStyle={customStyle}
     >
       <Wrapper>
@@ -41,15 +43,22 @@ const BillModal = () => {
           <h5>wedding information</h5>
           <SpecificOrderTable data={weddingInfo} />
           <div className="more-info">
-            <div className={`paid-date ${orderInfo?.extraFee > 0 && 'red'}`}>
+            <div className={`paid-date ${orderInfo?.extra_fee > 0 && 'red'}`}>
               <span className="title">paid date:</span>
-              <span>{orderInfo?.paidDate.toLocaleDateString()}</span>
+              <span>{resolveDate(orderInfo?.payment_date)}</span>
             </div>
             <Link className="pdf-export">
               export to pdf <FaFilePdf />
             </Link>
           </div>
-          <button className="btn">done</button>
+          <button
+            className="btn"
+            onClick={() =>
+              setOrderModalState({ ...orderModalState, bill: false })
+            }
+          >
+            done
+          </button>
         </div>
       </Wrapper>
     </Modal>

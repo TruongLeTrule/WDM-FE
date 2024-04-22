@@ -42,6 +42,9 @@ const Wrapper = styled.div`
   .deposit {
     color: var(--red-dark);
   }
+  .pending {
+    color: var(--yellow-dark);
+  }
   .page-group {
     position: absolute;
     bottom: 0;

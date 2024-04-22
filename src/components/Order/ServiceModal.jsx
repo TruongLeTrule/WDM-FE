@@ -1,7 +1,9 @@
-import { useMemo } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { useOrderContext } from '../../pages/Order';
+import { getFoodsOrder, getServicesOrder } from '../../api/wedding.api';
 import Modal from '../Modal';
 import Table from '../Table';
+import Loading from '../Loading';
 import Wrapper from '../../assets/wrappers/Order/ServiceWrapper';
 
 const customStyle = {
@@ -19,10 +21,10 @@ const customStyle = {
   },
 };
 
-const ServiceModal = ({ type, title, data }) => {
-  const { orderModalState, setOrderModalState } = useOrderContext();
-
-  const tableData = useMemo(() => data, []);
+const ServiceModal = ({ type, title }) => {
+  const { orderModalState, setOrderModalState, orderInfo } = useOrderContext();
+  const [tableData, setTableData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const foodColumns = useMemo(
     () => [
       {
@@ -31,15 +33,15 @@ const ServiceModal = ({ type, title, data }) => {
       },
       {
         Header: 'Food',
-        accessor: 'foodName',
+        accessor: 'food_name',
       },
       {
         Header: 'Price',
-        accessor: 'price',
+        accessor: 'food_price',
       },
       {
         Header: 'Quantity',
-        accessor: 'quantity',
+        accessor: 'count',
       },
       {
         Header: 'Total',
@@ -56,15 +58,15 @@ const ServiceModal = ({ type, title, data }) => {
       },
       {
         Header: 'Service',
-        accessor: 'serviceName',
+        accessor: 'service_name',
       },
       {
         Header: 'Price',
-        accessor: 'price',
+        accessor: 'service_price',
       },
       {
         Header: 'Quantity',
-        accessor: 'quantity',
+        accessor: 'count',
       },
       {
         Header: 'Total',
@@ -73,10 +75,34 @@ const ServiceModal = ({ type, title, data }) => {
     ],
     []
   );
+  const total = useMemo(
+    () =>
+      tableData.map(({ total }) => total).reduce((acc, item) => acc + item, 0),
+    [tableData]
+  );
 
-  const total = data
-    .map(({ total }) => total)
-    .reduce((acc, item) => acc + item);
+  const fetchData = async () => {
+    let data;
+    try {
+      if (type === 'food') data = await getFoodsOrder(orderInfo.id);
+      if (type === 'service') data = await getServicesOrder(orderInfo.id);
+      // handle data array
+      data = data.data.map((item, index) => ({
+        ...item,
+        order: index + 1,
+        total:
+          item.count * (type === 'food' ? item.food_price : item.service_price),
+      }));
+      setTableData(data);
+      setIsLoading(false);
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <Modal
@@ -86,16 +112,20 @@ const ServiceModal = ({ type, title, data }) => {
       }
       customStyle={customStyle}
     >
-      <Wrapper>
-        <h3>{title}</h3>
-        <div className="container">
-          <Table
-            data={tableData}
-            columns={type === 'food' ? foodColumns : serviceColumns}
-          />
-          <strong>total: {total}$</strong>
-        </div>
-      </Wrapper>
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <Wrapper>
+          <h3>{title}</h3>
+          <div className="container">
+            <Table
+              data={tableData}
+              columns={type === 'food' ? foodColumns : serviceColumns}
+            />
+            <strong>total: {total}$</strong>
+          </div>
+        </Wrapper>
+      )}
     </Modal>
   );
 };

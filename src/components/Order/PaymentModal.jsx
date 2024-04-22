@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useOrderContext } from '../../pages/Order';
 import { TextRow, TextInput, Radio } from '../';
 import { depositOrder, fullPayOrder } from '../../api/wedding.api';
 import { paymentOverall, paymentOption } from '../../utils/orderRenderArr';
@@ -21,32 +20,37 @@ const customStyle = {
   },
 };
 
-const PaymentModal = ({ isOpen, setModalClose, setNextModalOpen }) => {
-  const { newOrder, setNewOrder } = useOrderContext();
-  const [payValue, setPayValue] = useState();
+const PaymentModal = ({
+  isOpen,
+  setModalClose,
+  setNextModalOpen,
+  orderData,
+  setOrderData,
+}) => {
+  const [payValue, setPayValue] = useState(orderData.requiredDeposit);
   const [payOption, setPayOption] = useState('deposit');
 
   const handleOptionChange = (value) => {
     setPayOption(value);
     setPayValue(
-      value === 'deposit' ? newOrder.requiredDeposit : newOrder.total
+      value === 'deposit' ? orderData.requiredDeposit : orderData.total
     );
   };
 
   const handleNextBtnClick = async () => {
-    const intPayValue = Number(payValue);
+    // const intPayValue = Number(payValue);
     let result;
     try {
       if (payOption === 'deposit')
-        result = await depositOrder(newOrder.id, intPayValue);
+        result = await depositOrder(orderData.id, Number(payValue));
       if (payOption === 'full')
-        result = await fullPayOrder(newOrder.id, intPayValue);
+        result = await fullPayOrder(orderData.id, Number(payValue));
       if (result.data.msg) throw new Error(result.data.msg);
-      setNewOrder({
+      setOrderData({
         ...result.data,
         ...result.data.weddingData,
-        phone: newOrder.phone,
-        lobby_name: newOrder.lobby_name,
+        phone: orderData.phone,
+        lobby_name: orderData.lobby_name,
       });
       setNextModalOpen();
     } catch (error) {
@@ -56,9 +60,9 @@ const PaymentModal = ({ isOpen, setModalClose, setNextModalOpen }) => {
 
   useEffect(() => {
     const requiredDeposit =
-      (Number(newOrder.deposit_percent) / 100) * Number(newOrder.total);
-    setNewOrder({
-      ...newOrder,
+      (Number(orderData.deposit_percent) / 100) * Number(orderData.total);
+    setOrderData({
+      ...orderData,
       requiredDeposit,
     });
     setPayValue(requiredDeposit);
@@ -73,7 +77,6 @@ const PaymentModal = ({ isOpen, setModalClose, setNextModalOpen }) => {
       <Wrapper>
         <h4>payment</h4>
         <div className="container">
-          {/* Overall block */}
           <div className="overall">
             <h5>overall</h5>
             {paymentOverall.map(({ title, key }) => (
@@ -81,16 +84,15 @@ const PaymentModal = ({ isOpen, setModalClose, setNextModalOpen }) => {
                 title={title}
                 keyValue={key}
                 key={key}
-                value={newOrder?.[key]}
+                value={orderData?.[key]}
               />
             ))}
             <TextRow
               title="total"
-              value={newOrder.total}
+              value={orderData.total}
               keyValue={'remainder'}
             />
           </div>
-          {/* Payment block */}
           <div className="payment">
             <h5>payment option</h5>
             {paymentOption.map(({ key, value, title }) => (
@@ -106,7 +108,7 @@ const PaymentModal = ({ isOpen, setModalClose, setNextModalOpen }) => {
             <h5>pay remainder</h5>
             <TextInput
               keyValue="payRemainder"
-              value={Number(payValue).toString()}
+              value={payValue}
               handleChange={(e) => setPayValue(e.target.value)}
             />
           </div>
