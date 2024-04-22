@@ -1,10 +1,12 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { Modal, Button, Input, Upload, Select } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { createService, deleteService, getServices, updateService } from "../../api/service.api.js";
 import { uploadServiceImage } from "../../api/file.api.js";
 import { getFileBlobUrl } from "../../utils/index.js";
+import balletImg from '../../assets/images/ballet.jpg';
+import { FoodServiceContext } from "../../context/food.context.jsx"
 
 const { Option } = Select;
 // const { TextArea } = Input;
@@ -12,7 +14,7 @@ const { Option } = Select;
 const ServiceContext = React.createContext(); 
 
 const SContent = () => {
-    const [servicelists, setServiceLists] = useState();
+    
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedService, setSelectedService] = useState(null);
     const [tempName, setTempName] = useState("");
@@ -21,6 +23,22 @@ const SContent = () => {
     const [tempInventory, setInventory] = useState();
     const [tempFile, setTempFile] = useState(null)
     const isEdit = useRef(false)
+
+    const { services, serviceSearchList } = useContext(FoodServiceContext)
+    const [servicelists, setServiceLists] = useState(services);
+
+    useEffect(() => {
+        setServiceLists(services)
+    }, [services])
+
+    useEffect(() => {
+        if(serviceSearchList.length > 0) {
+            setServiceLists(serviceSearchList)
+        }
+        else {
+            setServiceLists(services)
+        }
+    }, [serviceSearchList])
 
     const prepareFileUploaded = (file) => {
         setTempFile(file)
@@ -153,7 +171,7 @@ const SContent = () => {
                     {servicelists && servicelists.length > 0 && servicelists.map((service) => (
                         <div key={service.id} className="service_box">
                             <div className="service_img">
-                                <img src={service.url} alt={service.name} className="image" />
+                                <img src={service.url ? service.url: balletImg} alt={service.name} className="image" />
                             </div>
                             <p className="title">{service.name}</p>
                             <p>{service.price}$</p>
