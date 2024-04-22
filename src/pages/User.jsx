@@ -109,70 +109,61 @@ const User = () => {
     }
   };
 
-  useEffect(() => {
-    if (!searchValue) {
-      setAccountInformationTableFilter(accountInformation);
-    } else {
-      const filteredData = accountInformation.slice(1).filter(row => checkRow(row, searchValue));
-      filteredData.unshift(accountInformation[0]);
-      setAccountInformationTableFilter(filteredData);
+  const fetchPermissionsAccount = async () => {
+    try {
+      const res = await getRoles();
+      if (res && res.data) {
+        setRoles(res.data);
+        const data = res.data;
+        const tempPermission = [];
+        tempPermission.push(["Account Groups", "Lobby", "Order", "Food & Service", "Report", "User"])
+        const pages = ["lobby", "order", "food_service", "report", "user"];
+        data.forEach((role) => {
+          let subArray = [];
+          subArray.push(role.name);
+          pages.forEach((page) => {
+            const hasPermission = role.permissions.some(permission => permission.page === page);
+            subArray.push(hasPermission);
+          });
+          tempPermission.push(subArray);
+        });
+        setPermissionAccount(tempPermission);
+      }
+    } catch (error) {
+      console.error(error);
+      alert(error.message);
     }
-  }, [searchValue, accountInformation]);
+  }
+
+  const fetchDataAccountInformation = async () => {
+    try {
+      const res = await getUsers();
+      if (res && res.data) {
+        const data = res.data;
+        const tempAccountInformation = [];
+        tempAccountInformation.push(["ID", "Display Name", "Username", "Password", "Permission", ""])
+        data.forEach((value) => {
+          let subArray = [];
+          subArray.push(
+            value["id"],
+            value["display_name"],
+            value["username"],
+            value["password"],
+            value["role"],
+          );
+          tempAccountInformation.push(subArray);
+        });
+        setAccountInformation(tempAccountInformation);
+      } else {
+        console.log('nodata');
+      }
+    } catch (error) {
+      console.error(error);
+      alert(error.message);
+    }
+  };
 
   useEffect(() => {
-    const fetchPermissionsAccount = async () => {
-      try {
-        const res = await getRoles();
-        if (res && res.data) {
-          setRoles(res.data);
-          const data = res.data;
-          const tempPermission = [];
-          tempPermission.push(["Account Groups", "Lobby", "Order", "Food & Service", "Report", "User"])
-          const pages = ["lobby", "order", "food_service", "report", "user"];
-          data.forEach((role) => {
-            let subArray = [];
-            subArray.push(role.name);
-            pages.forEach((page) => {
-              const hasPermission = role.permissions.some(permission => permission.page === page);
-              subArray.push(hasPermission);
-            });
-            tempPermission.push(subArray);
-          });
-          setPermissionAccount(tempPermission);
-        }
-      } catch (error) {
-        console.error(error);
-        alert(error.message);
-      }
-    }
-
-    const fetchDataAccountInformation = async () => {
-      try {
-        const res = await getUsers();
-        if (res && res.data) {
-          const data = res.data;
-          const tempAccountInformation = [];
-          tempAccountInformation.push(["ID", "Display Name", "Username", "Password", "Permission", ""])
-          data.forEach((value) => {
-            let subArray = [];
-            subArray.push(
-              value["id"],
-              value["display_name"],
-              value["username"],
-              value["password"],
-              value["role"],
-            );
-            tempAccountInformation.push(subArray);
-          });
-          setAccountInformation(tempAccountInformation);
-        } else {
-          console.log('nodata');
-        }
-      } catch (error) {
-        console.error(error);
-        alert(error.message);
-      }
-    };
     fetchPermissionsAccount();
     fetchDataAccountInformation();
     return;
@@ -185,6 +176,16 @@ const User = () => {
       }
     });
   };
+
+  useEffect(() => {
+    if (!searchValue) {
+      setAccountInformationTableFilter(accountInformation);
+    } else {
+      const filteredData = accountInformation.slice(1).filter(row => checkRow(row, searchValue));
+      filteredData.unshift(accountInformation[0]);
+      setAccountInformationTableFilter(filteredData);
+    }
+  }, [searchValue, accountInformation]);
 
   return (
     <UserBlock>

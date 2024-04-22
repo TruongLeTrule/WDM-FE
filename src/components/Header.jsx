@@ -2,10 +2,10 @@ import { FaFilter, FaPlus } from 'react-icons/fa6';
 import Wrapper from '../assets/wrappers/HeaderWrapper';
 import SearchBox from './SearchBox';
 
-const Header = ({ handleAddBtnClick }) => {
+const Header = ({ handleAddBtnClick, headerTitle }) => {
   return (
     <Wrapper>
-      <h1>Order</h1>
+      <h1>{headerTitle}</h1>
       <div className="right-container">
         <SearchBox />
         <button>
