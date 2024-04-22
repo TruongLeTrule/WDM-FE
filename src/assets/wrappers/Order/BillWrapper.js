@@ -2,18 +2,19 @@ import styled from 'styled-components';
 
 const Wrapper = styled.div`
   h4 {
+    font-size: 1.5rem;
     margin-top: 2rem;
     text-align: center;
     font-weight: 700;
   }
   .container {
     width: max-content;
-    margin: 1.5rem auto 0 auto;
+    margin: 2rem auto 0 auto;
     text-align: center;
   }
   h5 {
     text-align: left;
-    margin-top: 2rem;
+    margin-top: 1rem;
     font-weight: 600;
     font-size: 1.1rem;
   }
@@ -42,6 +43,9 @@ const Wrapper = styled.div`
   .btn {
     margin-top: 1.8rem;
     padding: 0.7rem 2.5rem;
+  }
+  .red {
+    color: var(--red-dark);
   }
 `;
 

@@ -1,11 +1,15 @@
+import { shift } from '../../utils/orderRenderArr';
 import { useState, useRef, useEffect, useMemo } from 'react';
 import lobImg from '../../assets/images/lobby.jpg';
-import { shift } from '../../utils/orderRenderArr';
-import { useOrderContext } from '../../pages/Order';
 
-const LobCard = ({ lobby, setNextModalOpen, Wedding }) => {
-  const { setNewOrder, newOrder } = useOrderContext();
-  const { id, name } = lobby;
+const LobCard = ({
+  lobby,
+  setNextModalOpen,
+  setPickLobbyModalClose,
+  setLobbyInfo,
+  editLobby,
+}) => {
+  const { id, name, Wedding } = lobby;
   const [showShiftModal, setShowShiftModal] = useState(false);
   const cardRef = useRef(null);
 
@@ -24,7 +28,9 @@ const LobCard = ({ lobby, setNextModalOpen, Wedding }) => {
   };
 
   const handleShiftClick = (shift) => {
-    setNewOrder({ ...newOrder, lobby_id: id, shift, lobby_name: name });
+    setLobbyInfo(id, shift, name);
+    // If Lobby card in edit mode, close lobby modal after shift picked
+    if (editLobby) return setPickLobbyModalClose();
     setNextModalOpen();
   };
 

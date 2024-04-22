@@ -1,9 +1,16 @@
 import { getFoods } from '../../api/food.api';
 import { getServices } from '../../api/service.api';
-import { useOrderContext } from '../../pages/Order';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { FaShoppingCart, FaRegTrashAlt } from 'react-icons/fa';
-import { orderFood, orderService } from '../../api/wedding.api';
+import {
+  orderFood,
+  orderService,
+  getFoodsOrder,
+  getServicesOrder,
+  editFoodsOrder,
+  editServicesOrder,
+} from '../../api/wedding.api';
+import { FaPlus, FaMinus } from 'react-icons/fa';
 import Modal from '../Modal';
 import FoodServiceCard from './FoodServiceCard';
 import beefImg from '../../assets/images/beef.png';
@@ -28,47 +35,41 @@ const customStyle = {
 
 const PickFoodServiceModal = ({
   isOpen,
+  type,
   setModalClose,
   setNextModalOpen,
-  type,
+  setServiceData,
+  setFoodData,
+  orderId,
+  editOrder,
 }) => {
-  const { newOrder, setNewOrder } = useOrderContext();
   const [renderList, setRenderList] = useState([]);
   const cartRef = useRef(null);
-  const [pickedItem, setPickItem] = useState([]);
+  const [pickedItem, setPickedItem] = useState([]);
   const [showPickedItemList, setShowPickedItemList] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-
-  const total = pickedItem.reduce(
-    (acc, item) => acc + item.quantity * item.price,
-    0
+  const total = useMemo(
+    () => pickedItem.reduce((acc, item) => acc + item.count * item.price, 0),
+    [pickedItem]
   );
 
   const handleNextBtnClick = async () => {
     let itemTotalPrice;
-    const handledList = pickedItem.map(({ id, quantity }) => ({
+    const handledList = pickedItem.map(({ id, count }) => ({
       id,
-      count: quantity,
+      count: count,
     }));
-    const pricePerTable = pickedItem.reduce(
-      (acc, item) => acc + item.quantity * item.price,
-      0
-    );
     try {
       if (type === 'food') {
-        itemTotalPrice = await orderFood(newOrder.id, handledList);
-        setNewOrder({
-          ...newOrder,
-          pricePerTable,
-        });
+        itemTotalPrice = await orderFood(orderId, handledList);
+        setFoodData(itemTotalPrice.data.totalPrice);
       }
       if (type === 'service') {
-        itemTotalPrice = await orderService(newOrder.id, handledList);
-        setNewOrder({
-          ...newOrder,
-          total: itemTotalPrice.data.totalPrice,
-          serviceFee: itemTotalPrice.data.service.servicePrice,
-        });
+        itemTotalPrice = await orderService(orderId, handledList);
+        setServiceData(
+          itemTotalPrice.data.totalPrice,
+          itemTotalPrice.data.service.servicePrice
+        );
       }
       setNextModalOpen();
     } catch (error) {
@@ -82,14 +83,14 @@ const PickFoodServiceModal = ({
       const itemList = pickedItem.map((item) =>
         item.id === newItem.id ? newItem : item
       );
-      return setPickItem(itemList);
+      return setPickedItem(itemList);
     }
-    return setPickItem([...pickedItem, newItem]);
+    return setPickedItem([...pickedItem, newItem]);
   };
 
   const handleTrashClick = (id) => {
     const newItemList = pickedItem.filter((item) => item.id !== id);
-    setPickItem(newItemList);
+    setPickedItem(newItemList);
   };
 
   const handleOutsideClick = (e) => {
@@ -108,10 +109,87 @@ const PickFoodServiceModal = ({
     }
   };
 
+  const fetchPickedItem = async (type) => {
+    try {
+      let fetchedItems;
+      if (type === 'food') {
+        fetchedItems = await getFoodsOrder(orderId);
+        // handle array key name
+        fetchedItems = fetchedItems.data.map(
+          ({ food_id, food_name, food_price, count }) => ({
+            id: food_id,
+            name: food_name,
+            price: food_price,
+            count,
+          })
+        );
+        setPickedItem(fetchedItems);
+      }
+      if (type === 'service') {
+        fetchedItems = await getServicesOrder(orderId);
+        // handle array key
+        fetchedItems = fetchedItems.data.map(
+          ({ service_id, service_name, service_price, count }) => ({
+            id: service_id,
+            name: service_name,
+            price: service_price,
+            count,
+          })
+        );
+        setPickedItem(fetchedItems);
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
+  const handleSaveBtnClick = async (type) => {
+    try {
+      let result;
+      if (type === 'food') {
+        result = await editFoodsOrder(orderId, pickedItem);
+        editOrder(
+          result.data.foodPrice,
+          result.data.remainPrice,
+          result.data.totalPrice
+        );
+      }
+      if (type === 'service') {
+        result = await editServicesOrder(orderId, pickedItem);
+        console.log(result.data);
+        editOrder(
+          result.data.servicePrice,
+          result.data.remainPrice,
+          result.data.totalPrice
+        );
+      }
+      setModalClose();
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
+  const handleItemAmountChange = (id, type) => {
+    const newList = pickedItem.map((item) => {
+      if (item.id === id) {
+        if (type === 'increase') return { ...item, count: item.count + 1 };
+        if (type === 'decrease')
+          return item.count - 1 <= 0
+            ? null
+            : { ...item, count: item.count - 1 };
+      }
+      return item;
+    });
+    const removedNullList = newList.filter((item) => item !== null);
+    setPickedItem(removedNullList);
+  };
+
   useEffect(() => {
     fetchData(type);
+    if (editOrder) fetchPickedItem(type);
   }, []);
 
+  // Handle outside click event
   useEffect(() => {
     document.addEventListener('mousedown', handleOutsideClick);
     return () => {
@@ -132,7 +210,9 @@ const PickFoodServiceModal = ({
           <div className="header">
             <h4>choose {type}</h4>
             <div
-              className="cart-wrapper"
+              className={
+                showPickedItemList ? 'cart-wrapper' : 'cart-wrapper pointer'
+              }
               ref={cartRef}
               onClick={() => {
                 setShowPickedItemList(true);
@@ -145,12 +225,13 @@ const PickFoodServiceModal = ({
                 </>
               ) : (
                 <>
+                  {/* Picked list */}
                   <div className="food-list">
                     <h6>{type} list</h6>
                     {pickedItem.length ? (
                       <>
                         <div className="food-container">
-                          {pickedItem.map(({ id, quantity, name, price }) => (
+                          {pickedItem.map(({ id, count, name, price }) => (
                             <div className="food" key={id}>
                               <img
                                 src={type === 'food' ? beefImg : balletImg}
@@ -158,9 +239,29 @@ const PickFoodServiceModal = ({
                               />
                               <div className="col">
                                 <span>{name}</span>
-                                <span className="quantity">{quantity}</span>
+                                <div className="quantity-group">
+                                  <FaMinus
+                                    className="pointer"
+                                    onClick={() =>
+                                      handleItemAmountChange(
+                                        id,
+                                        (type = 'decrease')
+                                      )
+                                    }
+                                  />
+                                  <span className="quantity">{count}</span>
+                                  <FaPlus
+                                    className="pointer"
+                                    onClick={() =>
+                                      handleItemAmountChange(
+                                        id,
+                                        (type = 'increase')
+                                      )
+                                    }
+                                  />
+                                </div>
                               </div>
-                              <span>{price * quantity}$</span>
+                              <span>{price * count}$</span>
                               <FaRegTrashAlt
                                 className="trash"
                                 onClick={() => handleTrashClick(id)}
@@ -169,9 +270,19 @@ const PickFoodServiceModal = ({
                           ))}
                         </div>
                         <strong>total {total}$</strong>
-                        <button className="btn" onClick={handleNextBtnClick}>
-                          next: {type === 'food' ? 'choose service' : 'payment'}
-                        </button>
+                        {!editOrder ? (
+                          <button className="btn" onClick={handleNextBtnClick}>
+                            next:
+                            {type === 'food' ? 'choose service' : 'payment'}
+                          </button>
+                        ) : (
+                          <button
+                            className="btn"
+                            onClick={() => handleSaveBtnClick(type)}
+                          >
+                            Save
+                          </button>
+                        )}
                       </>
                     ) : (
                       <p>please choose some {type}s</p>

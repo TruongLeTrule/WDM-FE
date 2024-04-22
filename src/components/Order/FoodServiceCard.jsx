@@ -26,7 +26,7 @@ const FoodServiceCard = ({ img, name, price, id, handleAddBtnClick }) => {
             className="btn"
             onClick={() => {
               if (quantity > 0) {
-                handleAddBtnClick({ id, quantity, name, price });
+                handleAddBtnClick({ id, count: quantity, name, price });
                 setQuantity(0);
               }
             }}

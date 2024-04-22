@@ -5,6 +5,7 @@ import {
   FaAngleDown,
   FaAngleUp,
 } from 'react-icons/fa';
+import resolveDate from '../utils/resolveDate';
 import Wrapper from '../assets/wrappers/TableWrapper';
 import resolveCurrency from '../utils/resolveCurrency';
 
@@ -29,6 +30,8 @@ const Table = ({ columns, data, handleRowClick, pagination }) => {
         return 'paid';
       case 'deposit':
         return 'deposit';
+      case 'pending':
+        return 'pending';
       default:
         return;
     }
@@ -68,7 +71,9 @@ const Table = ({ columns, data, handleRowClick, pagination }) => {
                     className={resolveCellClass(cell.value)}
                     title={cell.column.id === 'customerName' ? cell.value : ''}
                   >
-                    {cell.render('Cell')}
+                    {cell.column.id.includes('date')
+                      ? resolveDate(cell.value)
+                      : cell.value}
                     {resolveCurrency(cell.column.id)}
                   </td>
                 ))}

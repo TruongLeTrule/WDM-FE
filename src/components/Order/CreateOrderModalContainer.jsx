@@ -25,14 +25,9 @@ const CreateOrderModalContainer = () => {
     nextModalState
   ) => {
     setCreateOrderModalState({
-      ...createOrderModalState,
       [currModal]: currModalState,
       [nextModal]: nextModalState,
     });
-  };
-
-  const handleSubmit = () => {
-    console.log('fetch api');
   };
 
   return (
@@ -41,7 +36,7 @@ const CreateOrderModalContainer = () => {
         <PickDateModal
           isOpen={createOrderModalState?.pickDate}
           setModalClose={() => setModalState('pickDate', false)}
-          setValue={(newValue) => setNewOrder({ wedding_date: newValue })}
+          setWeddingDate={(wedding_date) => setNewOrder({ wedding_date })}
           setNextModalOpen={() =>
             setModalState('pickDate', false, 'lobType', true)
           }
@@ -66,6 +61,11 @@ const CreateOrderModalContainer = () => {
           setNextModalOpen={() =>
             setModalState('lobby', false, 'userInfo', true)
           }
+          setLobbyInfo={(lobby_id, shift, lobby_name) =>
+            setNewOrder({ ...newOrder, lobby_id, shift, lobby_name })
+          }
+          wedding_date={newOrder.wedding_date}
+          lob_type_id={newOrder.lob_type_id}
         />
       )}
       {createOrderModalState?.userInfo && (
@@ -75,25 +75,42 @@ const CreateOrderModalContainer = () => {
           setNextModalOpen={() =>
             setModalState('userInfo', false, 'food', true)
           }
+          setUserInfo={(formResult, id, table_count) =>
+            setNewOrder({
+              ...newOrder,
+              ...formResult,
+              id,
+              table_count,
+            })
+          }
+          lobby_id={newOrder.lobby_id}
+          shift={newOrder.shift}
+          wedding_date={newOrder.wedding_date}
         />
       )}
       {createOrderModalState?.food && (
         <PickFoodServiceModal
-          type="food"
           isOpen={createOrderModalState?.food}
           setModalClose={() => setModalState('food', false)}
-          setValue={(value) => setNewOrder({ ...newOrder, ...value })}
           setNextModalOpen={() => setModalState('food', false, 'service', true)}
+          type="food"
+          orderId={newOrder.id}
+          setFoodData={(food_total_price) =>
+            setNewOrder({ ...newOrder, food_total_price })
+          }
         />
       )}
       {createOrderModalState?.service && (
         <PickFoodServiceModal
-          type="service"
           isOpen={createOrderModalState?.service}
           setModalClose={() => setModalState('service', false)}
-          setValue={(value) => setNewOrder({ ...newOrder, ...value })}
           setNextModalOpen={() =>
             setModalState('service', false, 'payment', true)
+          }
+          type="service"
+          orderId={newOrder.id}
+          setServiceData={(total, service_total_price) =>
+            setNewOrder({ ...newOrder, total, service_total_price })
           }
         />
       )}
@@ -104,16 +121,19 @@ const CreateOrderModalContainer = () => {
           setNextModalOpen={() =>
             setModalState('payment', false, 'review', true)
           }
+          orderData={newOrder}
+          setOrderData={setNewOrder}
         />
       )}
       {createOrderModalState?.review && (
         <ReviewModal
           isOpen={createOrderModalState?.review}
           setModalClose={() => setModalState('review', false)}
-          handleSubmit={handleSubmit}
           setNextModalOpen={() =>
             setModalState('review', false, 'success', true)
           }
+          orderData={newOrder}
+          setOrderData={setNewOrder}
         />
       )}
       {createOrderModalState?.success && (

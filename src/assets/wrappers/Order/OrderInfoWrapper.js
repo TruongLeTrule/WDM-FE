@@ -2,7 +2,6 @@ import styled from 'styled-components';
 
 const Wrapper = styled.div`
   padding: 0 3rem;
-  text-transform: capitalize;
   h4 {
     font-size: 1.6rem;
     margin-top: 2.2rem;
@@ -11,6 +10,7 @@ const Wrapper = styled.div`
   }
   .header {
     position: relative;
+    padding: 0 2rem;
   }
   .icon {
     position: absolute;
@@ -35,6 +35,7 @@ const Wrapper = styled.div`
     font-size: 0.9rem;
     margin-top: 0.3rem;
     color: var(--grey-400);
+    text-transform: capitalize;
   }
   .rows {
     width: max-content;
@@ -44,7 +45,7 @@ const Wrapper = styled.div`
     padding: 0.7rem 1.7rem;
     font-size: 1rem;
     font-weight: 500;
-    margin: 1.2rem auto;
+    margin: 2.2rem auto 0 auto;
     display: block;
   }
 `;

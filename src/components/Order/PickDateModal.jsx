@@ -19,11 +19,11 @@ const customStyle = {
 const PickDateModal = ({
   isOpen,
   setModalClose,
-  setValue,
+  setWeddingDate,
   setNextModalOpen,
 }) => {
-  const handleOnChange = (newValue) => {
-    setValue(newValue.toDate());
+  const handleOnChange = (weddingDate) => {
+    setWeddingDate(weddingDate.toDate());
     setNextModalOpen();
   };
 
@@ -34,7 +34,7 @@ const PickDateModal = ({
       customStyle={customStyle}
     >
       <DateCalendar
-        onChange={(newValue) => handleOnChange(newValue)}
+        onChange={(weddingDate) => handleOnChange(weddingDate)}
         label="Choose day"
       />
     </Modal>

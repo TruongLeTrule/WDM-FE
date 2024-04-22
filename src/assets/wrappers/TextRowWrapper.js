@@ -7,6 +7,7 @@ const Wrapper = styled.div`
   .title {
     font-weight: 600;
     margin-right: 1rem;
+    text-transform: capitalize;
   }
   .open-modal {
     display: inline-flex;

@@ -4,7 +4,6 @@ import { createWedding } from '../../api/wedding.api';
 import { getUserInfo } from '../../utils/orderRenderArr';
 import Modal from '../Modal';
 import Wrapper from '../../assets/wrappers/Order/GetUserInfoWrapper';
-import { useOrderContext } from '../../pages/Order';
 
 const customStyle = {
   content: {
@@ -21,8 +20,15 @@ const customStyle = {
   },
 };
 
-const GetUserInfoModal = ({ isOpen, setModalClose, setNextModalOpen }) => {
-  const { newOrder, setNewOrder } = useOrderContext();
+const GetUserInfoModal = ({
+  isOpen,
+  setModalClose,
+  setNextModalOpen,
+  setUserInfo,
+  lobby_id,
+  shift,
+  wedding_date,
+}) => {
   const {
     handleSubmit,
     register,
@@ -32,20 +38,14 @@ const GetUserInfoModal = ({ isOpen, setModalClose, setNextModalOpen }) => {
   const handleNextBtnClick = handleSubmit(async (formResult) => {
     try {
       const tableCount = Number(formResult.table_count);
-      delete newOrder['lob_type_id'];
       const { data } = await createWedding({
         ...formResult,
-        lobby_id: newOrder.lobby_id,
-        shift: newOrder.shift,
-        wedding_date: newOrder.wedding_date,
+        lobby_id,
+        shift,
+        wedding_date,
         table_count: tableCount,
       });
-      setNewOrder({
-        ...newOrder,
-        ...formResult,
-        id: data.id,
-        table_count: tableCount,
-      });
+      setUserInfo(formResult, data.id, tableCount);
       setNextModalOpen();
     } catch (error) {
       alert(error.message);

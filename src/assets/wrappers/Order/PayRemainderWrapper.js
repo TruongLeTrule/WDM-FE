@@ -24,6 +24,9 @@ const Wrapper = styled.div`
   .text-input-wrapper {
     margin-top: 0.7rem;
   }
+  .text-input-wrapper input {
+    min-width: 100%;
+  }
   .text-row {
     column-gap: 2.5rem;
   }
