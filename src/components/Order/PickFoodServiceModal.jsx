@@ -293,16 +293,19 @@ const PickFoodServiceModal = ({
             </div>
           </div>
           <div className="container">
-            {renderList.map(({ id, name, price }) => (
-              <FoodServiceCard
-                img={type === 'food' ? beefImg : balletImg}
-                key={id}
-                id={id}
-                name={name}
-                price={price}
-                handleAddBtnClick={handleAddBtnClick}
-              />
-            ))}
+            {renderList.map(({ id, name, price, url }) =>{
+              return(
+                <FoodServiceCard
+                  img={type === 'food' ? (url? url: beefImg) : (url ? url :balletImg)}
+                  key={id}
+                  id={id}
+                  name={name}
+                  price={price}
+                  handleAddBtnClick={handleAddBtnClick}
+                />
+              )
+            } 
+            )}
           </div>
         </Wrapper>
       )}
