@@ -2,8 +2,7 @@ import { LobbyBlock, LobbyContent } from "../components/Lobby/Styled";
 import { Header } from "../components";
 import { getLobbyTypes } from "../api/lobby.api";
 import { useEffect, useState, createContext } from "react";
-import LobbyTypeTable from "../components/Lobby/LobbyTypeTable";
-import TypeTableEdit from "../components/Lobby/TypeTableEdit";
+import LobbyType from "../components/Lobby/LobbyTypeTable";
 export const LobbyContext = createContext();
 const Lobby = () => {
   const [lobTypeData, setLobTypeData] = useState();
@@ -35,7 +34,7 @@ const Lobby = () => {
     <LobbyContext.Provider value={shareValue}>
       <LobbyBlock>
         <Header headerTitle={"Lobby"}></Header>
-        <LobbyTypeTable data={lobTypeData} />
+        <LobbyType data={lobTypeData} />
       </LobbyBlock>
     </LobbyContext.Provider>
   )

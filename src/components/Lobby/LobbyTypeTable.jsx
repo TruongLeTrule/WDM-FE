@@ -1,126 +1,84 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import usePagination from "./Hooks/usePagination";
+import { LobbyContext } from '../../pages/Lobby';
 import { LobbyTypeTableStyled } from './Styled';
 import { Icon } from '../../assets/icon';
-import { LobbyContext } from '../../pages/Lobby';
 import TypeTableEdit from './TypeTableEdit';
+import TypeTable from './CreateTypeTable';
+import usePagination from "./Hooks/usePagination";
 
-const LobbyTypeTable = ({ data }) => {
-  const {
-    setLobTypeData,
-    fetchLobType
-  } = useContext(LobbyContext)
-  const [editData, setEditData] = useState()
+const LobbyType = ({ data }) => {
+  const { fetchLobType } = useContext(LobbyContext);
+  const [editData, setEditData] = useState();
   const [isLobTypeEditDisplay, setIsLobTypeEditDisplay] = useState(false);
+
   const testData = data ? data : [];
   const pagination = usePagination(testData, 9);
-  function createArray(n) {
-    var arr = [];
-    for (var i = 1; i <= n; i++) {
-      arr.push(i);
-    }
+
+  const createArray = (n) => {
+    const arr = [];
+    for (let i = 1; i <= n; i++) arr.push(i);
     return arr;
-  }
-  const [maxPages, setMaxPages] = useState(() => {
-    return createArray(pagination.totalPages + 1);
-  });
-  const tableHead = ["ID", "Type", "Max table", "Min price", "Required Deposit", ""]
+  };
+
+  const [maxPages, setMaxPages] = useState(() => createArray(pagination.totalPages + 1));
+
   const onNextPage = useCallback(() => {
-    pagination.setPage((prevState) => {
-      if (prevState < pagination.totalPages) {
-        return prevState + 1;
-      }
-      return prevState;
-    });
+    pagination.setPage(prevState => prevState < pagination.totalPages ? prevState + 1 : prevState);
   }, [pagination]);
 
   const onPrevPage = useCallback(() => {
-    pagination.setPage((prevState) => {
-      if (prevState > 0) {
-        return prevState - 1;
-      }
-      return prevState;
-    });
+    pagination.setPage(prevState => prevState > 0 ? prevState - 1 : prevState);
   }, [pagination]);
 
-  const onPageChange = useCallback((index) => {
+  const onPageChange = useCallback(index => {
     pagination.setPage(index);
-  })
+  }, [pagination]);
 
-  const handleEditButton = (value) => {
+  const handleEditButton = value => {
     setIsLobTypeEditDisplay(true);
-    console.log(editData);
     setEditData(value);
-  }
+  };
 
   useEffect(() => {
-    setMaxPages(createArray(pagination.totalPages + 1))
-  }, [pagination.totalPages])
+    setMaxPages(createArray(pagination.totalPages + 1));
+  }, [pagination.totalPages]);
+
   return (
     <LobbyTypeTableStyled>
       <div className="wrapTable">
-        <table className='lobbyTypeTable'>
-          <thead>
-            <tr>
-              {tableHead.map((value, index) => {
-                return <th key={index}>{value}</th>
-              })}
-            </tr>
-          </thead>
-          <tbody>
-            {pagination.data.map((value, index) => {
-              return (
-                <tr key={index}>
-                  {
-                    value.map((cell, cellIndex) => {
-                      return (
-                        <td key={cellIndex}>{cell}</td>
-                      )
-                    })
-                  }
-                  <td><Icon.more onClick={() => handleEditButton(value)}></Icon.more></td>
-                </tr>
-              )
-            })}
-          </tbody>
-        </table>
+        <TypeTable
+          className='lobbyTypeTable'
+          data={pagination.data}
+          handleEditButton={handleEditButton}
+        />
         <div className='paginationButtonTable'>
           <div className='button previousButton' onClick={onPrevPage} >
             <Icon.leftarrow disabled={pagination.page <= 0}></Icon.leftarrow>
           </div>
-          {
-            maxPages.map((value, index) => {
-              return (
-                <div
-                  key={index}
-                  className='pageNumber'
-                  style={
-                    pagination.page === index ?
-                      { backgroundColor: "blue", color: "white" }
-                      : {}
-                  }
-                  onClick={() => onPageChange(index)}
-                >
-                  {value}
-                </div>
-              );
-            })
-          }
+          {maxPages.map((value, index) => (
+            <div
+              key={index}
+              className='pageNumber'
+              style={pagination.page === index ? { backgroundColor: "blue", color: "white" } : {}}
+              onClick={() => onPageChange(index)}
+            >
+              {value}
+            </div>
+          ))}
           <div className='button nextButton' onClick={onNextPage} >
             <Icon.rightarrow disabled={pagination.page === pagination.totalPages}></Icon.rightarrow>
           </div>
         </div>
       </div>
-      {
-        isLobTypeEditDisplay &&
+      {isLobTypeEditDisplay && (
         <TypeTableEdit
           setIsLobTypeEditDisplay={setIsLobTypeEditDisplay}
           editData={editData}
           fetchLobType={fetchLobType}
         />
-      }
+      )}
     </LobbyTypeTableStyled>
   );
-}
+};
 
-export default LobbyTypeTable;
+export default LobbyType;

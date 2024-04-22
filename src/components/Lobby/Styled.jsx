@@ -135,7 +135,7 @@ export const TypeTableCancelAndSave = styled.div`
 `
 
 export const EditLobbyInput = styled.div`
-  height: 47.5%;
+  height: 65%;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
