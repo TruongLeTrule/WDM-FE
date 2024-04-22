@@ -21,7 +21,9 @@ const TypeTableEdit = ({
     setIsLobTypeEditDisplay(false);
   }
   const handleInput = (value, name) => {
-    if (typeof value === 'string' && /^\d+$/.test(value)) {
+    if (name === "type_name") {
+      setInputValue({ ...inputValue, [name]: value.replace(/[^A-Za-z]/g, '') });
+    } else if (typeof value === 'string' && /^\d+$/.test(value)) {
       if (name === "max_table_count" || name === "min_table_price" || name === "deposit_percent") {
         setInputValue({ ...inputValue, [name]: parseInt(value) });
       } else {
@@ -30,7 +32,8 @@ const TypeTableEdit = ({
     } else if (value === "") {
       setInputValue({ ...inputValue, [name]: value });
     }
-  }
+  };
+
 
   const handleSaveButton = async () => {
     await updateLobType(editData[0] < 10 ? editData[0].replace("0", "").replace(".", "") : editData[0], inputValue);
