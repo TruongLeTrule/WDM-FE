@@ -32,7 +32,7 @@ const EditUserInfoModal = ({
     bride: orderData.bride,
     note: orderData.note,
     phone: orderData.phone,
-    table_count: orderData.table_count,
+    table_count: Number(orderData.table_count),
   });
 
   const handleChange = (e) => {
@@ -53,6 +53,7 @@ const EditUserInfoModal = ({
     try {
       const reqBody = {
         ...formState,
+        table_count: Number(formState.table_count)
       };
       if (orderData.new_lobby_id) {
         reqBody.lobby_id = orderData.new_lobby_id;

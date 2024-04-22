@@ -113,7 +113,8 @@ const Order = () => {
 
   const fetchWeddings = async () => {
     try {
-      const list = await getWeddings();
+      const includeBill = true
+      const list = await getWeddings(includeBill);
       const handledList = list.data.map((wedding) => ({
         ...wedding,
         ...wedding.Bill[0],

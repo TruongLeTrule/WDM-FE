@@ -1,7 +1,11 @@
 import axiosClient from './axiosClient';
 
-export const getWeddings = () => {
-  return axiosClient.get('wedding');
+export const getWeddings = (bill=false) => {
+  return axiosClient.get('wedding', {
+    params: {
+      bill
+    }
+  });
 };
 
 export const getWeddingById = (id, includedBill = false) => {
