@@ -28,13 +28,14 @@ const Lobby = () => {
     fetchLobType();
   }, [])
   const shareValue = {
+    setLobTypeData,
+    fetchLobType
   }
   return (
     <LobbyContext.Provider value={shareValue}>
       <LobbyBlock>
         <Header headerTitle={"Lobby"}></Header>
-        <LobbyTypeTable data={lobTypeData}>
-        </LobbyTypeTable>
+        <LobbyTypeTable data={lobTypeData} />
       </LobbyBlock>
     </LobbyContext.Provider>
   )

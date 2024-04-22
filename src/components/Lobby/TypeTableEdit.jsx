@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { updateLobType } from "../../api/lobby.api";
+import { getLobbyTypes } from "../../api/lobby.api";
 import {
   TypeTableEditBlock,
   TypeTableInput,
@@ -9,38 +10,38 @@ import {
 } from "./Styled";
 const TypeTableEdit = ({
   setIsLobTypeEditDisplay,
-  editData
+  editData,
+  fetchLobType,
 }) => {
   const [inputValue, setInputValue] = useState({
     type_name: editData[1],
-    max_table_count: editData[2].replace(" tables", ""),
-    min_table_price: editData[3].replace("/table", ""),
-    deposit_percent: editData[4].replace("%", ""),
+    max_table_count: parseInt(editData[2].replace(" tables", "")),
+    min_table_price: parseInt(editData[3].replace("/table", "")),
+    deposit_percent: parseInt(editData[4].replace("%", "")),
   });
+  const [lobUpdateTypeData, setLobUpdateTypeData] = useState();
   const handleCancelButton = () => {
     setIsLobTypeEditDisplay(false);
   }
   const handleInput = (value, name) => {
-    setInputValue({ ...inputValue, [name]: value });
+    if (name === "max_table_count" || name === "min_table_price" || name === "deposit_percent")
+      setInputValue({ ...inputValue, [name]: parseInt(value) });
+    else
+      setInputValue({ ...inputValue, [name]: value });
   }
 
   const handleSaveButton = async () => {
-    setInputValue({
-      ...inputValue,
-      max_table_count: parseInt(inputValue.max_table_count),
-      min_table_price: parseInt(inputValue.min_table_price),
-      deposit_percent: parseInt(inputValue.deposit_percent)
-    })
-    await updateLobType(editData[0], inputValue);
+    console.log(inputValue);
+    await updateLobType(editData[0] < 10 ? editData[0].replace("0", "").replace(".", "") : editData[0], inputValue);
+    await fetchLobType();
     setIsLobTypeEditDisplay(false);
-    /* window.location.reload(); */
   }
   useEffect(() => {
     setInputValue({
       type_name: editData[1],
-      max_table_count: editData[2].replace(" tables", ""),
-      min_table_price: editData[3].replace("/table", ""),
-      deposit_percent: editData[4].replace("%", ""),
+      max_table_count: parseInt(editData[2].replace(" tables", "")),
+      min_table_price: parseInt(editData[3].replace("/table", "")),
+      deposit_percent: parseInt(editData[4].replace("%", "")),
     })
   }, [editData])
   return (

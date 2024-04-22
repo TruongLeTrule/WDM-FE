@@ -11,7 +11,7 @@ const AutoRedirect = (p) => {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      verifyToken(token) 
+      verifyToken(token)
         .then(() => {
           setIsVerified(true);
         })
@@ -28,7 +28,7 @@ const AutoRedirect = (p) => {
 
   if (isLoading) {
     // Optionally return a loading indicator while checking
-    return <Loading minsize="35px"/>;
+    return <Loading minsize="35px" />;
   }
 
   if (isVerified) {

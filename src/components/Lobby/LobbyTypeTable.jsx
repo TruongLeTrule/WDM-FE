@@ -6,6 +6,10 @@ import { LobbyContext } from '../../pages/Lobby';
 import TypeTableEdit from './TypeTableEdit';
 
 const LobbyTypeTable = ({ data }) => {
+  const {
+    setLobTypeData,
+    fetchLobType
+  } = useContext(LobbyContext)
   const [editData, setEditData] = useState()
   const [isLobTypeEditDisplay, setIsLobTypeEditDisplay] = useState(false);
   const testData = data ? data : [];
@@ -111,7 +115,8 @@ const LobbyTypeTable = ({ data }) => {
         isLobTypeEditDisplay &&
         <TypeTableEdit
           setIsLobTypeEditDisplay={setIsLobTypeEditDisplay}
-          editData = {editData}
+          editData={editData}
+          fetchLobType={fetchLobType}
         />
       }
     </LobbyTypeTableStyled>
