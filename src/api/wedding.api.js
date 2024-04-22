@@ -1,5 +1,13 @@
 import axiosClient from './axiosClient';
 
+export const searchWeddingsByPhone = (phone) => {
+  return axiosClient.get('wedding/find', {
+    params: {
+      phone
+    }
+  });
+};
+
 export const getWeddings = (bill=false) => {
   return axiosClient.get('wedding', {
     params: {
