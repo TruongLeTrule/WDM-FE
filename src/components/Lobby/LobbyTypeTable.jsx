@@ -1,54 +1,44 @@
 import React, { Fragment, useCallback, useContext, useEffect, useState } from 'react';
 import { LobbyContext } from '../../pages/Lobby';
 import TypeTableEdit from './TypeTableEdit';
-import TypeTable from './CreateTypeTable';
+import TypeTable from './utils/CreateTypeTable';
 import { WrapTable } from './Styled';
 import usePagination from "./Hooks/usePagination";
 import { getLobbies } from '../../api/lobby.api';
 import PagePagination from './PagePagination';
 
 const LobbyType = ({ data }) => {
-  const {
-    fetchLobType,
-    setPageDisplay,
-    setLobTypeInformationData
-  } = useContext(LobbyContext);
+  const { fetchLobType, setPageDisplay, setLobTypeInformationData } = useContext(LobbyContext);
   const [editData, setEditData] = useState();
   const [isLobTypeEditDisplay, setIsLobTypeEditDisplay] = useState(false);
-  const testData = data ? data : [];
+  const testData = data || [];
   const pagination = usePagination(testData, 9);
 
-  const handleEditButton = value => {
+  const handleEditButton = (value) => {
     setIsLobTypeEditDisplay(true);
     setEditData(value);
   };
 
-  const handleLobTypeClick = (value) => {
+  const handleLobTypeClick = async (value) => {
     const id = value[0].replace(".", "").replace("0", "");
     const type = value[1];
-    fetchLobTypeInformation(id, type);
-    setPageDisplay({
-      previousPage: "LobType",
-      currentPage: "LobTypeInformation",
-    });
-  }
-
-  const fetchLobTypeInformation = async (id, type) => {
-    const res = await getLobbies("", id);
-    const data = res.data;
-    console.log(data)
-    const tempData = [];
-    data.map((value) => {
-      const subData = []
-      subData.push(
+    try {
+      const res = await getLobbies("", id);
+      const data = res.data;
+      const tempData = data.map((value) => [
         value.lob_type_id < 10 ? "0" + value.lob_type_id + "." : value.lob_type_id + ".",
         value.name,
         type,
-      )
-      tempData.push(subData);
-    })
-    setLobTypeInformationData(tempData);
-  }
+      ]);
+      setLobTypeInformationData(tempData);
+      setPageDisplay({
+        previousPage: "LobType",
+        currentPage: "LobTypeInformation",
+      });
+    } catch (error) {
+      console.error("Error fetching lob type information:", error);
+    }
+  };
 
   return (
     <Fragment>

@@ -1,12 +1,11 @@
+import { useCallback, useEffect, useState } from "react";
 import { PagePaginationStyled } from "./Styled";
 import { Icon } from "../../assets/icon";
-import { useCallback, useEffect, useState } from "react";
 import createArray from "./utils/CreateArrayFromN";
-const PagePagination = ({
-  pagination,
 
-}) => {
+const PagePagination = ({ pagination }) => {
   const [maxPages, setMaxPages] = useState(() => createArray(pagination.totalPages + 1));
+
   const onNextPage = useCallback(() => {
     pagination.setPage(prevState => prevState < pagination.totalPages ? prevState + 1 : prevState);
   }, [pagination]);
@@ -18,9 +17,11 @@ const PagePagination = ({
   const onPageChange = useCallback(index => {
     pagination.setPage(index);
   }, [pagination]);
+
   useEffect(() => {
     setMaxPages(() => createArray(pagination.totalPages + 1));
-  }, [pagination])
+  }, [pagination]);
+
   return (
     <PagePaginationStyled>
       <div className='button previousButton' onClick={onPrevPage} >
@@ -40,7 +41,7 @@ const PagePagination = ({
         <Icon.rightarrow disabled={pagination.page === pagination.totalPages}></Icon.rightarrow>
       </div>
     </PagePaginationStyled>
-  )
-}
+  );
+};
 
 export default PagePagination;

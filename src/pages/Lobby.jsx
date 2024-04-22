@@ -1,11 +1,12 @@
-import { LobbyBlock, LobbyTableStyled } from "../components/Lobby/Styled";
-import { Header } from "../components";
-import { getLobbyTypes } from "../api/lobby.api";
-import { getLobbies } from "../api/lobby.api";
 import { useEffect, useState, createContext } from "react";
+import { Header } from "../components";
+import { getLobbyTypes, getLobbies } from "../api/lobby.api";
+import { LobbyBlock, LobbyTableStyled } from "../components/Lobby/Styled";
 import LobbyType from "../components/Lobby/LobbyTypeTable";
 import LobTypeInformation from "../components/Lobby/LobTypeInformTable";
+
 export const LobbyContext = createContext();
+
 const Lobby = () => {
   const [lobTypeData, setLobTypeData] = useState();
   const [lobTypeInformationData, setLobTypeInformationData] = useState();
@@ -13,29 +14,31 @@ const Lobby = () => {
     previousPage: "",
     currentPage: "",
   });
-  const handleBackBtn = (previos) => {
+
+  const handleBackBtn = (previous) => {
     setPageDisplay({
       previousPage: "",
-      currentPage: previos
-    })
-  }
+      currentPage: previous
+    });
+  };
+
   const fetchLobType = async () => {
     const res = await getLobbyTypes();
     const data = res.data;
-    const tempData = []
+    const tempData = [];
     data.map((value) => {
-      const subData = []
+      const subData = [];
       subData.push(
         value.id < 10 ? "0" + value.id + "." : value.id + ".",
         value.type_name,
         value.max_table_count + " tables",
         value.min_table_price + "/table",
-        value.deposit_percent + "%",
-      )
+        value.deposit_percent + "%"
+      );
       tempData.push(subData);
-    })
+    });
     setLobTypeData(tempData);
-  }
+  };
 
   useEffect(() => {
     setPageDisplay({
@@ -43,13 +46,15 @@ const Lobby = () => {
       currentPage: "LobType",
     });
     fetchLobType();
-  }, [])
+  }, []);
+
   const shareValue = {
     setLobTypeData,
     fetchLobType,
     setPageDisplay,
     setLobTypeInformationData
-  }
+  };
+
   return (
     <LobbyContext.Provider value={shareValue}>
       <LobbyBlock>
@@ -64,6 +69,7 @@ const Lobby = () => {
         </LobbyTableStyled>
       </LobbyBlock>
     </LobbyContext.Provider>
-  )
+  );
 };
+
 export default Lobby;
