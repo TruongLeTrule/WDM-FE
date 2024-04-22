@@ -13,18 +13,20 @@ export const customerInfo = [
   },
   {
     title: 'order date',
-    key: 'orderDate',
+    key: 'created_at',
+    type: 'date',
   },
 ];
 
 export const weddingInfo = [
   {
     title: 'lobby',
-    key: 'lobby',
+    key: 'lobby_name',
   },
   {
     title: 'occur date',
-    key: 'occurDate',
+    key: 'wedding_date',
+    type: 'date',
   },
   {
     title: 'shift',
@@ -32,26 +34,24 @@ export const weddingInfo = [
   },
   {
     title: 'total table',
-    key: 'totalTable',
+    key: 'table_count',
   },
   {
-    title: 'price/table',
-    key: 'pricePerTable',
+    title: 'total food price',
+    key: 'food_total_price',
+    openModal: 'food',
   },
   {
-    title: 'service fee',
-    key: 'serviceFee',
-  },
-  {
-    title: 'deposit',
-    key: 'deposit',
+    title: 'total service price',
+    key: 'service_total_price',
+    openModal: 'service',
   },
   {
     title: 'extra fee',
-    key: 'extraFee',
+    key: 'extra_fee',
   },
   {
     title: 'total',
-    key: 'total',
+    key: 'total_price',
   },
 ];

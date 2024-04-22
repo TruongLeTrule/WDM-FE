@@ -1,14 +1,18 @@
 import { TextRow } from '../';
-import { useOrderContext } from '../../pages/Order';
 import { reviewOrderLeft, reviewOrderRight } from '../../utils/orderRenderArr';
 import Modal from '../Modal';
 import Wrapper from '../../assets/wrappers/Order/ReviewWrapper';
 
-const ReviewModal = ({ isOpen, setModalClose, setNextModalOpen }) => {
-  const { newOrder, setNewOrder } = useOrderContext();
+const ReviewModal = ({
+  isOpen,
+  setModalClose,
+  setNextModalOpen,
+  orderData,
+  setOrderData,
+}) => {
   const handleNextBtnClick = () => {
     setNextModalOpen();
-    setNewOrder(null);
+    setOrderData(null);
   };
 
   return (
@@ -25,7 +29,7 @@ const ReviewModal = ({ isOpen, setModalClose, setNextModalOpen }) => {
                   title={title}
                   keyValue={key}
                   key={key}
-                  value={newOrder[key]}
+                  value={orderData[key]}
                   type={type}
                 />
               ))}
@@ -33,12 +37,12 @@ const ReviewModal = ({ isOpen, setModalClose, setNextModalOpen }) => {
           </div>
           {/* Right col */}
           <div>
-            <h5>{newOrder?.lobby_name}</h5>
-            <p className="shift">{newOrder?.shift}</p>
+            <h5>{orderData?.lobby_name}</h5>
+            <p className="shift">{orderData?.shift}</p>
             <div className="rows">
               {reviewOrderRight.map(({ title, key, openModal }) => (
                 <TextRow
-                  value={newOrder?.[key]}
+                  value={orderData?.[key]}
                   title={title}
                   keyValue={key}
                   key={key}

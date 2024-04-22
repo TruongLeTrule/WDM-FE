@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useOrderContext } from '../../pages/Order';
-import { payRemainderOverall } from '../../utils/orderRenderArr';
 import { CheckBox, Modal, TextInput } from '../';
+import { togglePenalty, depositOrder } from '../../api/wedding.api';
+import { payRemainderOverall } from '../../utils/orderRenderArr';
 import TextRow from '../TextRow';
 import Wrapper from '../../assets/wrappers/Order/PayRemainderWrapper';
 
@@ -23,56 +24,48 @@ const customStyle = {
 const PayRemainderModal = () => {
   const { orderModalState, setOrderModalState, orderInfo, setOrderInfo } =
     useOrderContext();
-  const [payRemainder, setPayRemainder] = useState(0);
+  const [payRemainder, setPayRemainder] = useState(orderInfo.remain_amount);
 
-  const handleChange = (e) => {
-    if (e.target.type === 'checkbox')
-      return setOrderInfo({
-        ...orderInfo,
-        isPenaltyMode: !orderInfo.isPenaltyMode,
-      });
-    setOrderInfo({
-      ...orderInfo,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const calculateExtraFee = () => {
-    const extraFee = 200;
-    const occurDate = new Date(orderInfo?.occurDate);
-    const today = new Date();
-    occurDate.setHours(0, 0, 0, 0);
-    today.setHours(0, 0, 0, 0);
-    if (orderInfo?.isPenaltyMode && today.getTime() > occurDate.getTime())
-      return setOrderInfo({
-        ...orderInfo,
-        extraFee: extraFee,
-        remainder: orderInfo.remainder + extraFee,
-      });
-    if (orderInfo.extraFee > 0)
+  const handlePenaltyModeChange = async () => {
+    try {
+      const result = await togglePenalty(orderInfo.id);
+      const { is_penalty_mode, total, extraFee, remainPrice } = result.data;
       setOrderInfo({
         ...orderInfo,
-        extraFee: 0,
-        remainder: orderInfo.remainder - extraFee,
+        is_penalty_mode,
+        total_price: total,
+        extra_fee: extraFee,
+        remain_amount: remainPrice,
       });
+      setPayRemainder(remainPrice);
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
-  useEffect(() => {
-    calculateExtraFee();
-  }, [orderInfo?.isPenaltyMode]);
-
-  const handleSubmitBtnClick = () => {
-    setOrderInfo({
-      ...orderInfo,
-      paidDate: new Date(),
-      status: 'paid',
-    });
-    setOrderModalState({
-      ...orderModalState,
-      payRemainder: false,
-      bill: true,
-    });
-    console.log(payRemainder);
+  const handleSubmitBtnClick = async () => {
+    try {
+      const result = await depositOrder(orderInfo.id, Number(payRemainder));
+      if (result.data.msg) throw new Error(result.data.msg);
+      if (result.data.remainPrice > 0) {
+        setOrderInfo(null);
+        setOrderModalState({ payRemainder: false });
+      }
+      if (result.data.remainPrice === 0) {
+        setOrderInfo({
+          ...orderInfo,
+          paid_date: result.data.paid_date,
+          status: result.data.status,
+        });
+        setOrderModalState({
+          ...orderModalState,
+          payRemainder: false,
+          bill: true,
+        });
+      }
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
   return (
@@ -80,7 +73,6 @@ const PayRemainderModal = () => {
       isOpen={orderModalState?.payRemainder}
       setModalClose={() =>
         setOrderModalState({
-          ...orderModalState,
           payRemainder: false,
         })
       }
@@ -107,7 +99,7 @@ const PayRemainderModal = () => {
             <h5>pay remainder</h5>
             <TextInput
               keyValue="payRemainder"
-              value={Number(payRemainder).toString()}
+              value={payRemainder}
               handleChange={(e) => setPayRemainder(e.target.value)}
               type="number"
             />
@@ -121,8 +113,8 @@ const PayRemainderModal = () => {
             title="penalty mode"
             type="checkbox"
             value="isPenaltyMode"
-            currValue={orderInfo?.isPenaltyMode}
-            handleChange={handleChange}
+            currValue={orderInfo?.is_penalty_mode}
+            handleChange={handlePenaltyModeChange}
           />
         </div>
       </Wrapper>

@@ -4,6 +4,7 @@ const Wrapper = styled.div`
   padding: 0 3rem;
   text-transform: capitalize;
   h4 {
+    font-size: 1.6rem;
     text-align: center;
     margin-top: 3rem;
     font-weight: 700;
@@ -15,6 +16,7 @@ const Wrapper = styled.div`
   }
   h5 {
     font-weight: 600;
+    text-align: center;
     font-size: 1.4em;
   }
   .shift {
@@ -25,24 +27,32 @@ const Wrapper = styled.div`
   }
   .text-row,
   .date-wrapper,
-  .text-input-wrapper {
-    margin-top: 1.3rem;
+  .text-input-wrapper,
+  h5 {
+    margin-top: 1.5rem;
   }
   .text-row {
     column-gap: 2.5rem;
   }
   .right-col {
-    h5 {
-      margin-top: 4.2rem;
-      text-align: center;
+    .col-header {
+      position: relative;
     }
     .rows {
       width: max-content;
       margin: 0 auto;
     }
+    .icon {
+      position: absolute;
+      top: 50%;
+      right: 2rem;
+      translate: 0 -50%;
+      color: var(--primary);
+      cursor: pointer;
+    }
   }
   .btn-wrapper {
-    margin-top: 2.3rem;
+    margin-top: 3rem;
     display: flex;
     justify-content: center;
     align-items: center;

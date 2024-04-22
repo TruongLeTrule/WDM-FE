@@ -21,6 +21,15 @@ const Wrapper = styled.div`
   .red {
     color: var(--red-dark);
   }
+  .open-modal {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    column-gap: 0.5rem;
+    color: var(--grey-400);
+    text-decoration: underline;
+    cursor: pointer;
+  }
 `;
 
 export default Wrapper;

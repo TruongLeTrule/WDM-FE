@@ -8,8 +8,8 @@ import React, {
 } from 'react';
 import { Header, Table } from '../components';
 const Wrapper = React.lazy(() => import('../assets/wrappers/OrderWrapper'));
-const EditOrderInfoModal = React.lazy(() =>
-  import('../components/Order/EditOrderInfoModal')
+const EditOrderModalContainer = React.lazy(() =>
+  import('../components/Order/EditOrderModalContainer')
 );
 const OrderInfoModal = React.lazy(() =>
   import('../components/Order/OrderInfoModal')
@@ -25,7 +25,6 @@ const CreateOrderModalContainer = React.lazy(() =>
   import('../components/Order/CreateOrderModalContainer')
 );
 import { getWeddings } from '../api/wedding.api';
-import { food, service } from '../utils/orderTestData';
 import Loading from '../components/Loading';
 
 const OrderContext = createContext();
@@ -70,7 +69,6 @@ const Order = () => {
   const [newOrder, setNewOrder] = useState();
   const [orderModalState, setOrderModalState] = useState({
     info: false,
-    edit: false,
     payRemainder: false,
     bill: false,
     food: false,
@@ -87,12 +85,21 @@ const Order = () => {
     review: false,
     success: false,
   });
+  const [editOrderModalState, setEditOrderModalState] = useState({
+    pickDate: false,
+    lobType: false,
+    lobby: false,
+    userInfo: false,
+    food: false,
+    service: false,
+    success: false,
+  });
 
   const handleRowClick = (rowData) => {
     setOrderInfo(rowData);
     setOrderModalState({
       ...orderModalState,
-      info: rowData?.status === 'deposit',
+      info: ['deposit', 'pending'].includes(rowData?.status),
       bill: rowData?.status === 'paid',
     });
   };
@@ -106,11 +113,15 @@ const Order = () => {
 
   const fetchWeddings = async () => {
     try {
-      const list = await getWeddings();
+      const includeBill = true
+      const list = await getWeddings(includeBill);
       const handledList = list.data.map((wedding) => ({
         ...wedding,
+        ...wedding.Bill[0],
         customer_name: wedding.Customer.name,
         phone: wedding.Customer.phone,
+        lobby_name: wedding.Lobby.name,
+        id: wedding.id,
       }));
       setOrderList(handledList);
       setIsLoading(false);
@@ -120,8 +131,9 @@ const Order = () => {
   };
 
   useEffect(() => {
-    fetchWeddings();
-  }, []);
+    if (!newOrder) fetchWeddings();
+    if (!orderInfo) fetchWeddings();
+  }, [newOrder, orderInfo]);
 
   return (
     <OrderContext.Provider
@@ -134,6 +146,8 @@ const Order = () => {
         setOrderInfo,
         newOrder,
         setNewOrder,
+        editOrderModalState,
+        setEditOrderModalState,
       }}
     >
       {isLoading ? (
@@ -153,17 +167,17 @@ const Order = () => {
             {/* Suspense wrapping all conditional modals */}
             <Suspense fallback={<Loading minsize="35px" />}>
               {orderModalState?.info && <OrderInfoModal />}
-              {orderModalState?.edit && <EditOrderInfoModal />}
               {orderModalState?.payRemainder && <PayRemainderModal />}
               {orderModalState?.bill && <BillModal />}
               {orderModalState?.food && (
-                <ServiceModal type="food" title="food" data={food} />
+                <ServiceModal type="food" title="food" />
               )}
               {orderModalState?.service && (
-                <ServiceModal type="service" title="service" data={service} />
+                <ServiceModal type="service" title="service" />
               )}
               {/* Create new order modal container always present, also wrapped in Suspense */}
               <CreateOrderModalContainer />
+              <EditOrderModalContainer />
             </Suspense>
           </main>
         </Wrapper>

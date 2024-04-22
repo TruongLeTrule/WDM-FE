@@ -7,6 +7,9 @@ const Wrapper = styled.div`
     text-transform: capitalize;
     font-weight: 600;
   }
+  .pointer {
+    cursor: pointer;
+  }
   .header {
     position: relative;
     .cart-wrapper {
@@ -14,7 +17,6 @@ const Wrapper = styled.div`
       position: absolute;
       right: 0;
       top: 0;
-      cursor: pointer;
       .food-list {
         text-transform: capitalize;
         border-radius: 6px;
@@ -48,9 +50,12 @@ const Wrapper = styled.div`
             justify-content: center;
             align-items: center;
             row-gap: 0.5rem;
-            .quantity {
-              border: 1px solid var(--grey-300);
-              padding: 0.1rem 0.25rem;
+            .quantity-group {
+              display: flex;
+              .quantity {
+                border: 1px solid var(--grey-300);
+                padding: 0.1rem 0.25rem;
+              }
             }
           }
           .trash {

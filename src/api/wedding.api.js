@@ -1,7 +1,11 @@
 import axiosClient from './axiosClient';
 
-export const getWeddings = () => {
-  return axiosClient.get('wedding');
+export const getWeddings = (bill=false) => {
+  return axiosClient.get('wedding', {
+    params: {
+      bill
+    }
+  });
 };
 
 export const getWeddingById = (id, includedBill = false) => {
@@ -13,7 +17,7 @@ export const createWedding = (dataCreate) => {
 };
 
 export const editWedding = (weddingID, dataEdit) => {
-/*
+  /*
 Param: weddingID
 Body: {
     "lobby_id"?: "FgHiJk1-LmNo-2PqRs-3TuVw",
@@ -54,7 +58,7 @@ export const fullPayOrder = (weddingId, transaction_amount) => {
 };
 
 export const togglePenalty = (weddingId) => {
-  return axiosClient.patch('wedding/toggle-penalty', { params: { weddingId } });
+  return axiosClient.patch(`wedding/toggle-penalty?weddingId=${weddingId}`);
 };
 
 export const getFoodsOrder = (weddingId) => {
@@ -62,7 +66,9 @@ export const getFoodsOrder = (weddingId) => {
 };
 
 export const getServicesOrder = (weddingId) => {
-  return axiosClient.get('wedding/get/service-order', { params: { weddingId } });
+  return axiosClient.get('wedding/get/service-order', {
+    params: { weddingId },
+  });
 };
 
 export const getWeddingCurrentTotalDeposit = (weddingId) => {
@@ -85,7 +91,7 @@ export const editFoodsOrder = (weddingId, foods) => {
     "weddingId": "a8414b0b-bd8e-4bfe-b2e8-bf7c4051ce0f"
 }
    */
-  return axiosClient.post(`wedding/update/wedding/food`,{ foods, weddingId, },);
+  return axiosClient.post(`wedding/update/wedding/food`, { foods, weddingId });
 };
 
 export const editServicesOrder = (weddingId, services) => {
@@ -100,7 +106,8 @@ export const editServicesOrder = (weddingId, services) => {
     "weddingId": "a8414b0b-bd8e-4bfe-b2e8-bf7c4051ce0f"
 }
    */
-  return axiosClient.post(`wedding/update/wedding/service`,{ services, weddingId, },);
+  return axiosClient.post(`wedding/update/wedding/service`, {
+    services,
+    weddingId,
+  });
 };
-
-
