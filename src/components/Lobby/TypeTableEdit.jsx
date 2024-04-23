@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { updateLobType } from "../../api/lobby.api";
-import { TypeTableEditBlock, TypeTableInput, TypeTableCancelAndSave } from "./Styled";
-import EditLobTypeInput from "./utils/CreateEditInput";
+import { EditBlock, TableInput, TypeTableCancelAndSave } from "./Styled";
+import EditLobTypeInput from "./utils/CreateTypeEditInput";
 
 const TypeTableEdit = ({ setIsLobTypeEditDisplay, editData, fetchLobType }) => {
   const [inputValue, setInputValue] = useState({
@@ -45,16 +45,16 @@ const TypeTableEdit = ({ setIsLobTypeEditDisplay, editData, fetchLobType }) => {
   }, [editData]);
 
   return (
-    <TypeTableEditBlock>
-      <TypeTableInput>
+    <EditBlock>
+      <TableInput className="Type">
         <h4>Edit Lobby Type</h4>
         <EditLobTypeInput handleInput={handleInput} inputValue={inputValue} />
-        <TypeTableCancelAndSave>
+        <TypeTableCancelAndSave className="Type">
           <button className="button buttonCancel" onClick={handleCancelButton}> Cancel </button>
           <button className="button buttonSave" onClick={handleSaveButton}>Save </button>
         </TypeTableCancelAndSave>
-      </TypeTableInput>
-    </TypeTableEditBlock>
+      </TableInput>
+    </EditBlock>
   );
 };
 

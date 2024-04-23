@@ -1,8 +1,19 @@
 import { Icon } from "../../../assets/icon";
+import { useContext } from "react";
+import { TypeInformContext } from "../LobTypeInformation";
 
-const TypeInformTable = ({ data }) => {
+const TypeInformTable = () => {
+  const {
+    setIsLobTypeInformEditDisplay,
+    setEditData,
+    pagination
+  } = useContext(TypeInformContext);
   const tableHead = ["ID", "Name", "Type"];
 
+  const handleEditIconClick = (value) => {
+    setIsLobTypeInformEditDisplay(true);
+    setEditData(value);
+  }
   return (
     <table className='lobbyTypeTable'>
       <thead>
@@ -13,12 +24,12 @@ const TypeInformTable = ({ data }) => {
         </tr>
       </thead>
       <tbody>
-        {data.map((value, index) => (
+        {pagination.data.map((value, index) => (
           <tr key={index}>
             {value.map((cell, cellIndex) => (
-              <td key={cellIndex} onClick={() => { }}>{cell}</td>
+              cellIndex < 3 && <td key={cellIndex}>{cell}</td>
             ))}
-            <td><Icon.more onClick={() => { }}></Icon.more></td>
+            <td><Icon.more onClick={() => handleEditIconClick(value)}></Icon.more></td>
           </tr>
         ))}
       </tbody>

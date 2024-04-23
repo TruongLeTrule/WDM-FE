@@ -2,8 +2,8 @@ import { useEffect, useState, createContext } from "react";
 import { Header } from "../components";
 import { getLobbyTypes, getLobbies } from "../api/lobby.api";
 import { LobbyBlock, LobbyTableStyled } from "../components/Lobby/Styled";
-import LobbyType from "../components/Lobby/LobbyTypeTable";
-import LobTypeInformation from "../components/Lobby/LobTypeInformTable";
+import LobbyType from "../components/Lobby/LobbyType";
+import LobTypeInformation from "../components/Lobby/LobTypeInformation";
 
 export const LobbyContext = createContext();
 
@@ -40,6 +40,28 @@ const Lobby = () => {
     setLobTypeData(tempData);
   };
 
+  const fetchLobby = async (value) => {
+    const id = value[0].replace(".", "").replace("0", "");
+    const type = value[1];
+    try {
+      const res = await getLobbies("", id);
+      const data = res.data;
+      const tempData = data.map((value) => [
+        value.lob_type_id < 10 ? "0" + value.lob_type_id + "." : value.lob_type_id + ".",
+        value.name,
+        type,
+        value.id
+      ]);
+      setLobTypeInformationData(tempData);
+      setPageDisplay({
+        previousPage: "LobType",
+        currentPage: "LobTypeInformation",
+      });
+    } catch (error) {
+      console.error("Error fetching lob type information:", error);
+    }
+  }
+
   useEffect(() => {
     setPageDisplay({
       previousPage: "",
@@ -51,6 +73,7 @@ const Lobby = () => {
   const shareValue = {
     setLobTypeData,
     fetchLobType,
+    fetchLobby,
     setPageDisplay,
     setLobTypeInformationData
   };

@@ -83,7 +83,7 @@ export const PagePaginationStyled = styled.div`
     }
 `
 
-export const TypeTableEditBlock = styled.div`
+export const EditBlock = styled.div`
   width: 100%;
   height: 100vh;
   background-color: rgb(0, 0, 0, 50%);
@@ -98,15 +98,21 @@ export const TypeTableEditBlock = styled.div`
     color: black;
   }
 `
-export const TypeTableInput = styled.div`
+export const TableInput = styled.div`
   background-color: white;
   width: 40%; 
-  height: 60%;
+  height: ${props => {
+    if (props.className === "Type") return "60%";
+    if (props.className === "TypeInform") return "40%;"
+  }};
   border-radius: 20px;
   display: flex;
   flex-direction: column;
   h4{
-    height: 15%;
+    height: ${props => {
+    if (props.className === "Type") return "15%";
+    if (props.className === "TypeInform") return "30%;"
+  }};
     display: flex;
     justify-content: center;
     align-items: center;
@@ -116,7 +122,10 @@ export const TypeTableInput = styled.div`
 
 export const TypeTableCancelAndSave = styled.div`
   display: flex;
-  height: 20%;
+  height: ${props => {
+    if (props.className === "Type") return "20%";
+    if (props.className === "TypeInform") return "35%";
+  }};
   justify-content: space-around;
   align-items: center;
   button{
@@ -206,6 +215,46 @@ export const EditLobbyShift = styled.div`
           cursor: pointer;
         }
       }
+    }
+  }
+`
+
+export const EditTypeInformInput = styled.div`
+  height: 35%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  .inputBlock {
+    height: 100%;
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    padding: 2%;
+    h5{
+      height: 50%;
+      color: black; 
+      font-weight: bold;
+    }
+  }
+  input{
+    height: 50%;
+    border: 2px solid gray;
+    border-radius: 10px;
+    padding-left: 5%;
+    font-size: 1.5em;
+    color: black; 
+  }
+  select{
+    padding-left: 5%;
+    padding-right: 5%;
+    height: 50%;
+    border: 2px solid gray;
+    border-radius: 10px;
+    font-size: 1.15em;
+    color: black; 
+    option{
+      color: black;
     }
   }
 `
