@@ -2,13 +2,31 @@ import styled from 'styled-components';
 
 const Wrapper = styled.header`
   height: var(--header-height);
-  padding: 0 2.5rem;
+  padding-right: 2.5rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
   background-color: var(--white);
   border-bottom: 1px solid var(--grey-200);
+  .backBtn{
+    width: 8%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    svg{
+      width: 35px;
+      height: 35px;
+    }
+    .canClickIcon{
+      &:hover{
+        cursor: pointer;
+      }
+    }
+  }
   h1 {
+    width: 100%;
+    display: flex;
+    justify-content: start;
     font-size: 2em;
     font-weight: 700;
   }

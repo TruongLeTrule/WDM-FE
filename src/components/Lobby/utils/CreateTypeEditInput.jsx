@@ -1,9 +1,9 @@
-import { EditLobbyInput } from "./Styled";
-const EditInput = ({ handleInput, inputValue }) => {
+import { EditLobbyInput } from "../Styled";
+
+const EditLobTypeInput = ({ handleInput, inputValue }) => {
   return (
     <EditLobbyInput>
       <div className="typeNameAndPrice">
-
         <div className="inputElement typeName">
           <h5>Lobby type name</h5>
           <input
@@ -12,7 +12,6 @@ const EditInput = ({ handleInput, inputValue }) => {
             type="text"
           />
         </div>
-
         <div className="inputElement minPrice">
           <h5>Min price</h5>
           <input
@@ -21,11 +20,8 @@ const EditInput = ({ handleInput, inputValue }) => {
             type="text"
           />
         </div>
-
       </div>
-
       <div className="maxTableandDeposit">
-
         <div className="inputElement maxTable">
           <h5>Max table</h5>
           <input
@@ -34,7 +30,6 @@ const EditInput = ({ handleInput, inputValue }) => {
             type="text"
           />
         </div>
-
         <div className="inputElement requiredDeposit">
           <h5>Required deposit</h5>
           <input
@@ -45,7 +40,7 @@ const EditInput = ({ handleInput, inputValue }) => {
         </div>
       </div>
     </EditLobbyInput>
-  )
-}
+  );
+};
 
-export default EditInput;
+export default EditLobTypeInput;

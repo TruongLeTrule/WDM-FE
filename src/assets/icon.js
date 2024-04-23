@@ -4,6 +4,8 @@ import { MdClose } from "react-icons/md";
 import { BiPlus } from "react-icons/bi";
 import { CgMoreVertical } from "react-icons/cg";
 import { BiCaretLeftSquare, BiCaretRightSquare } from "react-icons/bi";
+import { LeftCircleOutlined } from "@ant-design/icons";
+import { LeftCircleFilled } from "@ant-design/icons";
 
 export const Icon = {
   pencil: FaPencilAlt,
@@ -13,4 +15,6 @@ export const Icon = {
   more: CgMoreVertical,
   rightarrow: BiCaretRightSquare,
   leftarrow: BiCaretLeftSquare,
+  leftcircleoutlined: LeftCircleOutlined,
+  leffcirclefilled: LeftCircleFilled,
 }

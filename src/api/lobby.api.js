@@ -52,7 +52,7 @@ export const createLobby = (dataCreate) => {
 };
 
 export const updateLobby = (id, dataUpdate) => {
-  return axiosClient.patch(`lobby/${id}`, dataUpdate);
+  return axiosClient.patch(`lobby/${id}/update`, dataUpdate);
 };
 
 export const softDeleteLobby = (id) => {
