@@ -3,22 +3,28 @@ import Wrapper from '../assets/wrappers/HeaderWrapper';
 import SearchBox from './SearchBox';
 import { Icon } from '../assets/icon';
 
-const Header = ({ handleAddBtnClick, headerTitle, isBack, handleBackBtn }) => {
+const Header = ({
+  handleAddBtnClick,
+  headerTitle,
+  isBack,
+  handleBackBtn,
+  handleSearch,
+}) => {
   return (
     <Wrapper>
-      <div className='backBtn'>
-        {
-          isBack ?
-            <Icon.leffcirclefilled
-              className='canClickIcon'
-              onClick={handleBackBtn}
-            />
-            : <Icon.leftcircleoutlined />
-        }
+      <div className="backBtn">
+        {isBack ? (
+          <Icon.leffcirclefilled
+            className="canClickIcon"
+            onClick={handleBackBtn}
+          />
+        ) : (
+          <Icon.leftcircleoutlined />
+        )}
       </div>
       <h1>{headerTitle}</h1>
       <div className="right-container">
-        <SearchBox />
+        <SearchBox handleSearch={handleSearch} />
         <button>
           <FaFilter className="icon" />
         </button>

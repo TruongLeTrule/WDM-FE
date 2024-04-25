@@ -1,12 +1,13 @@
 import React from 'react';
 
+// other modals
 export const OrderInfoModal = React.lazy(() => import('./OrderInfoModal'));
 export const PayRemainderModal = React.lazy(() =>
   import('./PayRemainderModal')
 );
 export const BillModal = React.lazy(() => import('./BillModal'));
 export const ServiceModal = React.lazy(() => import('./ServiceModal'));
-// create new order modal
+// create new order modal group
 export const CreateOrderModalContainer = React.lazy(() =>
   import('./CreateOrderModalContainer')
 );
@@ -20,7 +21,7 @@ export const PickFoodServiceModal = React.lazy(() =>
 export const PaymentModal = React.lazy(() => import('./PaymentModal'));
 export const ReviewModal = React.lazy(() => import('./ReviewModal'));
 export const SuccessModal = React.lazy(() => import('./SuccessModal'));
-// edit order modal
+// edit order modal group
 export const EditOrderModalContainer = React.lazy(() =>
   import('./EditOrderModalContainer')
 );

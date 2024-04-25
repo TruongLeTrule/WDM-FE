@@ -7,93 +7,29 @@ import React, {
   Suspense,
 } from 'react';
 import { Header, Table } from '../components';
-const Wrapper = React.lazy(() => import('../assets/wrappers/OrderWrapper'));
-const EditOrderModalContainer = React.lazy(() =>
-  import('../components/Order/EditOrderModalContainer')
-);
-const OrderInfoModal = React.lazy(() =>
-  import('../components/Order/OrderInfoModal')
-);
-const PayRemainderModal = React.lazy(() =>
-  import('../components/Order/PayRemainderModal')
-);
-const BillModal = React.lazy(() => import('../components/Order/BillModal'));
-const ServiceModal = React.lazy(() =>
-  import('../components/Order/ServiceModal')
-);
-const CreateOrderModalContainer = React.lazy(() =>
-  import('../components/Order/CreateOrderModalContainer')
-);
-import { getWeddings } from '../api/wedding.api';
+import { getWeddings, searchWeddingsByPhone } from '../api/wedding.api';
+import {
+  EditOrderModalContainer,
+  OrderInfoModal,
+  CreateOrderModalContainer,
+  PayRemainderModal,
+  BillModal,
+} from '../components/Order';
+import { allOrdersTableHeader } from '../utils/orderRenderArr';
 import Loading from '../components/Loading';
 
+const Wrapper = React.lazy(() => import('../assets/wrappers/OrderWrapper'));
 const OrderContext = createContext();
 
 const Order = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [orderList, setOrderList] = useState([]);
-  const columns = useMemo(
-    () => [
-      {
-        Header: 'Id',
-        accessor: 'id',
-      },
-      {
-        Header: 'Customer',
-        accessor: 'customer_name',
-      },
-      {
-        Header: 'Phone',
-        accessor: 'phone',
-      },
-      {
-        Header: 'Shift',
-        accessor: 'shift',
-      },
-      {
-        Header: 'Date',
-        accessor: 'wedding_date',
-      },
-      {
-        Header: 'Tol.table',
-        accessor: 'table_count',
-      },
-      {
-        Header: 'Status',
-        accessor: 'status',
-      },
-    ],
-    []
-  );
+  const columns = useMemo(() => allOrdersTableHeader, []);
   const [orderInfo, setOrderInfo] = useState();
   const [newOrder, setNewOrder] = useState();
-  const [orderModalState, setOrderModalState] = useState({
-    info: false,
-    payRemainder: false,
-    bill: false,
-    food: false,
-    service: false,
-  });
-  const [createOrderModalState, setCreateOrderModalState] = useState({
-    pickDate: false,
-    lobType: false,
-    lobby: false,
-    userInfo: false,
-    food: false,
-    service: false,
-    payment: false,
-    review: false,
-    success: false,
-  });
-  const [editOrderModalState, setEditOrderModalState] = useState({
-    pickDate: false,
-    lobType: false,
-    lobby: false,
-    userInfo: false,
-    food: false,
-    service: false,
-    success: false,
-  });
+  const [orderModalState, setOrderModalState] = useState({});
+  const [createOrderModalState, setCreateOrderModalState] = useState({});
+  const [editOrderModalState, setEditOrderModalState] = useState({});
 
   const handleRowClick = (rowData) => {
     setOrderInfo(rowData);
@@ -113,27 +49,40 @@ const Order = () => {
 
   const fetchWeddings = async () => {
     try {
-      const includeBill = true
-      const list = await getWeddings(includeBill);
-      const handledList = list.data.map((wedding) => ({
-        ...wedding,
-        ...wedding.Bill[0],
-        customer_name: wedding.Customer.name,
-        phone: wedding.Customer.phone,
-        lobby_name: wedding.Lobby.name,
-        id: wedding.id,
-      }));
-      setOrderList(handledList);
+      const { data } = await getWeddings(true);
+      setOrderList(handleRenderData(data));
       setIsLoading(false);
     } catch (error) {
       alert(error.message);
     }
   };
 
+  const handleRenderData = (data) => {
+    return data.map((wedding) => ({
+      ...wedding,
+      ...wedding.Bill[0],
+      customer_name: wedding.Customer.name,
+      phone: wedding.Customer.phone,
+      lobby_name: wedding.Lobby.name,
+      id: wedding.id,
+    }));
+  };
+
+  const handleSearch = async (inputValue) => {
+    try {
+      if (!inputValue && !orderList.length) {
+        return await fetchWeddings();
+      }
+      const { data } = await searchWeddingsByPhone(inputValue);
+      setOrderList(handleRenderData(data));
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
   useEffect(() => {
-    if (!newOrder) fetchWeddings();
-    if (!orderInfo) fetchWeddings();
-  }, [newOrder, orderInfo]);
+    if (!orderInfo && !newOrder) fetchWeddings();
+  }, [orderInfo, newOrder]);
 
   return (
     <OrderContext.Provider
@@ -154,17 +103,26 @@ const Order = () => {
         <Loading />
       ) : (
         <Wrapper>
-          <Header handleAddBtnClick={handleAddBtnClick} headerTitle={"Order"} />
+          <Header
+            handleAddBtnClick={handleAddBtnClick}
+            headerTitle={'Order'}
+            handleSearch={handleSearch}
+          />
           <main>
-            <div className="container">
-              <Table
-                data={orderList}
-                columns={columns}
-                handleRowClick={handleRowClick}
-                pagination
-              />
+            <div
+              className={orderList.length ? 'container' : 'container center'}
+            >
+              {orderList.length ? (
+                <Table
+                  data={orderList}
+                  columns={columns}
+                  handleRowClick={handleRowClick}
+                  pagination
+                />
+              ) : (
+                <span className="empty">No order</span>
+              )}
             </div>
-            {/* Suspense wrapping all conditional modals */}
             <Suspense fallback={<Loading minsize="35px" />}>
               {orderModalState?.info && <OrderInfoModal />}
               {orderModalState?.payRemainder && <PayRemainderModal />}
@@ -175,7 +133,6 @@ const Order = () => {
               {orderModalState?.service && (
                 <ServiceModal type="service" title="service" />
               )}
-              {/* Create new order modal container always present, also wrapped in Suspense */}
               <CreateOrderModalContainer />
               <EditOrderModalContainer />
             </Suspense>

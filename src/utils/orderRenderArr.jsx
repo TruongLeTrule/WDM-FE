@@ -1,3 +1,38 @@
+export const allOrdersTableHeader = [
+  {
+    Header: 'Id',
+    accessor: 'id',
+  },
+  {
+    Header: 'Customer',
+    accessor: 'customer_name',
+  },
+  {
+    Header: 'Phone',
+    accessor: 'phone',
+  },
+  {
+    Header: 'Lobby',
+    accessor: 'lobby_name',
+  },
+  {
+    Header: 'Shift',
+    accessor: 'shift',
+  },
+  {
+    Header: 'Date',
+    accessor: 'wedding_date',
+  },
+  {
+    Header: 'Tol.table',
+    accessor: 'table_count',
+  },
+  {
+    Header: 'Status',
+    accessor: 'status',
+  },
+];
+
 export const orderInfoLeft = [
   { title: 'groom', key: 'groom' },
   { title: 'bride', key: 'bride' },

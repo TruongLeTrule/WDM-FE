@@ -38,7 +38,6 @@ const PaymentModal = ({
   };
 
   const handleNextBtnClick = async () => {
-    // const intPayValue = Number(payValue);
     let result;
     try {
       if (payOption === 'deposit')

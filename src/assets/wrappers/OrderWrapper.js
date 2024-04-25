@@ -18,8 +18,16 @@ const Wrapper = styled.section`
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+  .center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
   .container::-webkit-scrollbar {
     display: none;
+  }
+  .empty {
+    font-size: 2.5rem;
   }
 `;
 export default Wrapper;
