@@ -39,7 +39,7 @@ const Login = () => {
         <div className="image">
           <img src={Wedding} alt="" />
         </div>
-        <p>Đăng Nhập</p>
+        <p>Wedding</p>
         <InputField
           onChange={(e) => handleUserNameChange(e)}
           type="text"
@@ -67,7 +67,7 @@ const Login = () => {
 export default Login;
 
 const LoginPage = styled.div`
-  background-color: rgb(255, 226, 233);
+  background-color: white;
   width: 100vw; 
   height: 100vh;
   display: flex;
@@ -77,22 +77,23 @@ const LoginPage = styled.div`
 
 const LoginForm = styled.form`
   width: 30%;
-  height: 70%;
+  height:100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: space-around;
+  padding-top: 5%;
+  padding-bottom: 5%;
 
   .image{
     height: 40%;
     width: 100%;
-    background-color: #ffe2e9;
+    background-color: white;
     display: flex;
     justify-content: center;
     align-items: center;
   }
 
   img{
-    background-color: #ffe2e9;
     width: 100%;
     height: 100%;
   }
@@ -112,6 +113,7 @@ const InputField = styled.input`
   border-radius: 40px;
   padding: 5%;
   font-size: 1.5em;
+  border: 1px rgb(181, 192, 208) solid;
 `;
 
 const SubmitButton = styled.input`
@@ -119,7 +121,8 @@ const SubmitButton = styled.input`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgb(181, 192, 208);
+  background-color: blue;
+  color: white;
   border-radius: 40px;
   font-size: 1.5em;
   
