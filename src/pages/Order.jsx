@@ -14,6 +14,8 @@ import {
   CreateOrderModalContainer,
   PayRemainderModal,
   BillModal,
+  ServiceModal
+  
 } from '../components/Order';
 import { allOrdersTableHeader } from '../utils/orderRenderArr';
 import Loading from '../components/Loading';

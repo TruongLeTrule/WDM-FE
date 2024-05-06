@@ -31,7 +31,7 @@ const FoodServiceCard = ({ img, name, price, id, handleAddBtnClick }) => {
               }
             }}
           >
-            add
+            Apply
           </div>
         </div>
       </div>

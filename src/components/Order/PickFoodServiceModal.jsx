@@ -1,4 +1,4 @@
-import { getFoods } from '../../api/food.api';
+import { getFoods, checkInventoryForFood } from '../../api/food.api';
 import { getServices } from '../../api/service.api';
 import { useState, useRef, useEffect, useMemo } from 'react';
 import { FaShoppingCart, FaRegTrashAlt } from 'react-icons/fa';
@@ -77,15 +77,24 @@ const PickFoodServiceModal = ({
     }
   };
 
-  const handleAddBtnClick = (newItem) => {
-    // If item existed in picked list, set new quantity
-    if (pickedItem.find((item) => item.id === newItem.id)) {
-      const itemList = pickedItem.map((item) =>
-        item.id === newItem.id ? newItem : item
-      );
-      return setPickedItem(itemList);
+  const handleAddBtnClick = async (newItem) => {
+    try {
+      const foodId = newItem.id
+      const upcomingCount = newItem.count
+      await checkInventoryForFood(foodId, upcomingCount)
+      console.log(newItem)
+      // If item existed in picked list, set new quantity
+      if (pickedItem.find((item) => item.id === newItem.id)) {
+        const itemList = pickedItem.map((item) =>
+          item.id === newItem.id ? newItem : item
+        );
+        return setPickedItem(itemList);
+      }
+      return setPickedItem([...pickedItem, newItem]);  
+    } catch (error) {
+      alert(error.message);
     }
-    return setPickedItem([...pickedItem, newItem]);
+    
   };
 
   const handleTrashClick = (id) => {
