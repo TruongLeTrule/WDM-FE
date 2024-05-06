@@ -158,6 +158,8 @@ h4{
       align-items: center;
       font-size: 1.15em;
       font-weight: bold;
+
+
     }
     input{
       width: 65%;
@@ -165,6 +167,10 @@ h4{
       font-size: 1.15em;
       font-weight: bold;
       border-bottom: 1px black solid;
+      
+      &:disabled {
+        border-bottom: none!important;
+      }
     }
     select{
       margin-left: 5%;
@@ -191,7 +197,7 @@ h4{
       }
     }
     .cancelButton{
-      background-color: #c4c4c4;
+      background-color: #e85f5f;
       margin-left: 2%;
     }
 /*     .saveButton{
@@ -202,7 +208,7 @@ h4{
 `;
 
 export const SaveButton = styled.button`
-      background-color: ${(props) => (props.disabled ? 'gray' : 'blue')};
+      background-color: ${(props) => (props.disabled ? '#c4c4c4' : 'blue')};
       margin-right: 2%;
 `
 

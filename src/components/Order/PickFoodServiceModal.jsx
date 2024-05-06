@@ -1,6 +1,7 @@
-import { getFoods } from '../../api/food.api';
+import { getFoods, checkInventoryForFood } from '../../api/food.api';
 import { getServices } from '../../api/service.api';
 import { useState, useRef, useEffect, useMemo } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
 import { FaShoppingCart, FaRegTrashAlt } from 'react-icons/fa';
 import {
   orderFood,
@@ -77,15 +78,23 @@ const PickFoodServiceModal = ({
     }
   };
 
-  const handleAddBtnClick = (newItem) => {
-    // If item existed in picked list, set new quantity
-    if (pickedItem.find((item) => item.id === newItem.id)) {
-      const itemList = pickedItem.map((item) =>
-        item.id === newItem.id ? newItem : item
-      );
-      return setPickedItem(itemList);
+  const handleAddBtnClick = async (newItem) => {
+    try {
+      const foodId = newItem.id
+      const upcomingCount = newItem.count
+      type === 'food' && await checkInventoryForFood(foodId, upcomingCount)
+      // If item existed in picked list, set new quantity
+      if (pickedItem.find((item) => item.id === newItem.id)) {
+        const itemList = pickedItem.map((item) =>
+          item.id === newItem.id ? newItem : item
+        );
+        return setPickedItem(itemList);
+      }
+      return setPickedItem([...pickedItem, newItem]);  
+    } catch (error) {
+      toast.warning(error.message);
     }
-    return setPickedItem([...pickedItem, newItem]);
+    
   };
 
   const handleTrashClick = (id) => {
@@ -203,6 +212,7 @@ const PickFoodServiceModal = ({
       setModalClose={setModalClose}
       customStyle={customStyle}
     >
+       <ToastContainer />
       {isLoading ? (
         <Loading />
       ) : (

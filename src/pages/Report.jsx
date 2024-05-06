@@ -6,7 +6,8 @@ import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { Line, getDatasetAtEvent, getElementAtEvent } from "react-chartjs-2";
 import Chart from 'chart.js/auto';
-import { getListRevenue } from "../api/revenue.api"
+import { getListRevenue, getTotalRevenue } from "../api/revenue.api"
+import ExportCSVButton from "../components/ExportCSVBtn";
 
 dayjs.extend(customParseFormat);
 
@@ -15,79 +16,16 @@ const monthFormat = 'YYYY/MM';
 const yearFormat = 'YYYY';
 
 const Report = () => {
-  const [data, setData] = useState([
-    { day: "01-04-2024", weddingnumber: 2, revenue: 200 },
-    { day: "02-04-2024", weddingnumber: 1, revenue: 250 },
-    { day: "03-04-2024", weddingnumber: 5, revenue: 300 },
-    { day: "04-04-2024", weddingnumber: 6, revenue: 100 },
-    { day: "05-04-2024", weddingnumber: 8, revenue: 50 },
-    { day: "06-04-2024", weddingnumber: 5, revenue: 120 },
-    { day: "07-04-2024", weddingnumber: 3, revenue: 290 },
-    { day: "08-04-2024", weddingnumber: 4, revenue: 80 },
-    { day: "09-04-2024", weddingnumber: 3, revenue: 100 },
-    { day: "10-04-2024", weddingnumber: 2, revenue: 300 },
-    { day: "11-04-2024", weddingnumber: 7, revenue: 400 },
-    { day: "12-04-2024", weddingnumber: 3, revenue: 500 },
-    { day: "13-04-2024", weddingnumber: 1, revenue: 350 },
-    { day: "14-04-2024", weddingnumber: 4, revenue: 200 },
-    { day: "15-04-2024", weddingnumber: 4, revenue: 300 },
-    { day: "16-04-2024", weddingnumber: 4, revenue: 100 },
-    { day: "17-04-2024", weddingnumber: 4, revenue: 500 },
-    { day: "18-04-2024", weddingnumber: 4, revenue: 200 },
-    { day: "19-04-2024", weddingnumber: 4, revenue: 700 },
-    { day: "20-04-2024", weddingnumber: 4, revenue: 900 },
-    { day: "21-04-2024", weddingnumber: 4, revenue: 100 },
-    { day: "22-04-2024", weddingnumber: 4, revenue: 500 },
-    { day: "23-04-2024", weddingnumber: 4, revenue: 200 },
-    { day: "24-04-2024", weddingnumber: 4, revenue: 400 },
-    { day: "25-04-2024", weddingnumber: 4, revenue: 300 },
-    { day: "26-04-2024", weddingnumber: 4, revenue: 200 },
-    { day: "27-04-2024", weddingnumber: 4, revenue: 600 },
-    { day: "28-04-2024", weddingnumber: 4, revenue: 700 },
-    { day: "29-04-2024", weddingnumber: 4, revenue: 300 },
-    { day: "30-04-2024", weddingnumber: 4, revenue: 200 },
-    { day: "01-05-2024", weddingnumber: 2, revenue: 200 },
-    { day: "02-05-2024", weddingnumber: 1, revenue: 250 },
-    { day: "03-05-2024", weddingnumber: 5, revenue: 300 },
-    { day: "04-05-2024", weddingnumber: 6, revenue: 100 },
-    { day: "05-05-2024", weddingnumber: 8, revenue: 50 },
-    { day: "06-05-2024", weddingnumber: 5, revenue: 120 },
-    { day: "07-05-2024", weddingnumber: 3, revenue: 290 },
-    { day: "08-05-2024", weddingnumber: 4, revenue: 80 },
-    { day: "09-05-2024", weddingnumber: 3, revenue: 100 },
-    { day: "10-05-2024", weddingnumber: 2, revenue: 300 },
-    { day: "11-05-2024", weddingnumber: 7, revenue: 400 },
-    { day: "12-05-2024", weddingnumber: 3, revenue: 500 },
-    { day: "13-05-2024", weddingnumber: 1, revenue: 350 },
-    { day: "14-05-2024", weddingnumber: 3, revenue: 200 },
-    { day: "15-05-2024", weddingnumber: 3, revenue: 300 },
-    { day: "16-05-2024", weddingnumber: 2, revenue: 100 },
-    { day: "17-05-2024", weddingnumber: 1, revenue: 500 },
-    { day: "18-05-2024", weddingnumber: 2, revenue: 200 },
-    { day: "19-05-2024", weddingnumber: 4, revenue: 700 },
-    { day: "20-05-2024", weddingnumber: 3, revenue: 900 },
-    { day: "21-05-2024", weddingnumber: 1, revenue: 100 },
-    { day: "22-05-2024", weddingnumber: 2, revenue: 500 },
-    { day: "23-05-2024", weddingnumber: 1, revenue: 200 },
-    { day: "24-05-2024", weddingnumber: 4, revenue: 400 },
-    { day: "25-05-2024", weddingnumber: 5, revenue: 300 },
-    { day: "26-05-2024", weddingnumber: 6, revenue: 200 },
-    { day: "27-05-2024", weddingnumber: 2, revenue: 600 },
-    { day: "28-05-2024", weddingnumber: 5, revenue: 700 },
-    { day: "29-05-2024", weddingnumber: 5, revenue: 300 },
-    { day: "30-05-2024", weddingnumber: 2, revenue: 200 },
-    { day: "31-05-2024", weddingnumber: 6, revenue: 200 },
-    { day: "2-06-2024", weddingnumber: 9, revenue: 600 },
-    { day: "7-06-2024", weddingnumber: 5, revenue: 800 },
-    { day: "20-06-2024", weddingnumber: 4, revenue: 200 },
-  ]);
-
+  const [data, setData] = useState([]);
+  const [totalRevenue, setTotalRevenue] = useState(0)
+  const [isExtraFee, setIsExtraFee] = useState(false)
   useEffect(() => {
     const fetchDataRevenue = async () => {
       try{
-        const res = await getListRevenue();
+        const res = await getListRevenue(isExtraFee);
+        const totalRevenueData = await getTotalRevenue()
         setData(res.data)
-
+        setTotalRevenue(totalRevenueData.data)
       } catch(error) {
         console.log(error.message);
       }
@@ -95,17 +33,27 @@ const Report = () => {
     }
 
     fetchDataRevenue()
-  },[])
+  },[isExtraFee])
+
+  const handleToggleExtraFee = () => {
+    setIsExtraFee(!isExtraFee)
+  }
 
   if(data) {
+    const newData = data.reverse()
     return (
-      <ReportInner data={data} />
+      <ReportInner 
+        data={newData} 
+        totalRevenue={totalRevenue} 
+        isExtraFee={isExtraFee}
+        handleToggleExtraFee={handleToggleExtraFee}
+        />
     )
   }
 }
 
 const ReportInner = (p) => {
-  const { data } = p
+  const { data, totalRevenue, handleToggleExtraFee } = p
   const [showFollowBy, setShowFollowBy] = useState(false);
   const [showMonthPicker, setShowMonthPicker] = useState(true);
   const [selectedDate, setSelectedDate] = useState(dayjs());
@@ -126,7 +74,7 @@ const ReportInner = (p) => {
     window.location.reload();
   };
 
-  const filteredData = data.filter(item => {
+  let filteredData = data.filter(item => {
     if (showMonthPicker) {
       return dayjs(item.day, "DD-MM-YYYY").format("YYYY-MM") === selectedDate.format("YYYY-MM");
     } else {
@@ -134,26 +82,29 @@ const ReportInner = (p) => {
     }
   });
 
+  filteredData = filteredData.reverse()
+
   const monthlyData = filteredData.reduce((acc, cur) => {
     const monthYear = dayjs(cur.day, "DD-MM-YYYY").format("MM/YYYY");
     if (!acc[monthYear]) {
-      acc[monthYear] = { weddingNumber: 0, revenue: 0 };
+      acc[monthYear] = { weddingNumber: 0, estimate_revenue: 0 };
     }
     acc[monthYear].weddingNumber += cur.weddingnumber;
-    acc[monthYear].revenue += cur.revenue;
+    acc[monthYear].estimate_revenue += cur.estimate_revenue;
     return acc;
   }, {});
 
 
   const monthlyLabels = Object.keys(monthlyData);
   const monthlyWeddingNumbers = monthlyLabels.map(label => monthlyData[label].weddingNumber);
-  const monthlyRevenues = monthlyLabels.map(label => monthlyData[label].revenue);
+  const monthlyRevenues = monthlyLabels.map(label => monthlyData[label].estimate_revenue);
+  const monthlyRealeRevenues = monthlyLabels.map(label => monthlyData[label].real_revenue);
 
   const totalYearlyRevenue = monthlyRevenues.reduce((acc, cur) => acc + cur, 0);
   const yearlyRatio = totalYearlyRevenue === 0 ? 0 : (totalYearlyRevenue / (showMonthPicker ? 32444 : 324440)).toFixed(2);
 
   const totalWeddingNumber = filteredData.reduce((acc, cur) => acc + cur.weddingnumber, 0);
-  const totalRevenue = filteredData.reduce((acc, cur) => acc + cur.revenue, 0);
+  // const totalRevenue = filteredData.reduce((acc, cur) => acc + cur.estimate_revenue, 0);
   const ratio = totalRevenue === 0 ? 0 : (totalRevenue / (showMonthPicker ? 32444 : 324440)).toFixed(2);
 
 
@@ -168,8 +119,15 @@ const ReportInner = (p) => {
         yAxisID: 'y1',
       },
       {
-        label: 'Revenue',
-        data: filteredData.map(item => item.revenue),
+        label: 'Real Revenue',
+        data: filteredData.map(item => item.real_revenue),
+        fill: false,
+        borderColor: 'rgb(7, 174, 18)',
+        yAxisID: 'y',
+      },
+      {
+        label: 'Estimate Revenue',
+        data: filteredData.map(item => item.estimate_revenue),
         fill: false,
         borderColor: 'rgb(53, 162, 235)',
         yAxisID: 'y',
@@ -248,17 +206,24 @@ const ReportInner = (p) => {
   return (
     <Container>
       <Card>
+        <ActionBtn>
+          {showMonthPicker ? (
+              <DatePicker value={selectedDate} onChange={handleDateChange} picker="month"/>
+            ) : (
+              <DatePicker value={selectedDate} onChange={handleDateChange} picker="year" />
+            )}
+          <ShowExtraBtn onClick={handleToggleExtraFee}>show extra fee</ShowExtraBtn>
+          
+            <ExportCSVButton data={data}>Export File</ExportCSVButton>
+          
+        </ActionBtn>
+
         <Space align="baseline" style={{ marginBottom: 24 }}>
           <Statistic title="Wedding Number" value={totalWeddingNumber} />
-          <Statistic title="Current Revenue" value={totalRevenue} prefix="VND" />
-          <Statistic title="Estimate Revenue" value={totalRevenue} prefix="VND" />
-          <Divider type="vertical" style={{ height: "auto" }} />
-          {showMonthPicker ? (
-            <DatePicker value={selectedDate} onChange={handleDateChange} picker="month"/>
-          ) : (
-            <DatePicker value={selectedDate} onChange={handleDateChange} picker="year" />
-          )}
-          <Space>
+          <Statistic title="Current Revenue" value={totalRevenue.realRevenue} prefix="VND" />
+          <Statistic title="Estimate Revenue" value={totalRevenue.estimateRevenue} prefix="VND" />
+          {/* <Divider type="vertical" style={{ height: "auto" }} /> */}
+         {/*  <Space>
             <ReloadOutlined onClick={handleReloadClick} />
             <SettingOutlined onClick={handleSettingClick} />
             {showFollowBy && (
@@ -271,8 +236,9 @@ const ReportInner = (p) => {
               </FollowByBox>
             )}
 
-          </Space>
+          </Space> */}
         </Space>
+       
         {getChart === "1" &&
           <LineChartContainer>
             <div className="inner">
@@ -296,6 +262,7 @@ const ReportInner = (p) => {
                   <th>Date</th>
                   <th>Wedding Number</th>
                   <th>Revenue ($)</th>
+                  <th>Real Revenue ($)</th>
                   <th>Ratio</th>
                 </tr>
               </thead>
@@ -305,8 +272,9 @@ const ReportInner = (p) => {
                     <td>{index + 1}</td>
                     <td>{showMonthPicker ? dayjs(item.day, "DD-MM-YYYY").format("DD/MM") : dayjs(item.day, "DD-MM-YYYY").format("MM/YYYY")}</td>
                     <td>{item.weddingnumber}</td>
-                    <td>{item.revenue}</td>
-                    <td>{ratio}</td>
+                    <td>{item.estimate_revenue}</td>
+                    <td>{item.real_revenue}</td>
+                    <td>{item.ratio}</td>
                   </tr>
                 ))}
               </tbody>
@@ -322,6 +290,7 @@ const ReportInner = (p) => {
                   <th>Date</th>
                   <th>Wedding Number</th>
                   <th>Revenue ($)</th>
+                  <th>Real Revenue ($)</th>
                   <th>Ratio</th>
                 </tr>
               </thead>
@@ -332,6 +301,7 @@ const ReportInner = (p) => {
                     <td>{label}</td>
                     <td>{monthlyWeddingNumbers[index]}</td>
                     <td>{monthlyRevenues[index]}</td>
+                    <td>{monthlyRealeRevenues[index]}</td>
                     <td>{yearlyRatio}</td>
                   </tr>
                 ))}
@@ -339,10 +309,8 @@ const ReportInner = (p) => {
             </Table>
           </TableContainerYear>
         }
+     
       </Card>
-      <ButtonContainer>
-        <Button>Export File</Button>
-      </ButtonContainer>
 
     </Container>
   );
@@ -352,6 +320,40 @@ const Container = styled.div`
   // padding: 24px;
   height: 100vh;
   overflow: auto;
+
+  .ant-space {
+    margin-bottom: 24px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 29px;
+  }
+
+  .ant-space-item {
+    border-radius: 10px!important;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px!important;
+    padding: 10px!important;
+
+    .ant-statistic-content-prefix {
+      font-size: 0.8rem!important;
+      font-style: italic!important;
+    }
+
+    .ant-statistic-title {
+      font-weight: 700!important;
+      color: #0f0537!important;
+      font-size: 1.1rem!important;
+    }
+
+    .ant-statistic-content-value-int {
+      font-size: 1.3rem!important;
+      text-align: center;
+    }
+
+    .ant-statistic-content{
+      text-align: center;
+    }
+  }
 `;
 
 // const Card1 = styled.div`
@@ -401,19 +403,7 @@ const ButtonContainer = styled.div`
   margin-top: 16px;
 `;
 
-const Button = styled.button`
-  background-color: #ffcc00;
-  border: none;
-  border-radius: 4px;
-  padding: 8px 16px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s ease-in-out;
 
-  &:hover {
-    background-color: #ffb300;
-  }
-`;
 
 const FollowByBox = styled.div`
   position: absolute;
@@ -435,4 +425,20 @@ const LineChartContainer = styled.div`
   }
 
 `;
+const ShowExtraBtn = styled.button`
+    background-color: #1a00ff;
+    padding: 10px;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+`
+const ActionBtn = styled.button`
+    display: flex;
+    align-items: center;
+    margin: 10px;
+    gap: 10px;
+    width: 100%;
+    justify-content: flex-start;
+`
+
 export default Report;

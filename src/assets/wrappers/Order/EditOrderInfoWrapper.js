@@ -11,8 +11,12 @@ const Wrapper = styled.div`
   }
   .container {
     margin-top: 2rem;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    gap: 38px;
+    margin-top: 2rem;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
   }
   h5 {
     font-weight: 600;

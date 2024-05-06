@@ -52,6 +52,11 @@ const Wrapper = styled.div`
             row-gap: 0.5rem;
             .quantity-group {
               display: flex;
+
+              svg {
+                user-select: none!important;
+              }
+
               .quantity {
                 border: 1px solid var(--grey-300);
                 padding: 0.1rem 0.25rem;
@@ -130,6 +135,10 @@ const Wrapper = styled.div`
     align-items: center;
     justify-content: center;
     column-gap: 1rem;
+
+    svg {
+      user-select: none;
+    }
     .icon {
       cursor: pointer;
     }

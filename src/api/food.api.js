@@ -8,6 +8,12 @@ export const getFoodById = (id) => {
   return axiosClient.get(`food/${id}` );
 };
 
+export const checkInventoryForFood = (foodId, upcomingCount) => {
+  return axiosClient.post(`food/check-inventory/${foodId}`, {
+    "upcoming_count": upcomingCount
+  });
+};
+
 /**
 const createData = {
   "name": "HotDog",

@@ -13,7 +13,7 @@ const TypeTable = ({ data, handleEditButton, handleLobTypeClick }) => {
         </tr>
       </thead>
       <tbody>
-        {data.map((value, index) => (
+        {data && data.map((value, index) => (
           <tr key={index}>
             {value.map((cell, cellIndex) => (
               <td key={cellIndex} onClick={() => handleLobTypeClick(value)}>{cell}</td>
