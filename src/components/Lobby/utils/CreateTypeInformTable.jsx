@@ -18,7 +18,7 @@ const TypeInformTable = () => {
     <table className='lobbyTypeTable'>
       <thead>
         <tr>
-          {tableHead.map((value, index) => (
+          {tableHead && tableHead.map((value, index) => (
             <th key={index}>{value}</th>
           ))}
         </tr>

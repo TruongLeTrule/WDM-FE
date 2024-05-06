@@ -43,6 +43,7 @@ const Wrapper = styled.aside`
   }
   .role {
     position: absolute;
+    padding: 16px;
     bottom: 0;
     left: 50%;
     transform: translateX(-50%);
