@@ -3,6 +3,7 @@ import { useState } from 'react';
 import styled from "styled-components";
 import Wedding from "../assets/images/image";
 import { login } from '../api/auth.api';
+import { ToastContainer, toast } from 'react-toastify';
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -21,7 +22,8 @@ const Login = () => {
 
     } catch (error) {
       console.log(error);
-      alert(error.message);
+      toast.error(error.message);
+      
     }
   };
 
@@ -35,6 +37,7 @@ const Login = () => {
 
   return (
     <LoginPage>
+      <ToastContainer />
       <LoginForm onSubmit={(e) => handleLoginSubmit(e)}>
         <div className="image">
           <img src={Wedding} alt="" />

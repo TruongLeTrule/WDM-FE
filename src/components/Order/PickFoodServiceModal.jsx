@@ -1,6 +1,7 @@
 import { getFoods, checkInventoryForFood } from '../../api/food.api';
 import { getServices } from '../../api/service.api';
 import { useState, useRef, useEffect, useMemo } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
 import { FaShoppingCart, FaRegTrashAlt } from 'react-icons/fa';
 import {
   orderFood,
@@ -81,8 +82,7 @@ const PickFoodServiceModal = ({
     try {
       const foodId = newItem.id
       const upcomingCount = newItem.count
-      await checkInventoryForFood(foodId, upcomingCount)
-      console.log(newItem)
+      type === 'food' && await checkInventoryForFood(foodId, upcomingCount)
       // If item existed in picked list, set new quantity
       if (pickedItem.find((item) => item.id === newItem.id)) {
         const itemList = pickedItem.map((item) =>
@@ -92,7 +92,7 @@ const PickFoodServiceModal = ({
       }
       return setPickedItem([...pickedItem, newItem]);  
     } catch (error) {
-      alert(error.message);
+      toast.warning(error.message);
     }
     
   };
@@ -212,6 +212,7 @@ const PickFoodServiceModal = ({
       setModalClose={setModalClose}
       customStyle={customStyle}
     >
+       <ToastContainer />
       {isLoading ? (
         <Loading />
       ) : (

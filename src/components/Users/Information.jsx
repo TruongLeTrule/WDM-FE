@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { ToastContainer, toast } from 'react-toastify';
+
 import { InformationBlock, InformationBoard, SaveButton } from "./Styled";
 import { updateUserDisplayName } from "../../api/user.api";
 import { register } from "../../api/auth.api";
@@ -41,20 +43,29 @@ const Information = ({
   };
 
   const handleEditSave = async () => {
-    setIsDisplayInformationBlock(false);
     const newData = [...accountInformation];
-    newData[editrow] = Object.values(tempData).map((value, index) => value === '' ? newData[editrow][index] : value);
-    await updateRoleforUser(getRoleIdByName(newData[editrow][4]), newData[editrow][0])
-    await updateUserDisplayName(newData[editrow][0], newData[editrow][1]);
-    window.location.reload();
+    try {
+      newData[editrow] = Object.values(tempData).map((value, index) => value === '' ? newData[editrow][index] : value);
+      await updateRoleforUser(getRoleIdByName(newData[editrow][4]), newData[editrow][0])
+      setIsDisplayInformationBlock(false);
+      await updateUserDisplayName(newData[editrow][0], newData[editrow][1]);
+      window.location.reload();
+    } catch (error) {
+      toast.error(error.message);
+    }
+
   };
 
   const handleCreateSave = async () => {
-    setIsDisplayInformationBlock(false);
-    await register(Object.values(tempData)[2], Object.values(tempData)[3], Object.values(tempData)[1]);
-    const res = await findUserByUserName(Object.values(tempData)[2]);
-    await updateRoleforUser(getRoleIdByName(Object.values(tempData)[4]), res.data.id)
-    window.location.reload();
+    try {
+      await register(Object.values(tempData)[2], Object.values(tempData)[3], Object.values(tempData)[1]);
+      setIsDisplayInformationBlock(false);
+      const res = await findUserByUserName(Object.values(tempData)[2]);
+      await updateRoleforUser(getRoleIdByName(Object.values(tempData)[4]), res.data.id)
+      window.location.reload();
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   const handleSelectChange = (e) => {
@@ -146,6 +157,7 @@ const Information = ({
 
   return (
     <InformationBlock display={display.toString()}>
+      <ToastContainer />
       <InformationBoard>
         <h4>Account Information</h4>
         <table className="boardInput">

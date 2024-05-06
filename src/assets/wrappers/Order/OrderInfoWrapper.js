@@ -22,8 +22,11 @@ const Wrapper = styled.div`
   }
   .container {
     margin-top: 1.5rem;
-    display: grid;
+    display: flex;
+    justify-content: center;
+    gap: 40px;
     grid-template-columns: 1fr 1fr;
+    flex-wrap: wrap;
   }
   h5 {
     text-align: center;
