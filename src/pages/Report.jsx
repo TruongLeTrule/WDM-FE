@@ -17,11 +17,11 @@ const yearFormat = 'YYYY';
 const Report = () => {
   const [data, setData] = useState([]);
   const [totalRevenue, setTotalRevenue] = useState(0)
-
+  const [isExtraFee, setIsExtraFee] = useState(false)
   useEffect(() => {
     const fetchDataRevenue = async () => {
       try{
-        const res = await getListRevenue();
+        const res = await getListRevenue(isExtraFee);
         const totalRevenueData = await getTotalRevenue()
         setData(res.data)
         setTotalRevenue(totalRevenueData.data)
@@ -32,18 +32,27 @@ const Report = () => {
     }
 
     fetchDataRevenue()
-  },[])
+  },[isExtraFee])
+
+  const handleToggleExtraFee = () => {
+    setIsExtraFee(!isExtraFee)
+  }
 
   if(data) {
     const newData = data.reverse()
     return (
-      <ReportInner data={newData} totalRevenue={totalRevenue} />
+      <ReportInner 
+        data={newData} 
+        totalRevenue={totalRevenue} 
+        isExtraFee={isExtraFee}
+        handleToggleExtraFee={handleToggleExtraFee}
+        />
     )
   }
 }
 
 const ReportInner = (p) => {
-  const { data, totalRevenue } = p
+  const { data, totalRevenue, handleToggleExtraFee } = p
   const [showFollowBy, setShowFollowBy] = useState(false);
   const [showMonthPicker, setShowMonthPicker] = useState(true);
   const [selectedDate, setSelectedDate] = useState(dayjs());
@@ -196,17 +205,24 @@ const ReportInner = (p) => {
   return (
     <Container>
       <Card>
+        <ActionBtn>
+          {showMonthPicker ? (
+              <DatePicker value={selectedDate} onChange={handleDateChange} picker="month"/>
+            ) : (
+              <DatePicker value={selectedDate} onChange={handleDateChange} picker="year" />
+            )}
+          <ShowExtraBtn onClick={handleToggleExtraFee}>show extra fee</ShowExtraBtn>
+          
+            <Button>Export File</Button>
+          
+        </ActionBtn>
+
         <Space align="baseline" style={{ marginBottom: 24 }}>
           <Statistic title="Wedding Number" value={totalWeddingNumber} />
           <Statistic title="Current Revenue" value={totalRevenue.realRevenue} prefix="VND" />
           <Statistic title="Estimate Revenue" value={totalRevenue.estimateRevenue} prefix="VND" />
-          <Divider type="vertical" style={{ height: "auto" }} />
-          {showMonthPicker ? (
-            <DatePicker value={selectedDate} onChange={handleDateChange} picker="month"/>
-          ) : (
-            <DatePicker value={selectedDate} onChange={handleDateChange} picker="year" />
-          )}
-          <Space>
+          {/* <Divider type="vertical" style={{ height: "auto" }} /> */}
+         {/*  <Space>
             <ReloadOutlined onClick={handleReloadClick} />
             <SettingOutlined onClick={handleSettingClick} />
             {showFollowBy && (
@@ -219,8 +235,9 @@ const ReportInner = (p) => {
               </FollowByBox>
             )}
 
-          </Space>
+          </Space> */}
         </Space>
+       
         {getChart === "1" &&
           <LineChartContainer>
             <div className="inner">
@@ -291,9 +308,7 @@ const ReportInner = (p) => {
             </Table>
           </TableContainerYear>
         }
-      <ButtonContainer>
-        <Button>Export File</Button>
-      </ButtonContainer>
+     
       </Card>
 
     </Container>
@@ -304,6 +319,40 @@ const Container = styled.div`
   // padding: 24px;
   height: 100vh;
   overflow: auto;
+
+  .ant-space {
+    margin-bottom: 24px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 29px;
+  }
+
+  .ant-space-item {
+    border-radius: 10px!important;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px!important;
+    padding: 10px!important;
+
+    .ant-statistic-content-prefix {
+      font-size: 0.8rem!important;
+      font-style: italic!important;
+    }
+
+    .ant-statistic-title {
+      font-weight: 700!important;
+      color: #0f0537!important;
+      font-size: 1.1rem!important;
+    }
+
+    .ant-statistic-content-value-int {
+      font-size: 1.3rem!important;
+      text-align: center;
+    }
+
+    .ant-statistic-content{
+      text-align: center;
+    }
+  }
 `;
 
 // const Card1 = styled.div`
@@ -387,4 +436,20 @@ const LineChartContainer = styled.div`
   }
 
 `;
+const ShowExtraBtn = styled.button`
+    background-color: #1a00ff;
+    padding: 10px;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+`
+const ActionBtn = styled.button`
+    display: flex;
+    align-items: center;
+    margin: 10px;
+    gap: 10px;
+    width: 100%;
+    justify-content: flex-start;
+`
+
 export default Report;

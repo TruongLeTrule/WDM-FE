@@ -16,6 +16,10 @@ export const getMonthWedding = (year, month) => {
   });
 };
 
-export const getListRevenue = () => {
-  return axiosClient.get('revenue/list-revenue');
+export const getListRevenue = (includeFee=false) => {
+  return axiosClient.get('revenue/list-revenue', {
+    params: {
+      includeFee
+    }
+  });
 };
