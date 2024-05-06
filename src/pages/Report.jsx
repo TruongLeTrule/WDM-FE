@@ -7,6 +7,7 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { Line, getDatasetAtEvent, getElementAtEvent } from "react-chartjs-2";
 import Chart from 'chart.js/auto';
 import { getListRevenue, getTotalRevenue } from "../api/revenue.api"
+import ExportCSVButton from "../components/ExportCSVBtn";
 
 dayjs.extend(customParseFormat);
 
@@ -213,7 +214,7 @@ const ReportInner = (p) => {
             )}
           <ShowExtraBtn onClick={handleToggleExtraFee}>show extra fee</ShowExtraBtn>
           
-            <Button>Export File</Button>
+            <ExportCSVButton data={data}>Export File</ExportCSVButton>
           
         </ActionBtn>
 
@@ -402,19 +403,7 @@ const ButtonContainer = styled.div`
   margin-top: 16px;
 `;
 
-const Button = styled.button`
-  background-color: #ffcc00;
-  border: none;
-  border-radius: 4px;
-  padding: 8px 16px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s ease-in-out;
 
-  &:hover {
-    background-color: #ffb300;
-  }
-`;
 
 const FollowByBox = styled.div`
   position: absolute;
