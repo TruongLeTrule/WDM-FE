@@ -13,13 +13,11 @@ const Header = ({
   return (
     <Wrapper>
       <div className="backBtn">
-        {isBack ? (
+        {isBack && (
           <Icon.leffcirclefilled
             className="canClickIcon"
             onClick={handleBackBtn}
           />
-        ) : (
-          <Icon.leftcircleoutlined />
         )}
       </div>
       <h1>{headerTitle}</h1>
