@@ -37,7 +37,10 @@ const BillModal = () => {
       customStyle={customStyle}
     >
       <Wrapper>
-        <h4>order {orderInfo?.id}</h4>
+        <h4>
+          <div>order </div>
+          <div>{orderInfo?.id}</div>
+          </h4>
         <div className="container">
           <h5>customer information</h5>
           <SpecificOrderTable data={customerInfo} />
