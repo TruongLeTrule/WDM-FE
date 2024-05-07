@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, Fragment } from "react";
 import styled from "styled-components";
 import { DatePicker, Divider, Statistic, Space, Typography, Radio } from "antd";
 import { ReloadOutlined, SettingOutlined } from "@ant-design/icons";
@@ -8,6 +8,8 @@ import { Line, getDatasetAtEvent, getElementAtEvent } from "react-chartjs-2";
 import Chart from 'chart.js/auto';
 import { getListRevenue, getTotalRevenue } from "../api/revenue.api"
 import ExportCSVButton from "../components/ExportCSVBtn";
+import Loading from "../components/Loading";
+
 
 dayjs.extend(customParseFormat);
 
@@ -19,21 +21,32 @@ const Report = () => {
   const [data, setData] = useState([]);
   const [totalRevenue, setTotalRevenue] = useState(0)
   const [isExtraFee, setIsExtraFee] = useState(false)
+  const [isLoad, setLoad] = useState(false)
+  const newDate = new Date()
+  const [dateReport, setDateReport] = useState({
+    month: newDate.getMonth() + 1,
+    year: newDate.getFullYear()
+  })
   useEffect(() => {
     const fetchDataRevenue = async () => {
+      setLoad(true)
       try{
         const res = await getListRevenue(isExtraFee);
-        const totalRevenueData = await getTotalRevenue()
+        const year = dateReport.year
+        const month = dateReport.month
+        const totalRevenueData = await getTotalRevenue(year, month)
         setData(res.data)
         setTotalRevenue(totalRevenueData.data)
+        setLoad(false)
       } catch(error) {
+        setLoad(false)
         console.log(error.message);
       }
 
     }
 
     fetchDataRevenue()
-  },[isExtraFee])
+  },[isExtraFee, dateReport])
 
   const handleToggleExtraFee = () => {
     setIsExtraFee(!isExtraFee)
@@ -42,18 +55,22 @@ const Report = () => {
   if(data) {
     const newData = data.reverse()
     return (
-      <ReportInner 
-        data={newData} 
-        totalRevenue={totalRevenue} 
-        isExtraFee={isExtraFee}
-        handleToggleExtraFee={handleToggleExtraFee}
-        />
+      <Fragment>
+        {isLoad && <Loading minsize="35px" />}
+        <ReportInner 
+          setDateReport={setDateReport}
+          data={newData} 
+          totalRevenue={totalRevenue} 
+          isExtraFee={isExtraFee}
+          handleToggleExtraFee={handleToggleExtraFee}
+          />
+      </Fragment>
     )
   }
 }
 
 const ReportInner = (p) => {
-  const { data, totalRevenue, handleToggleExtraFee } = p
+  const { data, totalRevenue, handleToggleExtraFee, setDateReport } = p
   const [showFollowBy, setShowFollowBy] = useState(false);
   const [showMonthPicker, setShowMonthPicker] = useState(true);
   const [selectedDate, setSelectedDate] = useState(dayjs());
@@ -62,17 +79,26 @@ const ReportInner = (p) => {
   const handleSettingClick = () => {
     setShowFollowBy(!showFollowBy);
   };
-  const handleRadioChange = (e) => {
-    setShowMonthPicker(e.target.value === "month");
-  };
-
+  // const handleRadioChange = (e) => {
+  //   setShowMonthPicker(e.target.value === "month");
+  // };
+// 
   const handleDateChange = (date) => {
+    const newDate = new Date(date.$d);
+
+    // Get the month (getMonth() returns month from 0-11, so add 1 to match normal 1-12 format)
+    const month = newDate.getMonth() + 1;
+
+    // Get the year
+    const year = newDate.getFullYear();
+
+    setDateReport({month, year})
     setSelectedDate(date);
   };
 
-  const handleReloadClick = () => {
-    window.location.reload();
-  };
+  // const handleReloadClick = () => {
+  //   window.location.reload();
+  // };
 
   let filteredData = data.filter(item => {
     if (showMonthPicker) {
@@ -82,7 +108,7 @@ const ReportInner = (p) => {
     }
   });
 
-  filteredData = filteredData.reverse()
+  // filteredData = filteredData.reverse()
 
   const monthlyData = filteredData.reduce((acc, cur) => {
     const monthYear = dayjs(cur.day, "DD-MM-YYYY").format("MM/YYYY");
@@ -105,7 +131,6 @@ const ReportInner = (p) => {
 
   const totalWeddingNumber = filteredData.reduce((acc, cur) => acc + cur.weddingnumber, 0);
   // const totalRevenue = filteredData.reduce((acc, cur) => acc + cur.estimate_revenue, 0);
-  const ratio = totalRevenue === 0 ? 0 : (totalRevenue / (showMonthPicker ? 32444 : 324440)).toFixed(2);
 
 
   const ChartDataMonth = {
@@ -219,7 +244,7 @@ const ReportInner = (p) => {
         </ActionBtn>
 
         <Space align="baseline" style={{ marginBottom: 24 }}>
-          <Statistic title="Wedding Number" value={totalWeddingNumber} />
+          <Statistic title="Wedding Number" value={totalRevenue.weddingNum} />
           <Statistic title="Current Revenue" value={totalRevenue.realRevenue} prefix="VND" />
           <Statistic title="Estimate Revenue" value={totalRevenue.estimateRevenue} prefix="VND" />
           {/* <Divider type="vertical" style={{ height: "auto" }} /> */}

@@ -1,7 +1,12 @@
 import axiosClient from "./axiosClient"
 
-export const getTotalRevenue = () => {
-  return axiosClient.get('revenue/total');
+export const getTotalRevenue = (year, month) => {
+  return axiosClient.get('revenue/total', {
+    params: {
+      month, 
+      year
+    }
+  });
 };
 
 export const getMonRevenue = (year, month) => {

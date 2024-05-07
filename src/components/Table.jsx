@@ -24,6 +24,7 @@ const Table = ({ columns, data, handleRowClick, pagination }) => {
     pageCount,
   } = useTable({ columns, data }, useSortBy, usePagination);
 
+
   const resolveCellClass = (cellValue) => {
     switch (cellValue) {
       case 'paid':
