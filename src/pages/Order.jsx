@@ -14,8 +14,7 @@ import {
   CreateOrderModalContainer,
   PayRemainderModal,
   BillModal,
-  ServiceModal
-  
+  ServiceModal,
 } from '../components/Order';
 import { allOrdersTableHeader } from '../utils/orderRenderArr';
 import Loading from '../components/Loading';
@@ -60,22 +59,25 @@ const Order = () => {
   };
 
   const handleRenderData = (data) => {
-
-    
     return data.map((wedding) => {
-      const Bill = wedding.Bill.reduce((mainBill, currentBill) => 
-      (mainBill.payment_date < currentBill.payment_date ? currentBill : mainBill ), wedding.Bill[0]);
+      const Bill = wedding.Bill.reduce(
+        (mainBill, currentBill) =>
+          mainBill.payment_date < currentBill.payment_date
+            ? currentBill
+            : mainBill,
+        wedding.Bill[0]
+      );
       const newData = {
-      ...wedding,
-      ...Bill,
-      customer_name: wedding.Customer.name,
-      phone: wedding.Customer.phone,
-      lobby_name: wedding.Lobby.name,
-      id: wedding.id,
-     }
+        ...wedding,
+        ...Bill,
+        customer_name: wedding.Customer.name,
+        phone: wedding.Customer.phone,
+        lobby_name: wedding.Lobby.name,
+        id: wedding.id,
+      };
 
-     console.log("newData", newData)
-     return newData
+      console.log('newData', newData);
+      return newData;
     });
   };
 
@@ -92,6 +94,8 @@ const Order = () => {
   };
 
   useEffect(() => {
+    console.log('order info', orderInfo);
+    console.log('new order', newOrder);
     if (!orderInfo && !newOrder) fetchWeddings();
   }, [orderInfo, newOrder]);
 

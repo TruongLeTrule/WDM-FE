@@ -53,9 +53,10 @@ const BillModal = () => {
           </div>
           <button
             className="btn"
-            onClick={() =>
-              setOrderModalState({ ...orderModalState, bill: false })
-            }
+            onClick={() => {
+              setOrderModalState({ ...orderModalState, bill: false });
+              setOrderInfo(null);
+            }}
           >
             done
           </button>
