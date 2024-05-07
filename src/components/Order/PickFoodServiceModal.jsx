@@ -74,7 +74,7 @@ const PickFoodServiceModal = ({
       }
       setNextModalOpen();
     } catch (error) {
-      alert(error.message);
+      toast.warning(error.message);
     }
   };
 
@@ -114,7 +114,7 @@ const PickFoodServiceModal = ({
       setRenderList(data.data);
       setIsLoading(false);
     } catch (error) {
-      alert(error.message);
+      toast.warning(error.message);
     }
   };
 
@@ -148,7 +148,7 @@ const PickFoodServiceModal = ({
         setPickedItem(fetchedItems);
       }
     } catch (error) {
-      alert(error.message);
+      toast.warning(error.message);
     }
   };
 
@@ -174,7 +174,7 @@ const PickFoodServiceModal = ({
       }
       setModalClose();
     } catch (error) {
-      alert(error.message);
+      toast.warning(error.message);
     }
   };
 

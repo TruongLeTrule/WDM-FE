@@ -64,8 +64,8 @@ const Order = () => {
     
     return data.map((wedding) => {
       const Bill = wedding.Bill.reduce((mainBill, currentBill) => 
-      (mainBill.payment_date < currentBill.payment_date ? mainBill : currentBill), wedding.Bill[0]);
-      return {
+      (mainBill.payment_date < currentBill.payment_date ? currentBill : mainBill ), wedding.Bill[0]);
+      const newData = {
       ...wedding,
       ...Bill,
       customer_name: wedding.Customer.name,
@@ -73,6 +73,9 @@ const Order = () => {
       lobby_name: wedding.Lobby.name,
       id: wedding.id,
      }
+
+     console.log("newData", newData)
+     return newData
     });
   };
 
