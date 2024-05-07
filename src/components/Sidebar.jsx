@@ -7,12 +7,11 @@ import { AuthContext } from '../context/auth.context';
 import { useContext } from 'react';
 
 const Sidebar = () => {
-
-  const { logOut } = useContext(AuthContext)
+  const { logOut } = useContext(AuthContext);
 
   const handleClickLogoutBtn = () => {
-    logOut()
-  }
+    logOut();
+  };
 
   return (
     <Wrapper>
@@ -31,7 +30,6 @@ const Sidebar = () => {
 };
 export default Sidebar;
 
-
 const LogoutBtn = styled.button`
   background-color: #1d00ff;
   padding: 10px;
@@ -39,9 +37,9 @@ const LogoutBtn = styled.button`
   color: white;
   font-weight: 800;
   cursor: pointer;
-  transition: all .2s linear;
+  transition: all 0.2s linear;
 
-   &:hover{
+  &:hover {
     background-color: #483e95;
-   }
-`
+  }
+`;

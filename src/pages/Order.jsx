@@ -75,8 +75,6 @@ const Order = () => {
         lobby_name: wedding.Lobby.name,
         id: wedding.id,
       };
-
-      console.log('newData', newData);
       return newData;
     });
   };
@@ -94,8 +92,6 @@ const Order = () => {
   };
 
   useEffect(() => {
-    console.log('order info', orderInfo);
-    console.log('new order', newOrder);
     if (!orderInfo && !newOrder) fetchWeddings();
   }, [orderInfo, newOrder]);
 

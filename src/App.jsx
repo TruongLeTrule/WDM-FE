@@ -1,7 +1,7 @@
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import RequireAuth from './components/RequireAuth'
+import RequireAuth from './components/RequireAuth';
 
 import {
   HomeLayout,
@@ -25,11 +25,21 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <AutoRedirect><Login /></AutoRedirect>,
+        element: (
+          <AutoRedirect>
+            <Login />
+          </AutoRedirect>
+        ),
       },
       {
         path: 'dashboard',
-        element: <AuthProvider><RequireAuth><DashboardLayout /></RequireAuth></AuthProvider>,
+        element: (
+          <AuthProvider>
+            <RequireAuth>
+              <DashboardLayout />
+            </RequireAuth>
+          </AuthProvider>
+        ),
         children: [
           {
             index: true,
@@ -58,10 +68,9 @@ const router = createBrowserRouter([
 ]);
 
 const App = () => {
-
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <RouterProvider router={router} />
+      <RouterProvider router={router} />
     </LocalizationProvider>
   );
 };

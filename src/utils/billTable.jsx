@@ -1,18 +1,18 @@
 export const customerInfo = [
   {
-    title: 'groom',
+    title: 'Groom',
     key: 'groom',
   },
   {
-    title: 'bride',
+    title: 'Bride',
     key: 'bride',
   },
   {
-    title: 'contact phone',
+    title: 'Contact phone',
     key: 'phone',
   },
   {
-    title: 'order date',
+    title: 'Order date',
     key: 'created_at',
     type: 'date',
   },
@@ -20,38 +20,38 @@ export const customerInfo = [
 
 export const weddingInfo = [
   {
-    title: 'lobby',
+    title: 'Lobby',
     key: 'lobby_name',
   },
   {
-    title: 'occur date',
+    title: 'Occur date',
     key: 'wedding_date',
     type: 'date',
   },
   {
-    title: 'shift',
+    title: 'Shift',
     key: 'shift',
   },
   {
-    title: 'total table',
+    title: 'Total table',
     key: 'table_count',
   },
   {
-    title: 'total food price',
+    title: 'Total food price',
     key: 'food_total_price',
     openModal: 'food',
   },
   {
-    title: 'total service price',
+    title: 'Total service price',
     key: 'service_total_price',
     openModal: 'service',
   },
   {
-    title: 'extra fee',
+    title: 'Extra fee',
     key: 'extra_fee',
   },
   {
-    title: 'total',
+    title: 'Total',
     key: 'total_price',
   },
 ];
