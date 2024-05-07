@@ -11,12 +11,13 @@
         margin-top: 2rem;
         width: 89%;
         display: flex;
-        column-gap: 2rem;
+        gap: 8px;
         flex-wrap: wrap;
         overflow: auto;
 
         .service_box_add_service {
-            width: 190px;
+            width: 15%;
+            cursor: pointer;
             height: 284px;
             border: 1px solid var(--grey-300);
             border-radius: 10px;
@@ -25,7 +26,6 @@
             justify-content: center;
             background-color: var(--grey-100);
             cursor: pointer;
-            margin-bottom: 2rem;
 
             &:hover {
                 background: var(--grey-300);
@@ -38,15 +38,15 @@
         }
 
         .service_box {
-            width: 190px;
+            width: 15%;
             height: 284px;
+            cursor: pointer;
             border: 1px solid var(--grey-300);
             border-radius: 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
             background-color: var(--grey-100);
-            margin-bottom: 2rem;
 
             &:hover {
                 box-shadow: var(--shadow-3);
