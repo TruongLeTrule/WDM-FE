@@ -347,11 +347,12 @@ const Container = styled.div`
   overflow: auto;
 
   .ant-space {
-    margin-bottom: 24px;
     width: 100%;
     display: flex;
+    height: 10%;
     justify-content: center;
     gap: 29px;
+    margin: 0!important;
   }
 
   .ant-space-item {
@@ -392,32 +393,62 @@ const Container = styled.div`
 const Card = styled.div`
   background-color: #fff;
   border: 1px solid #d9d9d9;
+  padding: 0 2rem;
   border-radius: 2px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 16px;
+  height: 100%
 `;
 const TableContainerMonth = styled.div`
-  height: 55vh;
-  overflow-y: auto;
+  height: 25%;
 `;
 const TableContainerYear = styled.div`
-  height: 55vh;
-  overflow-y: auto;
+height: 25%;
 `;
 const Table = styled.table`
   width: 100%;
+  height: 100%;
   border-collapse: collapse;
 
   th,
   td {
-    border: 1px solid #d9d9d9;
     padding: 8px;
+  }
+
+  thead th {
+      position: sticky;
+      top: 0;
+      background-color: #1820F3;
+      font-weight: bold;
+      color: #f6f6f6;
+  }
+
+  tbody {
+      display: block;
+      max-height: 200px;
+      overflow-y: auto;
+  }
+
+  tbody tr {
+      display: table;
+      width: 100%;
+      table-layout: fixed; /* Optional: helps with column width consistency */
+  }
+
+  thead, tbody tr {
+      display: table;
+      width: 100%;
+      table-layout: fixed; /* This makes sure all columns are of equal size */
+  }
+
+  /* Ensure the table width is set and borders if needed */
+  table, th, td {
+    border: 1.5px solid #97caff;
     text-align: center;
   }
 
   th {
-    background-color: #f5f5f5;
-    font-weight: bold;
+    border: 2px solid #000000;
+    text-align: center;
   }
 `;
 
@@ -440,8 +471,8 @@ const FollowByBox = styled.div`
   margin-top: 16px;
 `;
 const LineChartContainer = styled.div`
-  margin: 40px; 
   display: flex;
+  height: 60%;
   justify-content: center;
 
   .inner {
@@ -459,8 +490,8 @@ const ShowExtraBtn = styled.button`
 `
 const ActionBtn = styled.button`
     display: flex;
+    height: 5%;
     align-items: center;
-    margin: 10px;
     gap: 10px;
     width: 100%;
     justify-content: flex-start;

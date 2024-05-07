@@ -48,7 +48,10 @@ const OrderInfoModal = () => {
     >
       <Wrapper>
         <div className="header">
-          <h4>order {orderInfo?.id}</h4>
+          <h4>
+           <p> order</p>
+           <p> {orderInfo?.id}</p>
+          </h4>
           <FaPenToSquare
             className="icon"
             onClick={() => setEditOrderModalState({ userInfo: true })}

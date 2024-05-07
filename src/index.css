@@ -261,6 +261,7 @@ button:disabled {
 
 /* React modal */
 .ReactModal__Content {
+  padding: 10px;
   border: 0;
   border-radius: 16px;
   overflow: auto;

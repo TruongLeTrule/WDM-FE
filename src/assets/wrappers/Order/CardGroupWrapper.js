@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
-  padding: 2rem 3rem;
   text-align: center;
+  height: 100%;
   h4 {
     text-transform: capitalize;
     font-weight: 600;
@@ -11,12 +11,18 @@ const Wrapper = styled.div`
     cursor: pointer;
   }
   .header {
+    justify-content: center;
+    align-items: center;
     position: relative;
+    padding: 30px;
+    display: flex;
+    height: 10%;
+
     .cart-wrapper {
       z-index: 999;
       position: absolute;
-      right: 0;
-      top: 0;
+      right: 30px;
+      top: 50%;
       .food-list {
         text-transform: capitalize;
         border-radius: 6px;
@@ -37,10 +43,15 @@ const Wrapper = styled.div`
           object-fit: cover;
           border-radius: 4px;
         }
+
+        .food-container {
+          height: 450px;
+          overflow-y:scroll;
+        }
         .food {
           margin-top: 1rem;
           display: flex;
-          justify-content: space-between;
+          justify-content: flex-start;
           align-items: center;
           column-gap: 2rem;
           font-size: 0.9rem;
@@ -48,8 +59,9 @@ const Wrapper = styled.div`
             display: flex;
             flex-direction: column;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
             row-gap: 0.5rem;
+            flex: 1;
             .quantity-group {
               display: flex;
 
@@ -98,7 +110,9 @@ const Wrapper = styled.div`
     }
   }
   .container {
-    padding: 2rem 0;
+    overflow-y: scroll;
+    height: 90%;
+    padding: 0 2rem;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 1.5rem;
@@ -111,6 +125,16 @@ const Wrapper = styled.div`
     box-shadow: 0px 2px 8px 0px rgba(78, 78, 78, 0.2);
     -webkit-box-shadow: 0px 2px 8px 0px rgba(78, 78, 78, 0.2);
     -moz-box-shadow: 0px 2px 8px 0px rgba(78, 78, 78, 0.2);
+
+    .content {
+      display: flex;
+      flex-direction: column;
+      height: 150px;
+
+      h5{
+        flex: 1;
+      }
+    }
   }
   .lob-img {
     z-index: 1;
@@ -129,6 +153,11 @@ const Wrapper = styled.div`
     font-size: 0.9rem;
     margin-top: 0.3rem;
   }
+
+  .action-wrapper {
+
+  }
+
   .quantity-group {
     margin-top: 0.7rem;
     display: flex;
@@ -136,15 +165,25 @@ const Wrapper = styled.div`
     justify-content: center;
     column-gap: 1rem;
 
+    .quantity {
+      user-select: none;
+    }
     svg {
       user-select: none;
+      font-size: 1.35rem;
+      background-color: #5c5c5c;
+      border-radius: 4px;
+      color: white;
+      padding: 5.8px 6px;
+      transition: all .2s linear;
     }
     .icon {
       cursor: pointer;
     }
     .disable {
-      color: var(--grey-400);
+      color: #ffffff;
       cursor: default;
+      background-color: #d5d5d5;
     }
   }
   .btn-group {
@@ -157,9 +196,11 @@ const Wrapper = styled.div`
       font-size: 0.8rem;
       padding: 0.5rem 1rem;
       background-color: var(--black);
+      user-select: none;
     }
     .reset {
       color: var(--grey-500);
+      user-select: none;
       background-color: var(--grey-300);
     }
   }

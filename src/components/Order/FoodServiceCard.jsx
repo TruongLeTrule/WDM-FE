@@ -10,28 +10,31 @@ const FoodServiceCard = ({ img, name, price, id, handleAddBtnClick }) => {
       <div className="content">
         <h5>{name}</h5>
         <p className="price">{price}$</p>
-        <div className="quantity-group">
-          <FaMinus
-            className={quantity === 0 ? 'disable icon' : 'icon'}
-            onClick={() => setQuantity(quantity === 0 ? 0 : quantity - 1)}
-          />
-          <div className="quantity">{quantity}</div>
-          <FaPlus className="icon" onClick={() => setQuantity(quantity + 1)} />
-        </div>
-        <div className="btn-group">
-          <div className="btn reset" onClick={() => setQuantity(0)}>
-            reset
+
+        <div className="action-wrapper">
+          <div className="quantity-group">
+            <FaMinus
+              className={quantity === 0 ? 'disable icon' : 'icon'}
+              onClick={() => setQuantity(quantity === 0 ? 0 : quantity - 1)}
+            />
+            <div className="quantity">{quantity}</div>
+            <FaPlus className="icon" onClick={() => setQuantity(quantity + 1)} />
           </div>
-          <div
-            className="btn"
-            onClick={() => {
-              if (quantity > 0) {
-                handleAddBtnClick({ id, count: quantity, name, price });
-                setQuantity(0);
-              }
-            }}
-          >
-            Apply
+          <div className="btn-group">
+            <div className="btn reset" onClick={() => setQuantity(0)}>
+              reset
+            </div>
+            <div
+              className="btn"
+              onClick={() => {
+                if (quantity > 0) {
+                  handleAddBtnClick({ id, count: quantity, name, price });
+                  setQuantity(0);
+                }
+              }}
+            >
+              Apply
+            </div>
           </div>
         </div>
       </div>

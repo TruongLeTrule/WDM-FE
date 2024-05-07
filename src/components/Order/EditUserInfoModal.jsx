@@ -103,11 +103,14 @@ const EditUserInfoModal = ({
     >
       <Wrapper>
         <div className="header">
-          <h4>edit order {orderData?.id}</h4>
+          <h4>
+            <div>edit order </div>
+            <div>{orderData?.id}</div>
+          </h4>
         </div>
         <div className="container">
           {/* Left col */}
-          <div>
+          <div className='customer_info'>
             <div className="rows">
               {editOrderLeft.map(({ title, key, type, openModal, edit }) =>
                 resolveComponent(title, key, type, openModal, edit)

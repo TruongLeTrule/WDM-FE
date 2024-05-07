@@ -3,6 +3,7 @@ import styled from 'styled-components';
 const Wrapper = styled.div`
   input {
     min-width: 15rem;
+    width: 100%;
     font-size: 1rem;
     margin-top: 0.4rem;
     display: block;

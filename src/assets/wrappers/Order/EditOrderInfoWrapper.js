@@ -17,6 +17,9 @@ const Wrapper = styled.div`
     width: 100%;
     justify-content: center;
     flex-wrap: wrap;
+
+    .customer_info {
+    }
   }
   h5 {
     font-weight: 600;
@@ -45,6 +48,7 @@ const Wrapper = styled.div`
     .rows {
       width: max-content;
       margin: 0 auto;
+
     }
     .icon {
       position: absolute;
