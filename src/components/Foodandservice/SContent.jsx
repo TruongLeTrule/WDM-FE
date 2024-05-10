@@ -239,8 +239,8 @@ const ServiceModalContent = (p) => {
             <Input
                 placeholder="Price"
                 style={{ marginTop: 10 }}
-                prefix="$"
-                suffix="USD"
+                prefix="VND"
+                suffix="VND"
                 value={tempPrice}
                 onChange={(e) => setTempPrice(e.target.value)}
             />

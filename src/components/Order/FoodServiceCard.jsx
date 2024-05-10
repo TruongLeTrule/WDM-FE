@@ -9,7 +9,7 @@ const FoodServiceCard = ({ img, name, price, id, handleAddBtnClick }) => {
       <img src={img} alt={name} className="lob-img" />
       <div className="content">
         <h5>{name}</h5>
-        <p className="price">{price}$</p>
+        <p className="price">{price} VND</p>
 
         <div className="action-wrapper">
           <div className="quantity-group">

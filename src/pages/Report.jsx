@@ -5,10 +5,13 @@ import { ReloadOutlined, SettingOutlined } from "@ant-design/icons";
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { Line, getDatasetAtEvent, getElementAtEvent } from "react-chartjs-2";
-import Chart from 'chart.js/auto';
+import Chart, { Interaction } from 'chart.js/auto';
 import { getListRevenue, getTotalRevenue } from "../api/revenue.api"
 import ExportCSVButton from "../components/ExportCSVBtn";
 import Loading from "../components/Loading";
+import { searchWeddingsByDate } from "../api/wedding.api";
+import WeddingCard from "../components/Report/ModalWedding";
+import { formatVND } from "../utils";
 
 
 dayjs.extend(customParseFormat);
@@ -59,6 +62,7 @@ const Report = () => {
         {isLoad && <Loading minsize="35px" />}
         <ReportInner 
           setDateReport={setDateReport}
+          dateReport={dateReport}
           data={newData} 
           totalRevenue={totalRevenue} 
           isExtraFee={isExtraFee}
@@ -70,12 +74,29 @@ const Report = () => {
 }
 
 const ReportInner = (p) => {
-  const { data, totalRevenue, handleToggleExtraFee, setDateReport } = p
+  const { data, totalRevenue, handleToggleExtraFee, setDateReport, dateReport, isExtraFee } = p
   const [showFollowBy, setShowFollowBy] = useState(false);
   const [showMonthPicker, setShowMonthPicker] = useState(true);
   const [selectedDate, setSelectedDate] = useState(dayjs());
+  
+  const [ModalWedding, setModalWedding] = useState({
+    state: false,
+    data: []
+  })
 
   const [getChart, setChart] = useState("1");
+
+  const modalWeddingOption = {
+    open:(data) => {
+      if(data) {
+        setModalWedding({ data, state: true })
+      }
+    },
+    close:() => {
+      setModalWedding({ data:[], state: false})
+    }
+  }
+
   const handleSettingClick = () => {
     setShowFollowBy(!showFollowBy);
   };
@@ -210,26 +231,40 @@ const ReportInner = (p) => {
         },
       },
     },
-    onClick: function(e) {   
-      // const canvasPosition = Chart.helpers.getRelativePosition(e, chart);
+    onClick: async function(e, elements) {   
+      const index = elements[0].index
+      const date = e.chart.data.labels[index]
 
-      // // Substitute the appropriate scale IDs
-      // const dataX = chart.scales.x.getValueForPixel(canvasPosition.x);
-      // const dataY = chart.scales.y.getValueForPixel(canvasPosition.y);
+      const newDate = new Date(dateReport.year, dateReport.month - 1, date);
+
+      console.log(newDate)
+
+      return handleOpenModalList(newDate)
     }
   };
 
-  const chartRef = useRef();
+  const handleOpenModalList = async (newDate) => {
+    try {
+      const res = await searchWeddingsByDate(newDate)
 
-  const handleClickChart = (e) => {
-    const point = getElementAtEvent(chartRef.current, e);
-    console.log(point[0].element.$context);
+      console.log(res.data)
+      modalWeddingOption.open(res.data)
+    } catch (error) {
+      alert(error.message)
+    }
   }
 
+  const chartRef = useRef();
+
+  // const handleClickChart = (e) => {
+  //   const point = getElementAtEvent(chartRef.current, e);
+  //   console.log(point[0].element.$context);
+  // }
 
 
   return (
     <Container>
+      {ModalWedding.state && <ModalWeddingList modalWeddingOption={modalWeddingOption} data={ModalWedding.data} isExtraFee={isExtraFee} />}
       <Card>
         <ActionBtn>
           {showMonthPicker ? (
@@ -237,7 +272,7 @@ const ReportInner = (p) => {
             ) : (
               <DatePicker value={selectedDate} onChange={handleDateChange} picker="year" />
             )}
-          <ShowExtraBtn onClick={handleToggleExtraFee}>show extra fee</ShowExtraBtn>
+          <ShowExtraBtn onClick={handleToggleExtraFee}>{!isExtraFee? "show extra fee" : "Don't show extra fee"}</ShowExtraBtn>
           
             <ExportCSVButton data={data}>Export File</ExportCSVButton>
           
@@ -267,7 +302,9 @@ const ReportInner = (p) => {
         {getChart === "1" &&
           <LineChartContainer>
             <div className="inner">
-              <Line data={ChartDataMonth} options={options} onClick={handleClickChart} ref={chartRef}/>
+              <Line data={ChartDataMonth} options={options} 
+              // onClick={handleClickChart}
+               ref={chartRef}/>
             </div>
           </LineChartContainer>
         }
@@ -286,19 +323,22 @@ const ReportInner = (p) => {
                   <th>No.</th>
                   <th>Date</th>
                   <th>Wedding Number</th>
-                  <th>Revenue ($)</th>
-                  <th>Real Revenue ($)</th>
+                  <th>Revenue (VND)</th>
+                  <th>Real Revenue (VND)</th>
                   <th>Ratio</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredData.map((item, index) => (
-                  <tr key={index}>
+                  <tr key={index} className="table-column" onClick={() => {
+                    const newDate = new Date(dateReport.year, dateReport.month - 1, item.day.split("-")[0]);
+                    return handleOpenModalList(newDate)
+                    }}>
                     <td>{index + 1}</td>
                     <td>{showMonthPicker ? dayjs(item.day, "DD-MM-YYYY").format("DD/MM") : dayjs(item.day, "DD-MM-YYYY").format("MM/YYYY")}</td>
                     <td>{item.weddingnumber}</td>
-                    <td>{item.estimate_revenue}</td>
-                    <td>{item.real_revenue}</td>
+                    <td style={{ fontWeight: "600", color: "blue"}}>{formatVND(item.estimate_revenue)}</td>
+                    <td style={{ fontWeight: "600", color: "green"}}>{formatVND(item.real_revenue)}</td>
                     <td>{item.ratio}</td>
                   </tr>
                 ))}
@@ -314,8 +354,8 @@ const ReportInner = (p) => {
                   <th>No.</th>
                   <th>Date</th>
                   <th>Wedding Number</th>
-                  <th>Revenue ($)</th>
-                  <th>Real Revenue ($)</th>
+                  <th>Revenue (VND)</th>
+                  <th>Real Revenue (VND)</th>
                   <th>Ratio</th>
                 </tr>
               </thead>
@@ -340,6 +380,33 @@ const ReportInner = (p) => {
     </Container>
   );
 };
+
+const ModalWeddingList = (p) => {
+  const { modalWeddingOption, data, isExtraFee } = p
+
+
+  console.log("get data", data)
+  return (
+    <ModalContainer>
+      <ContentWrapper>
+        <ModalOverlay onClick={modalWeddingOption.close}></ModalOverlay>
+        <ModalElm>
+          <ModalElmContent>
+
+            <div className="header">
+              Date: {new Date(data[0].wedding_date).toLocaleDateString()}
+            </div>
+            <div className="list_bill">
+              {data.map(wedding => (
+                <WeddingCard key={wedding.id} wedding={wedding} isExtraFee={isExtraFee}/>
+              ))}
+            </div>
+          </ModalElmContent>
+        </ModalElm>
+      </ContentWrapper>
+    </ModalContainer>
+  )
+}
 
 const Container = styled.div`
   // padding: 24px;
@@ -391,6 +458,7 @@ const Container = styled.div`
 //   margin-bottom: 24px;
 // `;
 const Card = styled.div`
+  position: : relative;
   background-color: #fff;
   border: 1px solid #d9d9d9;
   padding: 0 2rem;
@@ -409,6 +477,14 @@ const Table = styled.table`
   height: 100%;
   border-collapse: collapse;
 
+  .table-column {
+    cursor: pointer;
+    transition: all .2s linear;
+
+    &:hover {
+      background-color: #9cb8fd;
+    }
+  }
   th,
   td {
     padding: 8px;
@@ -497,4 +573,56 @@ const ActionBtn = styled.button`
     justify-content: flex-start;
 `
 
+const ModalContainer =styled.div`
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 999;
+`
+const ContentWrapper =styled.div`
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+
+const ModalOverlay = styled.div `
+  background-color: #6f6f6f;
+  opacity: .6;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  
+`
+
+const ModalElm = styled.div`
+  max-width: 1100px;
+  width: 50%;
+  height: 800px;
+  z-index: 1000;
+  background-color: white;
+  border-radius: 10px;
+  padding: 18px 16px;
+`
+const ModalElmContent = styled.div`
+  width: 100%;
+  overflow-y: scroll;
+  height: 100%;
+
+  .header  {
+    padding: 10px 21px;
+    font-weight: 500;
+    font-size: 1.4rem;
+  }
+
+  .list_bill {
+
+  }
+
+`
+
 export default Report;
+
+

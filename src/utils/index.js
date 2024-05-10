@@ -8,3 +8,10 @@ export function getFileBlobUrl(file) {
   return blobUrl;
 
 }
+
+export function formatVND(number) {
+  return number.toLocaleString('vi-VN', {
+      style: 'currency',
+      currency: 'VND'
+  });
+}
