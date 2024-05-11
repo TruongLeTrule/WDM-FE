@@ -145,6 +145,11 @@ export const TypeTableCancelAndSave = styled.div`
     color: white;
     background-color: blue;
   }
+
+  .buttonDelete {
+    color: white;
+    background-color: #f64e4e;
+  }
 `
 
 export const EditLobbyInput = styled.div`

@@ -1,14 +1,16 @@
 import { Fragment, createContext, useContext, useState } from "react";
 import { WrapTable } from "./Styled";
-import TypeInformTable from "./utils/CreateTypeInformTable";
+import TypeInformTable from "./components/CreateTypeInformTable";
 import usePagination from "./Hooks/usePagination";
 import { LobbyContext } from "../../pages/Lobby";
 import PagePagination from "./PagePagination";
 import TypeInformTableEdit from "./TypeInformTableEdit";
+import TypeInformTableAdd from "./TypeInformTableAdd";
 
 export const TypeInformContext = createContext();
 
-const LobTypeInformation = ({ data }) => {
+const LobTypeInformation = (p) => {
+  const { data, isModalAdd, modalOption } = p
   const { fetchLobby } = useContext(LobbyContext);
   const [isLobTypeInformEditDisplay, setIsLobTypeInformEditDisplay] = useState(false);
   const [editData, setEditData] = useState([]);
@@ -31,6 +33,11 @@ const LobTypeInformation = ({ data }) => {
         {isLobTypeInformEditDisplay &&
           <TypeInformTableEdit
           />}
+        {isModalAdd &&
+          <TypeInformTableAdd
+          modalOption={modalOption}
+          />}
+          
       </Fragment>
     </TypeInformContext.Provider>
   );

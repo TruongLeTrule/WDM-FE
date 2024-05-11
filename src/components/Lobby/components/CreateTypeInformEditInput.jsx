@@ -32,17 +32,6 @@ const EditLobTypeInformInput = ({ inputValue, setInputValue }) => {
         <h5>Lobby Name</h5>
         <input value={inputValue.name} onChange={(e) => handleInput(e.target.value)} type="text" />
       </div>
-      <div className="inputBlock lobType">
-        <h5>Lobby Type</h5>
-        <select value={inputValue.type} onChange={(e) => handleSelect(e.target.value)}>
-          <option value="" disabled>Select an option</option>
-          {
-            type.map((value, index) => {
-              return <option key={index}>{value}</option>
-            })
-          }
-        </select>
-      </div>
     </EditTypeInformInput>
   )
 };

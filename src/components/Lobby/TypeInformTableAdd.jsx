@@ -5,10 +5,11 @@ import { useContext, useState } from "react";
 import { updateLobby, softDeleteLobby } from "../../api/lobby.api";
 import { ToastContainer, toast } from 'react-toastify';
 
-const TypeInformTableEdit = () => {
+const TypeInformTableAdd = (p) => {
+
+  const { modalOption } = p
   const {
     editData,
-    setIsLobTypeInformEditDisplay,
     fetchLobby
   } = useContext(TypeInformContext);
   const [inputValue, setInputValue] = useState({
@@ -16,7 +17,7 @@ const TypeInformTableEdit = () => {
     type: editData[2]
   });
   const handleCancelButton = () => {
-    setIsLobTypeInformEditDisplay(false);
+    modalOption.close()
   }
 
   const handleSaveButton = async (value) => {
@@ -26,32 +27,23 @@ const TypeInformTableEdit = () => {
       }
       await updateLobby(editData[3], updateData)
       fetchLobby(value);
-      setIsLobTypeInformEditDisplay(false);
+      modalOption.close()
 
     } catch (error) {
       toast.success(error.message)
     }
   }
 
-  const handleDeleteButton = async (value) => {
-    try {
-      await softDeleteLobby(editData[3])
-      fetchLobby(value);
-      setIsLobTypeInformEditDisplay(false);
-    } catch (error) {
-      toast.success(error.message)
-    }
-  }
+
   return (
     <EditBlock onClick={(e) => { e.stopPropagation(); console.log(123) }}>
       <TableInput className="TypeInform">
-        <h4 className="TypeInform">Edit Lobby Type</h4>
+        <h4 className="TypeInform">Add Lobby Type</h4>
         <EditLobTypeInformInput
           inputValue={inputValue}
           setInputValue={setInputValue}
         />
         <TypeTableCancelAndSave className="TypeInform">
-          <button className="button buttonDelete" onClick={() => handleDeleteButton(([editData[0], editData[2]]))}> Delete </button>
           <button className="button buttonCancel" onClick={handleCancelButton}> Cancel </button>
           <button className="button buttonSave" onClick={() => handleSaveButton([editData[0], editData[2]])}>Save </button>
         </TypeTableCancelAndSave>
@@ -60,4 +52,4 @@ const TypeInformTableEdit = () => {
   )
 }
 
-export default TypeInformTableEdit;
+export default TypeInformTableAdd;

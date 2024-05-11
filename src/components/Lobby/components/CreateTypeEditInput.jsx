@@ -1,6 +1,7 @@
 import { EditLobbyInput } from "../Styled";
 
-const EditLobTypeInput = ({ handleInput, inputValue }) => {
+const EditLobTypeInput = (p) => {
+  const { handleInput, inputValue } = p
   return (
     <EditLobbyInput>
       <div className="typeNameAndPrice">

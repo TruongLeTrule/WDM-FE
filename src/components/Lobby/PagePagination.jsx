@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { PagePaginationStyled } from "./Styled";
 import { Icon } from "../../assets/icon";
-import createArray from "./utils/CreateArrayFromN";
+import createArray from "./components/CreateArrayFromN";
 
 const PagePagination = ({ pagination }) => {
   const [maxPages, setMaxPages] = useState(() => createArray(pagination.totalPages + 1));
