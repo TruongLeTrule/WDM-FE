@@ -82,8 +82,10 @@ const PickFoodServiceModal = ({
     try {
       const foodId = newItem.id
       const upcomingCount = newItem.count
+      console.log(newItem)
       type === 'food' && await checkInventoryForFood(foodId, upcomingCount)
       // If item existed in picked list, set new quantity
+      toast.success(`${newItem.name} Added successfully!`);
       if (pickedItem.find((item) => item.id === newItem.id)) {
         const itemList = pickedItem.map((item) =>
           item.id === newItem.id ? newItem : item
@@ -91,6 +93,7 @@ const PickFoodServiceModal = ({
         return setPickedItem(itemList);
       }
       return setPickedItem([...pickedItem, newItem]);  
+      
     } catch (error) {
       toast.warning(error.message);
     }
@@ -212,7 +215,7 @@ const PickFoodServiceModal = ({
       setModalClose={setModalClose}
       customStyle={customStyle}
     >
-       <ToastContainer />
+       {/* <ToastContainer /> */}
       {isLoading ? (
         <Loading />
       ) : (
@@ -303,7 +306,7 @@ const PickFoodServiceModal = ({
             </div>
           </div>
           <div className="container">
-            {renderList.map(({ id, name, price, url }) =>{
+            {renderList.map(({ id, name, price, url, inventory }) =>{
               return(
                 <FoodServiceCard
                   img={type === 'food' ? (url? url: beefImg) : (url ? url :balletImg)}
@@ -311,6 +314,7 @@ const PickFoodServiceModal = ({
                   id={id}
                   name={name}
                   price={price}
+                  inventory={inventory}
                   handleAddBtnClick={handleAddBtnClick}
                 />
               )

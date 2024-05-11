@@ -10,7 +10,11 @@ export function getFileBlobUrl(file) {
 }
 
 export function formatVND(number) {
-  return number.toLocaleString('vi-VN', {
+  let result = number
+  if (!result) {
+    result = 0
+  }
+  return result.toLocaleString('vi-VN', {
       style: 'currency',
       currency: 'VND'
   });

@@ -34,9 +34,9 @@ const Report = () => {
     const fetchDataRevenue = async () => {
       setLoad(true)
       try{
-        const res = await getListRevenue(isExtraFee);
         const year = dateReport.year
         const month = dateReport.month
+        const res = await getListRevenue(isExtraFee, month, year);
         const totalRevenueData = await getTotalRevenue(year, month)
         setData(res.data)
         setTotalRevenue(totalRevenueData.data)
@@ -394,7 +394,8 @@ const ModalWeddingList = (p) => {
           <ModalElmContent>
 
             <div className="header">
-              Date: {new Date(data[0].wedding_date).toLocaleDateString()}
+             <div> Date: {new Date(data[0].wedding_date).toLocaleDateString()}</div>
+             <div> Quantity: {data.length > 0 ? data.length: 0}</div>
             </div>
             <div className="list_bill">
               {data.map(wedding => (
@@ -608,16 +609,20 @@ const ModalElm = styled.div`
 `
 const ModalElmContent = styled.div`
   width: 100%;
-  overflow-y: scroll;
   height: 100%;
-
+  
   .header  {
     padding: 10px 21px;
     font-weight: 500;
+    display:flex;
     font-size: 1.4rem;
+    justify-content: space-between;
   }
-
+  
   .list_bill {
+    overflow-y: scroll;
+    overflow-y: scroll;
+    height: 90%;
 
   }
 
