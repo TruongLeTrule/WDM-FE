@@ -50,7 +50,7 @@ const Information = ({
       newData[editrow] = Object.values(tempData).map((value, index) => value === '' ? newData[editrow][index] : value);
       // console.log(accountInformation)
 
-      const roleID = getRoleIdByName(tempData.Role)
+      const roleID = await getRoleIdByName(tempData.Role)
       const userID = newData[editrow][0]
       const displayName = newData[editrow][1]
 
@@ -70,7 +70,7 @@ const Information = ({
       await register(Object.values(tempData)[2], Object.values(tempData)[3], Object.values(tempData)[1]);
       setIsDisplayInformationBlock(false);
       const res = await findUserByUserName(Object.values(tempData)[2]);
-      await updateRoleforUser(getRoleIdByName(Object.values(tempData)[4]), res.data.id)
+      await updateRoleforUser(await getRoleIdByName(Object.values(tempData)[4]), res.data.id)
       tempData.ID = res.data.id
       tempData.Password = res.data.password
       

@@ -64,3 +64,7 @@ export const checkUserPermissionForPage = (userID, page) => { // return boolean 
     }
   });
 };
+
+export const deleteRole = (roleID) => {
+  return axiosClient.delete(`privilege/role/delete/${roleID}`);
+};

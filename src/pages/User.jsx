@@ -29,9 +29,11 @@ const User = () => {
   const [boardType, setBoardType] = useState("");
   const [row, setRow] = useState();
   const [searchValue, setSearchValue] = useState();
+  const [isFetch, setIsFetch] = useState(Math.random())
 
-  const getRoleIdByName = (name) => {
-    const role = roles.find((value) => value.name === name);
+  const getRoleIdByName = async (name) => {
+    const rolesData = await getRoles()
+    const role = rolesData.data.find((value) => value.name === name);
     return role ? role.id : null;
   };
 
@@ -51,7 +53,7 @@ const User = () => {
     newPermissionAccount[rowIndex + 1][cellIndex] = !permissionAccount[rowIndex + 1][cellIndex];
     setPermissionAccount(newPermissionAccount);
 
-    const roleId = getRoleIdByName(permissionAccount[rowIndex + 1][0]);
+    const roleId = await getRoleIdByName(permissionAccount[rowIndex + 1][0]);
     const permissionId = getPermissionsIdByName(permissionAccount[0][cellIndex]);
 
     const permission = permissionAccount[rowIndex + 1][cellIndex];
@@ -136,7 +138,6 @@ const User = () => {
   }
 
   const updateUserList = (userID, newData) => {
-    // const index =
     console.log("userID", userID)
     console.log("newData", newData)
     setAccountInformation(newData)
@@ -174,7 +175,7 @@ const User = () => {
     fetchPermissionsAccount();
     fetchDataAccountInformation();
     return;
-  }, []);
+  }, [isFetch]);
 
   const checkRow = (row, searchValue) => {
     return row.some(cell => {
@@ -204,8 +205,8 @@ const User = () => {
           <Icon.plus className="iconPlus" onClick={handlePermissionCreate}></Icon.plus>
         </div>
       </div>
-      <StyledPermissionAccountTable data={permissionAccount} action={updateRolePermission} />
-      <Permission display={isDisplayPermissionBlock} setIsDisplayPermissionBlock={setIsDisplayPermissionBlock} />
+      <StyledPermissionAccountTable data={permissionAccount} action={updateRolePermission} getRoleIdByName={getRoleIdByName} setIsFetch={setIsFetch}/>
+      <Permission display={isDisplayPermissionBlock} setIsDisplayPermissionBlock={setIsDisplayPermissionBlock} setPermissionAccount={setPermissionAccount}/>
       <div className="TitleSearchCombination">
         <div className="blockTitle">
           <h4 className="title" onClick={() => console.log(accountInformation)}>
