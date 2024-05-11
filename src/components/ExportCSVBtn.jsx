@@ -8,8 +8,8 @@ const ExportCSVButton = (p) => {
     const headers = [ 
         { label: "Date", key: "day" },
         { label: "Wedding Number", key: "weddingnumber" },
-        { label: "Estimated Revenue ($)", key: "estimate_revenue" },
-        { label: "Real Revenue ($)", key: "real_revenue" },
+        { label: "Estimated Revenue (VND)", key: "estimate_revenue" },
+        { label: "Real Revenue (VND)", key: "real_revenue" },
         { label: "Ratio (%)", key: "ratio" },
     ];
 

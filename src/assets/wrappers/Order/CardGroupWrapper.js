@@ -21,7 +21,7 @@ const Wrapper = styled.div`
     .cart-wrapper {
       z-index: 999;
       position: absolute;
-      right: 30px;
+      left: 30px;
       top: 50%;
       .food-list {
         text-transform: capitalize;
@@ -166,7 +166,10 @@ const Wrapper = styled.div`
     column-gap: 1rem;
 
     .quantity {
-      user-select: none;
+      width: 30px;
+      border: 1px solid #b5b5b5;
+      overflow: hidden;
+      border-radius: 4px;
     }
     svg {
       user-select: none;

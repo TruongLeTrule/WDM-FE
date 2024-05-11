@@ -7,6 +7,7 @@ import {
   PickFoodServiceModal,
   SuccessModal,
 } from './';
+import { ToastContainer, toast } from 'react-toastify';
 
 const CreateOrderModalContainer = () => {
   const {
@@ -30,6 +31,7 @@ const CreateOrderModalContainer = () => {
 
   return (
     <>
+      <ToastContainer />
       {editOrderModalState?.userInfo && (
         <EditUserInfoModal
           isOpen={editOrderModalState?.userInfo}

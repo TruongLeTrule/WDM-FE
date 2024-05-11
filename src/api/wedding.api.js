@@ -8,6 +8,14 @@ export const searchWeddingsByPhone = (phone) => {
   });
 };
 
+export const searchWeddingsByDate = (date) => {
+  return axiosClient.get('wedding/find-by-date?', {
+    params: {
+      date,
+    },
+  });
+};
+
 export const getWeddings = (bill = false) => {
   return axiosClient.get('wedding', {
     params: {
@@ -21,6 +29,7 @@ export const getWeddingById = (id, includedBill = false) => {
 };
 
 export const createWedding = (dataCreate) => {
+  console.log("dataCreate", dataCreate)
   return axiosClient.post('wedding/create/wedding', dataCreate);
 };
 

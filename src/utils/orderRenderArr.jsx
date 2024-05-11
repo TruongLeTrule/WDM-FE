@@ -52,6 +52,7 @@ export const orderInfoRight = [
   },
   { title: 'total', key: 'total_price' },
   { title: 'deposit', key: 'deposit_amount' },
+  { title: 'extra fee', key: 'extra_fee' },
   { title: 'remainder', key: 'remain_amount' },
 ];
 

@@ -21,10 +21,10 @@ export const getMonthWedding = (year, month) => {
   });
 };
 
-export const getListRevenue = (includeFee=false) => {
+export const getListRevenue = (includeFee=false, month, year) => {
   return axiosClient.get('revenue/list-revenue', {
     params: {
-      includeFee
+      includeFee, month, year
     }
   });
 };
