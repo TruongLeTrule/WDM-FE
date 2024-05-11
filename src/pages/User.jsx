@@ -108,6 +108,8 @@ const User = () => {
     if (typeof value === 'string') {
       const trimmedValue = value.trim();
       setSearchValue(trimmedValue);
+
+      
     }
   };
 
@@ -216,7 +218,7 @@ const User = () => {
             <Icon.plus className="iconPlus" onClick={handleInformationCreate}></Icon.plus>
           </div>
         </div>
-        <SearchBox onChange={handleSearchBox} />
+        <SearchBox handleSearch={handleSearchBox} />
       </div>
       <StyledAccountInformationTable
         data={accountInformationTableFilter}
