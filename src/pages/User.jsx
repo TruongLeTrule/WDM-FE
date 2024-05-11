@@ -16,7 +16,7 @@ const User = () => {
   ]);
   const [roles, setRoles] = useState();
   const [accountInformation, setAccountInformation] = useState([
-    ["ID", "Display Name", "Username", "Password", "Permission", ""],
+    ["ID", "Display Name", "Username", "Password", "Role"],
   ]);
   const [accountInformationTableFilter, setAccountInformationTableFilter] = useState(accountInformation);
   const [accountInformationInput, setAccountInformationInput] = useState({
@@ -24,7 +24,7 @@ const User = () => {
     DisplayName: "",
     UserName: "",
     Password: "",
-    Permission: "",
+    Role: "",
   });
   const [boardType, setBoardType] = useState("");
   const [row, setRow] = useState();
@@ -76,7 +76,7 @@ const User = () => {
       DisplayName: "",
       UserName: "",
       Password: "",
-      Permission: "",
+      Role: "",
     });
   };
 
@@ -97,7 +97,7 @@ const User = () => {
       DisplayName: rowData[1],
       UserName: rowData[2],
       Password: rowData[3],
-      Permission: rowData[4],
+      Role: rowData[4],
     });
     setRow(row);
   };
@@ -135,13 +135,20 @@ const User = () => {
     }
   }
 
+  const updateUserList = (userID, newData) => {
+    // const index =
+    console.log("userID", userID)
+    console.log("newData", newData)
+    setAccountInformation(newData)
+  }
+
   const fetchDataAccountInformation = async () => {
     try {
       const res = await getUsers();
       if (res && res.data) {
         const data = res.data;
         const tempAccountInformation = [];
-        tempAccountInformation.push(["ID", "Display Name", "Username", "Password", "Permission", ""])
+        tempAccountInformation.push(["ID", "Display Name", "Username", "Password", "Role"])
         data.forEach((value) => {
           let subArray = [];
           subArray.push(
@@ -225,6 +232,7 @@ const User = () => {
         setAccountInformation={setAccountInformation}
         accountInformationInput={accountInformationInput}
         getRoleIdByName={getRoleIdByName}
+        updateUserList={updateUserList}
       />
     </UserBlock>
   );
