@@ -4,7 +4,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import { InformationBlock, InformationBoard, SaveButton } from "./Styled";
 import { updateUserDisplayName } from "../../api/user.api";
 import { register } from "../../api/auth.api";
-import { updateRoleforUser } from "../../api/privilege.api";
+import { updateRoleforUser, getRoles } from "../../api/privilege.api";
 import { findUserByUserName } from "../../api/user.api";
 
 const Information = ({
@@ -14,7 +14,8 @@ const Information = ({
   editrow,
   accountInformation,
   accountInformationInput,
-  getRoleIdByName
+  getRoleIdByName,
+  updateUserList
 }) => {
   const [inputValue, setInputValue] = useState(accountInformationInput);
   const [tempData, setTempData] = useState({
@@ -22,12 +23,13 @@ const Information = ({
     DisplayName: "",
     UserName: "",
     Password: "",
-    Permission: accountInformationInput.Permission,
+    Role: accountInformationInput?.Role,
   });
 
-  const [selectValue, setSelectValue] = useState(inputValue.Permission);
+  const [selectValue, setSelectValue] = useState(inputValue.Role);
   const [isSaveDisabled, setIsSaveDisabled] = useState(true);
   const [isModified, setIsModified] = useState(false);
+  const [roles, setRoles] = useState([])
 
   const updateTempData = (name, data) => {
     setTempData(prevData => ({ ...prevData, [name]: data }));
@@ -46,10 +48,17 @@ const Information = ({
     const newData = [...accountInformation];
     try {
       newData[editrow] = Object.values(tempData).map((value, index) => value === '' ? newData[editrow][index] : value);
-      await updateRoleforUser(getRoleIdByName(newData[editrow][4]), newData[editrow][0])
+      // console.log(accountInformation)
+
+      const roleID = await getRoleIdByName(tempData.Role)
+      const userID = newData[editrow][0]
+      const displayName = newData[editrow][1]
+
+
+      await updateRoleforUser(roleID, userID)
       setIsDisplayInformationBlock(false);
-      await updateUserDisplayName(newData[editrow][0], newData[editrow][1]);
-      window.location.reload();
+      await updateUserDisplayName(userID, displayName);
+      updateUserList(userID, newData)
     } catch (error) {
       toast.error(error.message);
     }
@@ -61,8 +70,14 @@ const Information = ({
       await register(Object.values(tempData)[2], Object.values(tempData)[3], Object.values(tempData)[1]);
       setIsDisplayInformationBlock(false);
       const res = await findUserByUserName(Object.values(tempData)[2]);
-      await updateRoleforUser(getRoleIdByName(Object.values(tempData)[4]), res.data.id)
-      window.location.reload();
+      await updateRoleforUser(await getRoleIdByName(Object.values(tempData)[4]), res.data.id)
+      tempData.ID = res.data.id
+      tempData.Password = res.data.password
+      
+      // window.location.reload();
+      const newUser = Object.values(tempData)
+      const newData = [newUser, ...accountInformation];
+      updateUserList(null, newData)
     } catch (error) {
       toast.error(error.message);
     }
@@ -70,7 +85,8 @@ const Information = ({
 
   const handleSelectChange = (e) => {
     const value = e.target.value;
-    updateTempData("Permission", value);
+    console.log(value)
+    updateTempData("Role", value);
     setSelectValue(value);
     setIsModified(true);
   };
@@ -81,24 +97,39 @@ const Information = ({
       DisplayName: accountInformationInput.DisplayName,
       UserName: "",
       Password: "",
-      Permission: accountInformationInput.Permission,
+      Role: accountInformationInput.Role,
     })
     setIsModified(false);
     setInputValue(accountInformationInput);
-    setSelectValue(accountInformationInput.Permission);
+    setSelectValue(accountInformationInput.Role);
   }, [display, accountInformationInput]);
 
   useEffect(() => {
     if (type === "Edit") {
-      if (tempData.Permission === accountInformationInput.Permission && tempData.DisplayName === accountInformationInput.DisplayName) {
+      if (tempData.Role === accountInformationInput.Role && tempData.DisplayName === accountInformationInput.DisplayName) {
         setIsSaveDisabled(true);
       }
       else if (tempData.DisplayName === "") setIsSaveDisabled(true)
       else setIsSaveDisabled(false);
     } else {
-      setIsSaveDisabled(!(tempData.DisplayName && tempData.Password && tempData.Permission && tempData.UserName));
+      setIsSaveDisabled(!(tempData.DisplayName && tempData.Password && tempData.Role && tempData.UserName));
     }
   }, [type, tempData, inputValue]);
+
+  useEffect(() => {
+    // getroles
+    const processGetRoles = async () => {
+      try {
+        const res = await getRoles()
+
+        setRoles(res.data)
+      } catch (error) {
+        alert(error.message)
+      }
+    }
+
+    processGetRoles()
+  }, [])
 
   const renderInputs = () => {
     return (
@@ -142,12 +173,16 @@ const Information = ({
           </td>
         </tr>
         <tr>
-          <td className="informationTitle"><p>Permission :</p></td>
+          <td className="informationTitle"><p>Role :</p></td>
           <td>
             <select value={selectValue} onChange={(e) => handleSelectChange(e)}>
               <option value="" disabled>Select an option</option>
-              <option value="Admin">Admin</option>
-              <option value="Staff">Staff</option>
+              {roles && roles.map((role, idx) => {
+                  return (
+                    <option value={role.name} key={idx}>{role.name}</option>
+                  )
+                })
+              }
             </select>
           </td>
         </tr>

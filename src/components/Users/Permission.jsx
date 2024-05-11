@@ -1,14 +1,28 @@
 import { useEffect, useState } from "react";
 import { createRole } from "../../api/privilege.api";
 import { PermissionBlock, PermissionForm, PermissionCancelandSave, PermissionInput } from "./Styled";
-const Permission = ({ display, setIsDisplayPermissionBlock }) => {
+const Permission = (p) => {
+  const { display, setIsDisplayPermissionBlock, setPermissionAccount } = p
   const [inputValue, setInputValue] = useState();
   const handleCancelButton = () => {
     setIsDisplayPermissionBlock("none");
   }
   const handleSaveButton = async () => {
     await createRole(inputValue, []);
-    window.location.reload();
+
+    const newRole = [inputValue, false, false, false, false, false]
+    
+    setPermissionAccount(prev => {
+      console.log(prev)
+      console.log(newRole)
+      return [
+        ...prev.slice(0, 1), // Include the first element
+        newRole,             // Insert newRole next
+        ...prev.slice(1)
+      ];
+    })
+    setInputValue("")
+    setIsDisplayPermissionBlock("none");
   }
   const handleInput = (e) => {
     setInputValue(e.target.value);

@@ -17,8 +17,8 @@ export const AccountInformationTable = ({ className, data, deleteRow, editRow, p
         {data[0].map((header, index) => (
           <th key={index}>{header}</th>
         ))}
-        <th></th>
-        <th></th>
+        <th className="empty"></th>
+        <th className="empty"></th>
       </tr>
     </thead>
   );

@@ -17,10 +17,11 @@ export const UserBlock = styled.div`
   width: 100%;
   height: 100vh;
   overflow-y: auto;
+  padding: 2%;
+
   .blockTitle {
     width: 100%;
     height: 8vh;
-    padding-left: 2%;
     display: flex;
     align-items: center;
   }
@@ -48,37 +49,34 @@ export const UserBlock = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    padding-right: 5%;
   }
 `;
 
 export const StyledPermissionAccountTable = styled(PermissonAccountTable)`
-  table-layout: fixed;
-  width: 100%;
-  margin-top: 20px;
-  margin-bottom: 20px;
-  tr{
-    height: 7vh;
-  }
-  th{
-    width: auto;
-    text-align: center;
-    font-size: 1.5em;
-    color: #718ebf;
-  }
-  td{
-    width: auto;
-    text-align: center;
-    font-size: 1.25em;
-  }
-`;
-
-export const StyledAccountInformationTable = styled(AccountInformationTable)`
-  width: 85vw;
+ width: 100%;
   margin-top: 20px;
   margin-bottom: 20px;
   border-collapse: separate; 
   border-spacing: 10px; 
+  border-collapse: collapse;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+  border-radius: 10px;
+  overflow: hidden;
+  thead {
+    border-radius: 10px;  
+  }
+  thead th {
+    position: sticky;
+    top: 0;
+    background-color: #1820F3;
+    font-weight: bold;
+    color: #f6f6f6;
+  }
+  tbody {
+    display: block;
+    max-height: 25vh;
+    overflow-y: auto;
+  }
   tr{
     height: 7vh;
   }
@@ -88,9 +86,14 @@ export const StyledAccountInformationTable = styled(AccountInformationTable)`
     text-align: center;
     font-size: 1.5em;
     color: #718ebf;
+
+    &.empty {
+      width: 3vw;
+    }
   }
   td{
     width: auto;
+    padding: 0 8px;
     max-width: 20vw;
     overflow: hidden;
     white-space: nowrap; 
@@ -98,6 +101,82 @@ export const StyledAccountInformationTable = styled(AccountInformationTable)`
     text-align: center;
     font-size: 1.25em;
   }
+
+  tbody tr {
+      display: table;
+      width: 100%;
+      table-layout: fixed; /* Optional: helps with column width consistency */
+  }
+
+  thead, tbody tr {
+      display: table;
+      width: 100%;
+      table-layout: fixed; /* This makes sure all columns are of equal size */
+  }
+`;
+
+export const StyledAccountInformationTable = styled(AccountInformationTable)`
+  width: 100%;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border-collapse: separate; 
+  border-spacing: 10px; 
+  border-collapse: collapse;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+  border-radius: 10px;
+  overflow: hidden;
+  thead {
+    border-radius: 10px;  
+  }
+  thead th {
+    position: sticky;
+    top: 0;
+    background-color: #1820F3;
+    font-weight: bold;
+    color: #f6f6f6;
+  }
+  tbody {
+    display: block;
+    max-height: 30vh;
+    overflow-y: auto;
+  }
+  tr{
+    height: 7vh;
+  }
+  th{
+    width: auto;
+    max-width: 20vw;
+    text-align: center;
+    font-size: 1.5em;
+    color: #718ebf;
+
+    &.empty {
+      width: 3vw;
+    }
+  }
+  td{
+    width: auto;
+    padding: 0 8px;
+    max-width: 20vw;
+    overflow: hidden;
+    white-space: nowrap; 
+    text-overflow: ellipsis;
+    text-align: center;
+    font-size: 1.25em;
+  }
+
+  tbody tr {
+      display: table;
+      width: 100%;
+      table-layout: fixed; /* Optional: helps with column width consistency */
+  }
+
+  thead, tbody tr {
+      display: table;
+      width: 100%;
+      table-layout: fixed; /* This makes sure all columns are of equal size */
+  }
+
   .pencilIcon{
     width: 3vw;
     &:hover{
