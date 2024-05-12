@@ -1,14 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { EditTypeInformInput } from "../Styled";
 import { getLobbyTypes } from "../../../api/lobby.api";
 
-const EditLobTypeInformInput = ({ inputValue, setInputValue }) => {
-  const [type, setType] = useState([])
+const AddLobbiesForm = (p) => {
+  const { inputValue, setInputValue } = p
   const handleInput = (value) => {
     setInputValue({ ...inputValue, name: value });
-  }
-  const handleSelect = (value) => {
-    setInputValue({ ...inputValue, type: value })
   }
 
   const fetchLobType = async () => {
@@ -18,8 +15,6 @@ const EditLobTypeInformInput = ({ inputValue, setInputValue }) => {
     data.map(value => {
       subData.push(value.type_name)
     })
-    const tempData = [... new Set(subData)];
-    setType(tempData);
   }
 
   useEffect(() => {
@@ -36,4 +31,4 @@ const EditLobTypeInformInput = ({ inputValue, setInputValue }) => {
   )
 };
 
-export default EditLobTypeInformInput;
+export default AddLobbiesForm;

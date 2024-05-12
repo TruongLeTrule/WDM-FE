@@ -11,8 +11,9 @@ const TypeTableAdd = (p) => {
 
   const {
     setLobTypeData,
-    lobTypeData
+    lobTypeData,
   } = useContext(LobbyContext);
+  
   const [inputValue, setInputValue] = useState({
     type_name: "",
     max_table_count: "",

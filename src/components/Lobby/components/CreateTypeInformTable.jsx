@@ -1,40 +1,37 @@
 import { Icon } from "../../../assets/icon";
-import { useContext } from "react";
-import { TypeInformContext } from "../LobTypeInformation";
+import { useContext, useEffect, useState } from "react";
+import { TypeInformContext } from "../Lobbies.jsx";
+import { getLobbies } from '../../../api/lobby.api';
+import Wrapper from '../../../assets/wrappers/Order/LobWrapper';
+import LobbyCard from '../LobbyCard.jsx';
+import Loading from '../../../components/Loading';
 
-const TypeInformTable = () => {
-  const {
-    setIsLobTypeInformEditDisplay,
-    setEditData,
-    pagination
-  } = useContext(TypeInformContext);
-  const tableHead = ["ID", "Name", "Type"];
+const TypeInformTable = (p) => {
+  const { lobbyList, isLoading } = p
 
-  const handleEditIconClick = (value) => {
-    setIsLobTypeInformEditDisplay(true);
-    setEditData(value);
-  }
+
+    
   return (
-    <table className='lobbyTypeTable'>
-      <thead>
-        <tr>
-          {tableHead && tableHead.map((value, index) => (
-            <th key={index}>{value}</th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {pagination.data.map((value, index) => (
-          <tr key={index}>
-            {value.map((cell, cellIndex) => (
-              cellIndex < 3 && <td key={cellIndex}>{cell}</td>
+    <Wrapper>
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <>
+          <div className="container">
+            {lobbyList.map((lobby) => (
+              <LobbyCard
+                lobby={lobby}
+                key={lobby.id}
+              />
             ))}
-            <td><Icon.more onClick={() => handleEditIconClick(value)}></Icon.more></td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+          </div>
+        </>
+      )}
+    </Wrapper>
   );
 };
 
 export default TypeInformTable;
+
+
+

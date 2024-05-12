@@ -3,13 +3,14 @@ import Wrapper from '../assets/wrappers/HeaderWrapper';
 import SearchBox from './SearchBox';
 import { Icon } from '../assets/icon';
 
-const Header = ({
-  handleAddBtnClick,
-  headerTitle,
-  isBack,
-  handleBackBtn,
-  handleSearch,
-}) => {
+const Header = (p) => {
+  const {
+    handleAddBtnClick,
+    headerTitle,
+    isBack,
+    handleBackBtn,
+    handleSearch,
+  } = p
   return (
     <Wrapper>
       <div className="backBtn">

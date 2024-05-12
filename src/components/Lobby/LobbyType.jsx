@@ -12,7 +12,8 @@ const LobbyType = (p) => {
   const {
     fetchLobType,
     fetchLobby,
-    setLobTypeData
+    setLobTypeData,
+    setCurrentLT
   } = useContext(LobbyContext);
   const [editData, setEditData] = useState();
   const [isLobTypeEditDisplay, setIsLobTypeEditDisplay] = useState(false);
@@ -25,8 +26,14 @@ const LobbyType = (p) => {
   };
 
   const handleLobTypeClick = (value) => {
+    console.log(value)
+    setCurrentLT({id: value[0], name: value[1]})
     fetchLobby(value);
   };
+
+  const handleGetLTID = (data) => {
+    console.log(data)
+  }
 
   return (
     <Fragment>
@@ -36,7 +43,7 @@ const LobbyType = (p) => {
           handleEditButton={handleEditButton}
           handleLobTypeClick={handleLobTypeClick}
         />
-        <PagePagination pagination={pagination} />
+        <PagePagination pagination={pagination} handleGetLTID={handleGetLTID}/>
       </WrapTable>
       {isLobTypeEditDisplay && (
         <TypeTableEdit
@@ -51,6 +58,7 @@ const LobbyType = (p) => {
           modalOption={LTmodalOption}
           editData={editData}
           fetchLobType={fetchLobType}
+          
         />
       }
     </Fragment>

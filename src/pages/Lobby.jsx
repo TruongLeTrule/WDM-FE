@@ -3,7 +3,7 @@ import { Header } from "../components";
 import { getLobbyTypes, getLobbies } from "../api/lobby.api";
 import { LobbyBlock, LobbyTableStyled } from "../components/Lobby/Styled";
 import LobbyType from "../components/Lobby/LobbyType";
-import LobTypeInformation from "../components/Lobby/LobTypeInformation";
+import Lobbies from "../components/Lobby/Lobbies";
 import styled from "styled-components";
 
 import { Modal, Button, Input, Upload, Select } from "antd";
@@ -20,6 +20,7 @@ const Lobby = () => {
   });
   const [isModalAddLT, setModalAddLT] = useState(false)
   const [isModalAdd, setModalAdd] = useState(false)
+  const [currentLT, setCurrentLT] = useState({})
 
   const handleBackBtn = (previous) => {
     setPageDisplay({
@@ -47,12 +48,13 @@ const Lobby = () => {
   };
 
   const fetchLobby = async (value) => {
-    const id = value[0];
+    const lobTypeId = value[0];
     const type = value[1];
+    console.log('value', value)
     try {
-      const res = await getLobbies("", id);
-      const data = res.data;
-      const tempData = data.map((value) => [
+      const res = await getLobbies("", lobTypeId);
+      const lobbies = res.data;
+      const tempData = lobbies.map((value) => [
         value.lob_type_id,
         value.name,
         type,
@@ -61,7 +63,7 @@ const Lobby = () => {
       setLobTypeInformationData(tempData);
       setPageDisplay({
         previousPage: "LobType",
-        currentPage: "LobTypeInformation",
+        currentPage: "Lobbies",
       });
     } catch (error) {
       console.error("Error fetching lob type information:", error);
@@ -82,7 +84,8 @@ const Lobby = () => {
     fetchLobType,
     fetchLobby,
     setPageDisplay,
-    setLobTypeInformationData
+    lobTypeInformationData, setLobTypeInformationData,
+    currentLT, setCurrentLT
   };
 
   const handleAddBtnClick = () => {
@@ -108,6 +111,7 @@ const Lobby = () => {
     }
   }
 
+
   return (
     <LobbyContext.Provider value={shareValue}>
       <LobbyBlock>
@@ -119,8 +123,8 @@ const Lobby = () => {
         />
         <LobbyTableStyled>
           <ToastContainer />
-          {pageDisplay.currentPage === "LobType" && <LobbyType data={lobTypeData} isModalAddLT={isModalAddLT} LTmodalOption={LTmodalOption}/>}
-          {pageDisplay.currentPage === "LobTypeInformation" && <LobTypeInformation data={lobTypeInformationData} isModalAdd={isModalAdd} modalOption={modalOption} />}
+          {pageDisplay.currentPage === "LobType" && shareValue && <LobbyType data={lobTypeData} isModalAddLT={isModalAddLT} LTmodalOption={LTmodalOption}/>}
+          {pageDisplay.currentPage === "Lobbies" && shareValue && <Lobbies data={lobTypeInformationData} isModalAdd={isModalAdd} modalOption={modalOption} currentLT={currentLT}/>}
         </LobbyTableStyled>
       </LobbyBlock>
     </LobbyContext.Provider>

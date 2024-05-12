@@ -3,6 +3,7 @@ import Wrapper from '../assets/wrappers/DashboardWrapper';
 import { Sidebar } from '../components';
 import { Suspense } from 'react';
 import Loading from '../components/Loading';
+import { ToastContainer, toast } from 'react-toastify';
 
 const DashboardLayout = () => {
   return (
@@ -11,6 +12,7 @@ const DashboardLayout = () => {
           <Sidebar />
             <Suspense fallback={<Loading minsize="35px"/> }>
               <div className="dashboard-page">
+                  <ToastContainer />
                   <Outlet />
               </div>
             </Suspense>

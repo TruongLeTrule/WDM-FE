@@ -1,5 +1,5 @@
 import { FaPencilAlt } from "react-icons/fa";
-import { MdDelete } from "react-icons/md";
+import { MdDelete, MdEditSquare } from "react-icons/md";
 import { MdClose } from "react-icons/md";
 import { BiPlus } from "react-icons/bi";
 import { CgMoreVertical } from "react-icons/cg";
@@ -17,4 +17,5 @@ export const Icon = {
   leftarrow: BiCaretLeftSquare,
   leftcircleoutlined: LeftCircleOutlined,
   leffcirclefilled: LeftCircleFilled,
+  edit: MdEditSquare
 }
