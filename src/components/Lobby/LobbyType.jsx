@@ -1,15 +1,19 @@
 import React, { Fragment, useCallback, useContext, useEffect, useState } from 'react';
 import { LobbyContext } from '../../pages/Lobby';
 import TypeTableEdit from './TypeTableEdit';
-import TypeTable from './utils/CreateTypeTable';
+import TypeTable from './components/CreateTypeTable';
 import { WrapTable } from './Styled';
 import usePagination from "./Hooks/usePagination";
 import PagePagination from './PagePagination';
+import TypeTableAdd from './TypeTableAdd';
 
-const LobbyType = ({ data }) => {
+const LobbyType = (p) => {
+  const { data, isModalAddLT, LTmodalOption } = p
   const {
     fetchLobType,
     fetchLobby,
+    setLobTypeData,
+    setCurrentLT
   } = useContext(LobbyContext);
   const [editData, setEditData] = useState();
   const [isLobTypeEditDisplay, setIsLobTypeEditDisplay] = useState(false);
@@ -22,8 +26,14 @@ const LobbyType = ({ data }) => {
   };
 
   const handleLobTypeClick = (value) => {
+    console.log(value)
+    setCurrentLT({id: value[0], name: value[1]})
     fetchLobby(value);
   };
+
+  const handleGetLTID = (data) => {
+    console.log(data)
+  }
 
   return (
     <Fragment>
@@ -33,7 +43,7 @@ const LobbyType = ({ data }) => {
           handleEditButton={handleEditButton}
           handleLobTypeClick={handleLobTypeClick}
         />
-        <PagePagination pagination={pagination} />
+        <PagePagination pagination={pagination} handleGetLTID={handleGetLTID}/>
       </WrapTable>
       {isLobTypeEditDisplay && (
         <TypeTableEdit
@@ -42,6 +52,15 @@ const LobbyType = ({ data }) => {
           fetchLobType={fetchLobType}
         />
       )}
+
+      {isModalAddLT && 
+        <TypeTableAdd
+          modalOption={LTmodalOption}
+          editData={editData}
+          fetchLobType={fetchLobType}
+          
+        />
+      }
     </Fragment>
   );
 };

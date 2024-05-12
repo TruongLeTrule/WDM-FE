@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 import { PagePaginationStyled } from "./Styled";
 import { Icon } from "../../assets/icon";
-import createArray from "./utils/CreateArrayFromN";
+import createArray from "./components/CreateArrayFromN";
 
-const PagePagination = ({ pagination }) => {
+const PagePagination = (p) => {
+  const { pagination } = p
   const [maxPages, setMaxPages] = useState(() => createArray(pagination.totalPages + 1));
 
   const onNextPage = useCallback(() => {
@@ -32,7 +33,9 @@ const PagePagination = ({ pagination }) => {
           key={index}
           className='pageNumber'
           style={pagination.page === index ? { backgroundColor: "blue", color: "white" } : {}}
-          onClick={() => onPageChange(index)}
+          onClick={() => {
+            onPageChange(index)
+          }}
         >
           {value}
         </div>
