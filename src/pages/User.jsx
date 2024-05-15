@@ -208,7 +208,7 @@ const User = () => {
         </div>
       </div>
       <StyledPermissionAccountTable data={permissionAccount} action={updateRolePermission} getRoleIdByName={getRoleIdByName} setIsFetch={setIsFetch}/>
-      <Permission display={isDisplayPermissionBlock} setIsDisplayPermissionBlock={setIsDisplayPermissionBlock} setPermissionAccount={setPermissionAccount}/>
+      <Permission setIsFetch={setIsFetch} display={isDisplayPermissionBlock} setIsDisplayPermissionBlock={setIsDisplayPermissionBlock} setPermissionAccount={setPermissionAccount}/>
       <div className="TitleSearchCombination">
         <div className="blockTitle">
           <h4 className="title" onClick={() => console.log(accountInformation)}>
@@ -236,6 +236,7 @@ const User = () => {
         accountInformationInput={accountInformationInput}
         getRoleIdByName={getRoleIdByName}
         updateUserList={updateUserList}
+        roles={roles}
       />
     </UserBlock>
   );

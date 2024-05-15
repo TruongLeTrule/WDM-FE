@@ -23,7 +23,7 @@ const FContent = () => {
     const [tempFile, setTempFile] = useState(null)
     const [tempInventory, setInventory] = useState()
 
-    const { foods, foodSearchList } = useContext(FoodServiceContext)
+    const { foods, foodSearchList, foodOption } = useContext(FoodServiceContext)
     const [foodlists, setFoodLists] = useState(foods)
 
     useEffect(() => {
@@ -55,30 +55,7 @@ const FContent = () => {
         setModalVisible(true);
     };
     
-    const handleDelete = async (id) => {
-        const updatedFoodLists = foodlists.filter((food) => food.id !== id);
-        setFoodLists(updatedFoodLists);
-        await deleteFood(id)
 
-    };
-    const updateFoodListItemById = (foodId, foodData) => {
-        const newList = foodlists.map(item => {
-            // Check if the current item's id matches the foodId
-            if (item.id === foodId) {
-                return {...item, ...foodData};
-            }
-            // If it doesn't match, return the item unchanged
-            return item;
-        });
-
-        // Return the updated list to update the state
-
-        setFoodLists(newList);
-    }
-    const UpdateFoodListWithNewData = (foodData) => {
-        const newList = [foodData, ...foodlists]
-        setFoodLists(newList);
-    }
 
     const handleOk = async () => {
         try{
@@ -97,7 +74,7 @@ const FContent = () => {
                     const url = getFileBlobUrl(tempFile)
                     foodData.url = url
                 }
-                updateFoodListItemById(foodData.id, foodData)
+                foodOption.updateFoodListItemById(foodData.id, foodData)
             }
             else {
                 const res = await createFood(updatedFood)
@@ -110,7 +87,7 @@ const FContent = () => {
                     const url = getFileBlobUrl(tempFile)
                     foodData.url = url
                 }
-                UpdateFoodListWithNewData(foodData)
+                foodOption.UpdateFoodListWithNewData(foodData)
             }
 
             setModalVisible(false);
@@ -159,7 +136,7 @@ const FContent = () => {
                                 <button className="edit" onClick={() => handleEdit(food)}>
                                     Edit
                                 </button>
-                                <button className="delete" onClick={() => handleDelete(food.id)}>
+                                <button className="delete" onClick={() => foodOption.delete(food.id)}>
                                     Delete
                                 </button>
                             </div>
