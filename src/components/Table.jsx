@@ -9,7 +9,8 @@ import resolveDate from '../utils/resolveDate';
 import Wrapper from '../assets/wrappers/TableWrapper';
 import resolveCurrency from '../utils/resolveCurrency';
 
-const Table = ({ columns, data, handleRowClick, pagination }) => {
+const Table = (p) => {
+  const { columns, data, handleRowClick, pagination } = p
   const {
     getTableProps,
     getTableBodyProps,
@@ -23,6 +24,7 @@ const Table = ({ columns, data, handleRowClick, pagination }) => {
     state: { pageIndex },
     pageCount,
   } = useTable({ columns, data }, useSortBy, usePagination);
+  
 
 
   const resolveCellClass = (cellValue) => {

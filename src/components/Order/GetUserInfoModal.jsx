@@ -4,6 +4,8 @@ import { createWedding } from '../../api/wedding.api';
 import { getUserInfo } from '../../utils/orderRenderArr';
 import Modal from '../Modal';
 import Wrapper from '../../assets/wrappers/Order/GetUserInfoWrapper';
+import { toast } from 'react-toastify';
+
 
 const customStyle = {
   content: {
@@ -48,7 +50,7 @@ const GetUserInfoModal = ({
       setUserInfo(formResult, data.id, tableCount);
       setNextModalOpen();
     } catch (error) {
-      alert(error.message);
+      toast.warn(error.message)
     }
   });
 

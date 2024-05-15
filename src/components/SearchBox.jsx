@@ -2,17 +2,23 @@ import { useRef, useState, useEffect } from 'react';
 import { FaMagnifyingGlass } from 'react-icons/fa6';
 import Wrapper from '../assets/wrappers/SearchBoxWrapper';
 
-const SearchBox = ({ handleSearch }) => {
+const SearchBox = (p) => {
+  const { handleSearch } = p
   const inputRef = useRef(null);
-  const [inputValue, setInputValue] = useState();
+  const [inputValue, setInputValue] = useState("");
   const handleFormClick = () => {
     inputRef.current.focus();
   };
 
   useEffect(() => {
-    const delayDebounceFn = setTimeout(() => {
-      handleSearch(inputValue);
-    }, 750);
+    let delayDebounceFn
+    if(inputValue !== ''){
+      delayDebounceFn = setTimeout(() => {
+        handleSearch(inputValue);
+      }, 750);
+    } else {
+      handleSearch("");
+    }
 
     return () => clearTimeout(delayDebounceFn);
   }, [inputValue]);

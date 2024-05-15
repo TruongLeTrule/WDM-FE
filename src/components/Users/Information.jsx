@@ -7,16 +7,19 @@ import { register } from "../../api/auth.api";
 import { updateRoleforUser, getRoles } from "../../api/privilege.api";
 import { findUserByUserName } from "../../api/user.api";
 
-const Information = ({
-  display,
-  setIsDisplayInformationBlock,
-  type,
-  editrow,
-  accountInformation,
-  accountInformationInput,
-  getRoleIdByName,
-  updateUserList
-}) => {
+const Information = (p) => {
+  const {
+    display,
+    setIsDisplayInformationBlock,
+    type,
+    editrow,
+    accountInformation,
+    accountInformationInput,
+    getRoleIdByName,
+    updateUserList,
+    roles
+  } = p
+
   const [inputValue, setInputValue] = useState(accountInformationInput);
   const [tempData, setTempData] = useState({
     ID: "",
@@ -29,7 +32,7 @@ const Information = ({
   const [selectValue, setSelectValue] = useState(inputValue.Role);
   const [isSaveDisabled, setIsSaveDisabled] = useState(true);
   const [isModified, setIsModified] = useState(false);
-  const [roles, setRoles] = useState([])
+  // const [roles, setRoles] = useState([])
 
   const updateTempData = (name, data) => {
     setTempData(prevData => ({ ...prevData, [name]: data }));
@@ -116,20 +119,20 @@ const Information = ({
     }
   }, [type, tempData, inputValue]);
 
-  useEffect(() => {
-    // getroles
-    const processGetRoles = async () => {
-      try {
-        const res = await getRoles()
+  // useEffect(() => {
+  //   // getroles
+  //   const processGetRoles = async () => {
+  //     try {
+  //       const res = await getRoles()
 
-        setRoles(res.data)
-      } catch (error) {
-        alert(error.message)
-      }
-    }
+  //       setRoles(res.data)
+  //     } catch (error) {
+  //       alert(error.message)
+  //     }
+  //   }
 
-    processGetRoles()
-  }, [])
+  //   processGetRoles()
+  // }, [])
 
   const renderInputs = () => {
     return (

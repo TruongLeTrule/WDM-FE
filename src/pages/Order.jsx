@@ -51,7 +51,9 @@ const Order = () => {
   const fetchWeddings = async () => {
     try {
       const { data } = await getWeddings(true);
-      setOrderList(handleRenderData(data));
+      const renderData = handleRenderData(data)
+
+      setOrderList(renderData);
       setIsLoading(false);
     } catch (error) {
       alert(error.message);
@@ -59,7 +61,9 @@ const Order = () => {
   };
 
   const handleRenderData = (data) => {
-    return data.map((wedding) => {
+    
+    const renderData = []
+    for(let wedding of data ) {
       const Bill = wedding.Bill.reduce(
         (mainBill, currentBill) =>
           mainBill.payment_date < currentBill.payment_date
@@ -75,8 +79,10 @@ const Order = () => {
         lobby_name: wedding.Lobby.name,
         id: wedding.id,
       };
-      return newData;
-    });
+      renderData.push(newData)
+    }
+    console.log("renderData", renderData)
+    return renderData
   };
 
   const handleSearch = async (inputValue) => {
@@ -85,7 +91,9 @@ const Order = () => {
         return await fetchWeddings();
       }
       const { data } = await searchWeddingsByPhone(inputValue);
-      setOrderList(handleRenderData(data));
+      const renderData = handleRenderData(data)
+      console.log("renderData 2 ",renderData)
+      setOrderList(renderData);
     } catch (error) {
       alert(error.message);
     }

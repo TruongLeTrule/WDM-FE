@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { createRole } from "../../api/privilege.api";
 import { PermissionBlock, PermissionForm, PermissionCancelandSave, PermissionInput } from "./Styled";
 const Permission = (p) => {
-  const { display, setIsDisplayPermissionBlock, setPermissionAccount } = p
+  const { display, setIsDisplayPermissionBlock, setPermissionAccount, setIsFetch } = p
   const [inputValue, setInputValue] = useState();
   const handleCancelButton = () => {
     setIsDisplayPermissionBlock("none");
@@ -21,6 +21,7 @@ const Permission = (p) => {
         ...prev.slice(1)
       ];
     })
+    setIsFetch(Math.random())
     setInputValue("")
     setIsDisplayPermissionBlock("none");
   }
@@ -33,7 +34,7 @@ const Permission = (p) => {
   return (
     <PermissionBlock display={display}>
       <PermissionForm>
-        <h4 className="formTitle">Permissions Of Account Groups</h4>
+        <h4 className="formTitle">Add new Role</h4>
         <PermissionInput>
           <p className="inputTitle">Role : </p>
           <div className="input">

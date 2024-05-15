@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useContext } from "react";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { Modal, Button, Input, Upload, Select } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-import { createService, deleteService, getServices, updateService } from "../../api/service.api.js";
+import { createService, getServices, updateService } from "../../api/service.api.js";
 import { uploadServiceImage } from "../../api/file.api.js";
 import { getFileBlobUrl } from "../../utils/index.js";
 import balletImg from '../../assets/images/ballet.jpg';
@@ -24,7 +24,7 @@ const SContent = () => {
     const [tempFile, setTempFile] = useState(null)
     const isEdit = useRef(false)
 
-    const { services, serviceSearchList } = useContext(FoodServiceContext)
+    const { services, serviceSearchList, serviceOption } = useContext(FoodServiceContext)
     const [servicelists, setServiceLists] = useState(services);
 
     useEffect(() => {
@@ -44,25 +44,6 @@ const SContent = () => {
         setTempFile(file)
     }
 
-    const updateServiceListItemById = (serviceId, serviceData) => {
-        const newList = servicelists.map(item => {
-            // Check if the current item's id matches the serviceId
-            if (item.id === serviceId) {
-                return {...item, ...serviceData};
-            }
-            // If it doesn't match, return the item unchanged
-            return item;
-        });
-
-        // Return the updated list to update the state
-
-        setServiceLists(newList);
-    }
-    const UpdateServiceListWithNewData = (serviceData) => {
-        const newList = [serviceData, ...servicelists]
-        setServiceLists(newList);
-    }
-
     const handleEdit = (service) => {
 
         setSelectedService(service);
@@ -74,12 +55,6 @@ const SContent = () => {
         setInventory(service.inventory)
         setModalVisible(true);
         
-    };
-
-    const handleDelete = async (id) => {
-        const updatedServiceLists = servicelists.filter((service) => service.id !== id);
-        setServiceLists(updatedServiceLists);
-        await deleteService(id)
     };
 
     const showModal = () => {
@@ -109,7 +84,7 @@ const SContent = () => {
                     const url = getFileBlobUrl(tempFile)
                     serviceData.url = url
                 }
-                updateServiceListItemById(serviceData.id, serviceData)
+                serviceOption.updateServiceListItemById(serviceData.id, serviceData)
             }
             else {
                 const res = await createService(updatedService)
@@ -122,7 +97,7 @@ const SContent = () => {
                     const url = getFileBlobUrl(tempFile)
                     serviceData.url = url
                 }
-                UpdateServiceListWithNewData(serviceData)
+                serviceOption.UpdateServiceListWithNewData(serviceData)
             }
 
             setModalVisible(false);
@@ -179,7 +154,7 @@ const SContent = () => {
                                 <button className="edit" onClick={() => handleEdit(service)}>
                                     Edit
                                 </button>
-                                <button className="delete" onClick={() => handleDelete(service.id)}>
+                                <button className="delete" onClick={() => serviceOption.delete(service.id)}>
                                     Delete
                                 </button>
                             </div>
