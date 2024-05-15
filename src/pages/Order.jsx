@@ -81,7 +81,6 @@ const Order = () => {
       };
       renderData.push(newData)
     }
-    console.log("renderData", renderData)
     return renderData
   };
 
@@ -92,7 +91,6 @@ const Order = () => {
       }
       const { data } = await searchWeddingsByPhone(inputValue);
       const renderData = handleRenderData(data)
-      console.log("renderData 2 ",renderData)
       setOrderList(renderData);
     } catch (error) {
       alert(error.message);

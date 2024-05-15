@@ -36,8 +36,6 @@ const LobbyCard = (p) => {
 const NameBox = (p) => {
   const { id, name, lob_type_id } = p
   const { lobbyList, setLobbyList } = useContext(TypeInformContext)
-
-  console.log("lob_type_id", lob_type_id)
   const [value, setValue] = useState({name: name, lobTypeID: lob_type_id})
   const [isEdit, setEdit] = useState(false)
   const [saveAble, setSaveAble] = useState(false)
@@ -112,12 +110,10 @@ const NameBox = (p) => {
   
   // Function to handle when an option is selected
   function handleSelectChange(event) {
-    console.log('Selected:', event.target.value);
     setValue(prev => ({...prev, lobTypeID: event.target.value}))
   }
 
   const handleInputName = (e) => {
-    console.log(e.target.value)
     setValue(prev => ({...prev, name: e.target.value}))
   }
 

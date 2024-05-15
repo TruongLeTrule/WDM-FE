@@ -67,9 +67,7 @@ const FContent = () => {
                 const res = await updateFood(selectedFood.id, updatedFood)
 
                 foodData = res.data
-                if(tempFile) {
-                    console.log(tempFile)
-                    
+                if(tempFile) {                   
                     await uploadFoodImage(tempFile, foodData.id)
                     const url = getFileBlobUrl(tempFile)
                     foodData.url = url
@@ -79,10 +77,7 @@ const FContent = () => {
             else {
                 const res = await createFood(updatedFood)
                 foodData = res.data
-                console.log(foodData)
-                if(tempFile) {
-                    console.log(tempFile)
-                    
+                if(tempFile) {                  
                     await uploadFoodImage(tempFile, foodData.id)
                     const url = getFileBlobUrl(tempFile)
                     foodData.url = url
@@ -98,6 +93,7 @@ const FContent = () => {
 
         } catch(error) {
             console.log(error.message);
+            alert(error.message)
         } finally {
             isEdit.current = false
         }

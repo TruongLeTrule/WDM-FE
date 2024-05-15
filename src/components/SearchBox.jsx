@@ -11,14 +11,15 @@ const SearchBox = (p) => {
   };
 
   useEffect(() => {
-    let delayDebounceFn
-    if(inputValue !== ''){
-      delayDebounceFn = setTimeout(() => {
-        handleSearch(inputValue);
-      }, 750);
-    } else {
-      handleSearch("");
-    }
+    const delayDebounceFn = setTimeout(() => {
+      if(typeof handleSearch === 'function') { 
+        if(inputValue !== ''){
+          handleSearch(inputValue);
+        } else {
+          handleSearch("");
+        }
+      }
+    }, 750);
 
     return () => clearTimeout(delayDebounceFn);
   }, [inputValue]);

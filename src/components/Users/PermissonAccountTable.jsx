@@ -8,7 +8,6 @@ export const PermissonAccountTable = (p) => {
   const handleDeleteRole = async(data) => {
     try {
       const roleID = await getRoleIdByName(data[0])
-      console.log(roleID)
       await deleteRole(roleID)
       setIsFetch(Math.random())
     } catch (error) {

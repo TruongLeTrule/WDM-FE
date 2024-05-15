@@ -140,8 +140,6 @@ const User = () => {
   }
 
   const updateUserList = (userID, newData) => {
-    console.log("userID", userID)
-    console.log("newData", newData)
     setAccountInformation(newData)
   }
 

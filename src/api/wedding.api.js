@@ -29,7 +29,6 @@ export const getWeddingById = (id, includedBill = false) => {
 };
 
 export const createWedding = (dataCreate) => {
-  console.log("dataCreate", dataCreate)
   return axiosClient.post('wedding/create/wedding', dataCreate);
 };
 

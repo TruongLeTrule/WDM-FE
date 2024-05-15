@@ -31,9 +31,7 @@ const SearchBox = (p) => {
   
     const { setFoodSearchList, setServiceSearchList } = useContext(FoodServiceContext)
 
-    useEffect(() => {
-        console.log('Fetching data with query:', debouncedQuery);
-        
+    useEffect(() => {        
         const fetchFood = async () => {
             const res = await findFoodByName(query)
             setFoodSearchList(res.data)
@@ -45,7 +43,6 @@ const SearchBox = (p) => {
         }
 
         if(query !== '') {
-            console.log(page)
             page === 'food'
             ? fetchFood() 
             : fetchService()

@@ -50,7 +50,6 @@ const Lobby = () => {
   const fetchLobby = async (value) => {
     const lobTypeId = value[0];
     const type = value[1];
-    console.log('value', value)
     try {
       const res = await getLobbies("", lobTypeId);
       const lobbies = res.data;
