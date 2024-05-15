@@ -21,7 +21,7 @@ const FoodServiceProvider = (p) => {
       const foodData = await getFoods()
       setFoods(foodData.data)
     } catch (error) {
-      console.log(error);
+      alert(error.message)
     }
   }
 

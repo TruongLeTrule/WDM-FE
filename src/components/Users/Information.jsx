@@ -88,7 +88,6 @@ const Information = (p) => {
 
   const handleSelectChange = (e) => {
     const value = e.target.value;
-    console.log(value)
     updateTempData("Role", value);
     setSelectValue(value);
     setIsModified(true);

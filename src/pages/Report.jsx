@@ -247,7 +247,6 @@ const ReportInner = (p) => {
     try {
       const res = await searchWeddingsByDate(newDate)
 
-      console.log(res.data)
       modalWeddingOption.open(res.data)
     } catch (error) {
       alert(error.message)
@@ -384,8 +383,6 @@ const ReportInner = (p) => {
 const ModalWeddingList = (p) => {
   const { modalWeddingOption, data, isExtraFee } = p
 
-
-  console.log("get data", data)
   return (
     <ModalContainer>
       <ContentWrapper>

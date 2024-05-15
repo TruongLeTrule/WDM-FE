@@ -82,7 +82,6 @@ const PickFoodServiceModal = ({
     try {
       const foodId = newItem.id
       const upcomingCount = newItem.count
-      console.log(newItem)
       type === 'food' && await checkInventoryForFood(foodId, upcomingCount)
       // If item existed in picked list, set new quantity
       toast.success(`${newItem.name} Added successfully!`);
@@ -168,7 +167,6 @@ const PickFoodServiceModal = ({
       }
       if (type === 'service') {
         result = await editServicesOrder(orderId, pickedItem);
-        console.log(result.data);
         editOrder(
           result.data.servicePrice,
           result.data.remainPrice,

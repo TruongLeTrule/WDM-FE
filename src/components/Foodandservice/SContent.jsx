@@ -77,9 +77,7 @@ const SContent = () => {
 
                 serviceData = res.data
                 setServiceLists(updatedServiceLists);
-                if(tempFile) {
-                    console.log(tempFile)
-                    
+                if(tempFile) {                   
                     await uploadServiceImage(tempFile, serviceData.id)
                     const url = getFileBlobUrl(tempFile)
                     serviceData.url = url
@@ -89,10 +87,7 @@ const SContent = () => {
             else {
                 const res = await createService(updatedService)
                 serviceData = res.data
-                console.log(serviceData)
-                if(tempFile) {
-                    console.log(tempFile)
-                    
+                if(tempFile) {                    
                     await uploadServiceImage(tempFile, serviceData.id)
                     const url = getFileBlobUrl(tempFile)
                     serviceData.url = url
@@ -121,20 +116,6 @@ const SContent = () => {
         setTempStatus("OK");
         isEdit.current = false;
     };
-
-    useEffect(() => {
-        serviceAPI();
-    }, [])
-    
-    const serviceAPI = async () => {
-        try {
-            const services = await getServices();
-            setServiceLists(services.data)
-
-        } catch (error) {
-            console.log(error);
-        }
-    }
 
     return (
         <ServiceContext.Provider value={{ selectedService, setSelectedService }}>

@@ -13,8 +13,6 @@ const Permission = (p) => {
     const newRole = [inputValue, false, false, false, false, false]
     
     setPermissionAccount(prev => {
-      console.log(prev)
-      console.log(newRole)
       return [
         ...prev.slice(0, 1), // Include the first element
         newRole,             // Insert newRole next

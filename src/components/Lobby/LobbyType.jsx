@@ -26,7 +26,6 @@ const LobbyType = (p) => {
   };
 
   const handleLobTypeClick = (value) => {
-    console.log(value)
     setCurrentLT({id: value[0], name: value[1]})
     fetchLobby(value);
   };
