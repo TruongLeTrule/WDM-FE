@@ -233,7 +233,6 @@ const User = () => {
         setAccountInformation={setAccountInformation}
         accountInformationInput={accountInformationInput}
         getRoleIdByName={getRoleIdByName}
-        updateUserList={updateUserList}
         roles={roles}
       />
     </UserBlock>
