@@ -16,7 +16,7 @@ const Information = (p) => {
     accountInformation,
     accountInformationInput,
     getRoleIdByName,
-    updateUserList,
+    setAccountInformation,
     roles
   } = p
 
@@ -61,7 +61,7 @@ const Information = (p) => {
       await updateRoleforUser(roleID, userID)
       setIsDisplayInformationBlock(false);
       await updateUserDisplayName(userID, displayName);
-      updateUserList(userID, newData)
+      setAccountInformation(newData)
     } catch (error) {
       toast.error(error.message);
     }
@@ -79,8 +79,15 @@ const Information = (p) => {
       
       // window.location.reload();
       const newUser = Object.values(tempData)
-      const newData = [newUser, ...accountInformation];
-      updateUserList(null, newData)
+
+      setAccountInformation(prev => {
+        const newResult = [
+          ...prev.slice(0, 1), // Include the first element
+          newUser,             // Insert newRole next
+          ...prev.slice(1)
+        ]
+        return newResult
+      })
     } catch (error) {
       toast.error(error.message);
     }
