@@ -5,7 +5,7 @@ const links = [
   {
     text: 'lobby',
     page: 'lobby',
-    path: '.',
+    path: 'lobby',
     icon: <FaHotel />,
   },
   {

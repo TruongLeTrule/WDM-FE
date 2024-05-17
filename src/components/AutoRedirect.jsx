@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { verifyToken } from '../api/auth.api';
 import Loading from './Loading';
+import { AuthContext } from '../context/auth.context';
 
 const AutoRedirect = (p) => {
   const { children } = p;
   const [isVerified, setIsVerified] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const { token } = useContext(AuthContext)
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
     if (token) {
       verifyToken(token)
         .then(() => {
@@ -24,7 +25,7 @@ const AutoRedirect = (p) => {
     } else {
       setIsLoading(false);
     }
-  }, []);
+  }, [token]);
 
   if (isLoading) {
     // Optionally return a loading indicator while checking
