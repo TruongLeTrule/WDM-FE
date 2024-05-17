@@ -1,14 +1,16 @@
 import { useNavigate } from "react-router-dom";
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import styled from "styled-components";
 import Wedding from "../assets/images/image";
 import { login } from '../api/auth.api';
 import { ToastContainer, toast } from 'react-toastify';
+import { AuthContext } from "../context/auth.context";
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
+  const { setToken } = useContext(AuthContext)
 
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
@@ -16,14 +18,14 @@ const Login = () => {
       const res = await login(username, password)
       const token = res.data.access_token;
       localStorage.setItem('token', token);
+      setToken(token); 
       setUsername('');
       setPassword('');
-      navigate('/dashboard', { replace: true });
+      // navigate('/dashboard', { replace: true });
 
     } catch (error) {
       console.log(error);
       toast.error(error.message);
-      
     }
   };
 

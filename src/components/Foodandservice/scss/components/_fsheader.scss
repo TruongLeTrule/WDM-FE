@@ -37,6 +37,13 @@
         .service{
           border-top-left-radius: 20px;
         }
+        .food, .service {
+
+          &.active {
+            border-color: var(--primary); 
+            color: var(--primary);
+          }
+        }
       }
     .right{
       form {
