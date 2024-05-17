@@ -15,7 +15,7 @@ const BillItem = (p) => {
       </div>
       <div className='item'><span className="title">Service:</span> <span className="value"> {formatVND(bill.service_total_price)}</span></div>
       <div className='item'><span className="title">Food:</span> <span className="value">{formatVND(bill.food_total_price)}</span></div>
-     {isExtraFee && <div className='item'><span className="title">Extra Fee:</span> <span className="value" style={{color: "red", fontWeight: "600"}}>{bill.extra_fee.toLocaleString()} VND</span></div>}
+     {isExtraFee && <div className='item'><span className="title">Extra Fee:</span> <span className="value" style={{color: "red", fontWeight: "600"}}>{formatVND(bill.extra_fee)}</span></div>}
       <div className='item'><span className="title">Total:</span> <span className="value" style={{color: "#3f59fd", fontWeight: "600"}}>
       {formatVND(isExtraFee? bill.total_price + bill.extra_fee : bill.total_price)}
       </span></div>

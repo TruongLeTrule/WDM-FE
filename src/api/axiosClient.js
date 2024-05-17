@@ -38,7 +38,14 @@ axiosClient.interceptors.response.use(
     return res;
   },
   (error) => {
-    throw error.response.data;
+    if(error.response?.data)
+      throw error.response.data;
+    else { 
+      const newError = {
+        message: "Server Error"
+      }
+      throw newError
+    }
   }
 );
 
