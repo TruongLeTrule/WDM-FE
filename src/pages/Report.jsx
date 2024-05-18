@@ -12,6 +12,9 @@ import Loading from "../components/Loading";
 import { searchWeddingsByDate } from "../api/wedding.api";
 import WeddingCard from "../components/Report/ModalWedding";
 import { formatVND } from "../utils";
+import { Header } from "../components";
+import Modal from '../components/Modal'
+import ReactModal from "react-modal";
 
 
 dayjs.extend(customParseFormat);
@@ -255,66 +258,104 @@ const ReportInner = (p) => {
 
   const chartRef = useRef();
 
-  // const handleClickChart = (e) => {
-  //   const point = getElementAtEvent(chartRef.current, e);
-  //   console.log(point[0].element.$context);
-  // }
+  const tableRef = useRef(null);
 
+  const setTbodyMaxHeight = () => {
+    const table = tableRef.current;
+    if (table) {
+      const thead = table.querySelector('thead');
+      const tfoot = table.querySelector('tfoot');
+      const tbody = table.querySelector('tbody');
 
+      // Get heights of thead and tfoot
+      const theadHeight = thead.offsetHeight;
+      const tfootHeight = tfoot.offsetHeight;
+
+      // Calculate the max-height for tbody
+      const tableHeight = table.offsetHeight;
+      const tbodyMaxHeight = tableHeight - theadHeight - tfootHeight;
+
+      // Set the max-height for tbody
+      tbody.style.maxHeight = `${tbodyMaxHeight}px`;
+    }
+  };
+
+  useEffect(() => {
+    setTbodyMaxHeight();
+    window.addEventListener('resize', setTbodyMaxHeight);
+
+    return () => {
+      window.removeEventListener('resize', setTbodyMaxHeight);
+    };
+  }, []);
+
+  const modalStyle = {
+    content: {
+      width: 'auto',
+      height: '800px',
+      left: '50%',
+      top: '50%',
+      padding: 0,
+      transform: 'translate(-50%, -50%)',
+      backgroundColor: '#FFF',
+    },
+    overlay: {
+      backgroundColor: 'rgba(0,0,0,0.5)',
+    },
+  };
+  
   return (
     <Container>
-      {ModalWedding.state && <ModalWeddingList modalWeddingOption={modalWeddingOption} data={ModalWedding.data} isExtraFee={isExtraFee} />}
-      <Card>
-        <ActionBtn>
-          {showMonthPicker ? (
-              <DatePicker value={selectedDate} onChange={handleDateChange} picker="month"/>
-            ) : (
-              <DatePicker value={selectedDate} onChange={handleDateChange} picker="year" />
-            )}
-          <ShowExtraBtn onClick={handleToggleExtraFee}>{!isExtraFee? "show extra fee" : "Don't show extra fee"}</ShowExtraBtn>
+      <Header
+        handleAddBtnClick={() =>{}}
+        headerTitle={'Report'}
+        handleSearch={() => {}}
+        action={false}
+      />
+      <main>
+      <ReactModal
+        isOpen={ModalWedding.state}
+        onRequestClose={() => {
+          modalWeddingOption.close()
+        }}
+        style={modalStyle}
+      >
+        <ModalWeddingList modalWeddingOption={modalWeddingOption} data={ModalWedding.data} isExtraFee={isExtraFee} />
+      </ReactModal>
+        <Card>
+          <ActionBtn>
+            {showMonthPicker ? (
+                <DatePicker value={selectedDate} onChange={handleDateChange} picker="month"/>
+              ) : (
+                <DatePicker value={selectedDate} onChange={handleDateChange} picker="year" />
+              )}
+            <ShowExtraBtn onClick={handleToggleExtraFee}>{!isExtraFee? "show extra fee" : "Don't show extra fee"}</ShowExtraBtn>
+            
+              <ExportCSVButton data={data}>Export File</ExportCSVButton>
+            
+          </ActionBtn>
+          <div style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                flexDirection: "row-reverse"
+          }}>
+  
+            <Space align="baseline" style={{ marginBottom: 24, flexDirection: "column" }}>
+              <Statistic title="Wedding Number" value={totalRevenue.weddingNum} />
+              <Statistic title="Current Revenue" value={totalRevenue.realRevenue} prefix="VND" />
+              <Statistic title="Estimate Revenue" value={totalRevenue.estimateRevenue} prefix="VND" />
+            </Space>
           
-            <ExportCSVButton data={data}>Export File</ExportCSVButton>
-          
-        </ActionBtn>
-
-        <Space align="baseline" style={{ marginBottom: 24 }}>
-          <Statistic title="Wedding Number" value={totalRevenue.weddingNum} />
-          <Statistic title="Current Revenue" value={totalRevenue.realRevenue} prefix="VND" />
-          <Statistic title="Estimate Revenue" value={totalRevenue.estimateRevenue} prefix="VND" />
-          {/* <Divider type="vertical" style={{ height: "auto" }} /> */}
-         {/*  <Space>
-            <ReloadOutlined onClick={handleReloadClick} />
-            <SettingOutlined onClick={handleSettingClick} />
-            {showFollowBy && (
-              <FollowByBox>
-                <Text>Follow by</Text>
-                <Radio.Group defaultValue="month" onChange={handleRadioChange}>
-                  <Radio value="month" onClick={() => setChart("1")}>Month</Radio>
-                  <Radio value="year" onClick={() => setChart("2")}>Year</Radio>
-                </Radio.Group>
-              </FollowByBox>
-            )}
-
-          </Space> */}
-        </Space>
-       
-        {getChart === "1" &&
-          <LineChartContainer>
-            <div className="inner">
-              <Line data={ChartDataMonth} options={options} 
-              // onClick={handleClickChart}
-               ref={chartRef}/>
-            </div>
-          </LineChartContainer>
-        }
-        {getChart === "2" &&
-          <LineChartContainer>
-            <div className="inner">
-              <Line data={ChartDataYear} options={options} />
-            </div>
-          </LineChartContainer>
-        }
-        {getChart === "1" &&
+            <LineChartContainer>
+              <div className="inner">
+                <Line data={ChartDataMonth} options={options} 
+                // onClick={handleClickChart}
+                ref={chartRef}/>
+              </div>
+            </LineChartContainer>
+  
+          </div>
           <TableContainerMonth>
             <Table>
               <thead>
@@ -344,38 +385,9 @@ const ReportInner = (p) => {
               </tbody>
             </Table>
           </TableContainerMonth>
-        }
-        {getChart === "2" &&
-          <TableContainerYear>
-            <Table>
-              <thead>
-                <tr>
-                  <th>No.</th>
-                  <th>Date</th>
-                  <th>Wedding Number</th>
-                  <th>Revenue (VND)</th>
-                  <th>Real Revenue (VND)</th>
-                  <th>Ratio</th>
-                </tr>
-              </thead>
-              <tbody>
-                {monthlyLabels.map((label, index) => (
-                  <tr key={index}>
-                    <td>{index + 1}</td>
-                    <td>{label}</td>
-                    <td>{monthlyWeddingNumbers[index]}</td>
-                    <td>{monthlyRevenues[index]}</td>
-                    <td>{monthlyRealeRevenues[index]}</td>
-                    <td>{yearlyRatio}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
-          </TableContainerYear>
-        }
-     
-      </Card>
 
+        </Card>
+      </main>
     </Container>
   );
 };
@@ -385,8 +397,8 @@ const ModalWeddingList = (p) => {
 
   return (
     <ModalContainer>
-      <ContentWrapper>
-        <ModalOverlay onClick={modalWeddingOption.close}></ModalOverlay>
+    {data.length > 0 && <ContentWrapper>
+        {/* <ModalOverlay onClick={modalWeddingOption.close}></ModalOverlay> */}
         <ModalElm>
           <ModalElmContent>
 
@@ -401,7 +413,7 @@ const ModalWeddingList = (p) => {
             </div>
           </ModalElmContent>
         </ModalElm>
-      </ContentWrapper>
+      </ContentWrapper>}
     </ModalContainer>
   )
 }
@@ -411,8 +423,12 @@ const Container = styled.div`
   height: 100vh;
   overflow: auto;
 
+  main {
+    height: 88vh;
+    border-radius: var(--border-radius);
+  }
+
   .ant-space {
-    width: 100%;
     display: flex;
     height: 10%;
     justify-content: center;
@@ -456,16 +472,15 @@ const Container = styled.div`
 //   margin-bottom: 24px;
 // `;
 const Card = styled.div`
-  position: : relative;
-  background-color: #fff;
-  border: 1px solid #d9d9d9;
-  padding: 0 2rem;
-  border-radius: 2px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  height: 100%
+    position: relative;
+    display: flex;
+    background-color: #fff;
+    padding: 1rem 2rem;
+    height: 100%;
+    flex-direction: column;
 `;
 const TableContainerMonth = styled.div`
-  height: 25%;
+  flex: 1;
 `;
 const TableContainerYear = styled.div`
 height: 25%;
@@ -546,11 +561,11 @@ const FollowByBox = styled.div`
 `;
 const LineChartContainer = styled.div`
   display: flex;
-  height: 60%;
+  height: 100%;
   justify-content: center;
-
+  flex: 1;
   .inner {
-    max-width: 1200px;
+    max-width: 1000px;
     width: 100%;
   }
 
@@ -590,15 +605,17 @@ const ModalOverlay = styled.div `
   background-color: #6f6f6f;
   opacity: .6;
   width: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
   height: 100%;
   position: absolute;
   
 `
 
 const ModalElm = styled.div`
-  max-width: 1100px;
-  width: 50%;
-  height: 800px;
+  width: 100%;
+  height: 100%;
   z-index: 1000;
   background-color: white;
   border-radius: 10px;

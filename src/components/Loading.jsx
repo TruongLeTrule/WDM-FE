@@ -29,6 +29,7 @@ const Container = styled.div`
   height: 100%;
   width: 100%;
   position: absolute;
+  z-index: 100000;
   top: 0;
   .spinner-wrapper {
     z-index: 9999;

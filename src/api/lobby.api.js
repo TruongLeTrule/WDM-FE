@@ -11,6 +11,14 @@ export const getLobbyTypeByID = (id) => {
   return axiosClient.get(`lobby/type/${id}`);
 };
 
+export const findLobTypeByName = (type_name) => {
+  return axiosClient.get('lobby/find_type_by_name/', {
+    params: {
+      type_name: type_name
+    }
+  });
+};
+
 export const createLobType = (createData) => {
   return axiosClient.post('lobby/type/create/', createData);
 };

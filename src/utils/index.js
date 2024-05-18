@@ -19,3 +19,18 @@ export function formatVND(number) {
       currency: 'VND'
   });
 }
+
+
+/**
+ * Truncate a UUID to the specified length.
+ * 
+ * @param {string} uuid - The UUID to be truncated.
+ * @param {number} length - The number of characters to keep from the start of the UUID.
+ * @returns {string} - The truncated UUID.
+ */
+export function truncateUUID(id, length = 8) {
+  if (typeof id == 'string') {
+    return id.substring(0, length);
+  }
+  return id
+}

@@ -8,6 +8,7 @@ import {
 import resolveDate from '../utils/resolveDate';
 import Wrapper from '../assets/wrappers/TableWrapper';
 import resolveCurrency from '../utils/resolveCurrency';
+import { truncateUUID } from '../utils';
 
 const Table = (p) => {
   const { columns, data, handleRowClick, pagination } = p
@@ -67,22 +68,31 @@ const Table = (p) => {
                 {...row.getRowProps()}
                 className={handleRowClick && 'can-click'}
                 onClick={() => handleRowClick(row.original)}
+                key={row.id}  // It's better to use a unique identifier for the row if available
               >
-                {row.cells.map((cell) => (
+                {row.cells.map((cell, idx) => {
+                  let renderData = cell.value
+                  if(cell.column.id.includes('date')) {
+                    renderData = resolveDate(cell.value)
+                  } else if(cell.column.id === "id" ) {
+                    renderData = truncateUUID(cell.value)
+                  }
+
+                return (
                   <td
                     {...cell.getCellProps()}
                     className={resolveCellClass(cell.value)}
                     title={cell.column.id === 'customerName' ? cell.value : ''}
+                    key={idx}  // Adding the key here
                   >
-                    {cell.column.id.includes('date')
-                      ? resolveDate(cell.value)
-                      : cell.value}
+                    {renderData}
                     {resolveCurrency(cell.column.id)}
                   </td>
-                ))}
+                )})}
               </tr>
             );
           })}
+
         </tbody>
       </table>
       {pagination && (

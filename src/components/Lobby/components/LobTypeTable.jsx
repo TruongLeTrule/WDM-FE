@@ -1,5 +1,5 @@
 import { Icon } from "../../../assets/icon";
-import { formatVND } from "../../../utils";
+import { formatVND, truncateUUID } from "../../../utils";
 
 const LobTypeTable = (p) => {
   const { data, handleEditButton, handleLobTypeClick } = p
@@ -33,7 +33,7 @@ const LobTypeTable = (p) => {
     <table className='lobbyTypeTable'>
       <thead>
         <tr>
-          {data && formatTableHead(data).map((value, index) => (
+          {data && data.length > 0 && formatTableHead(data).map((value, index) => (
             <th key={index}>{value}</th>
           ))}
         </tr>
@@ -44,6 +44,8 @@ const LobTypeTable = (p) => {
             {
             Object.keys(formatTableRow(value)).map((cell, cellIndex) => {
               let renderData = value[cell]
+              if(cell === 'id') // max table
+                renderData = truncateUUID(renderData);
               if(cell === 'max_table_count') // max table
                 renderData = renderData + " tables"
               if(cell === 'min_table_price') // min table price
