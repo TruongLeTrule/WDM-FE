@@ -17,12 +17,13 @@ const style = {
 
 ReactModal.setAppElement('#root');
 
-const Modal = ({ isOpen, setModalClose, customStyle, children }) => {
+const Modal = (p) => {
+  const { isOpen, setModalClose, children } = p
   return (
     <ReactModal
       isOpen={isOpen}
       onRequestClose={setModalClose}
-      style={customStyle ? customStyle : style}
+      style={p?.customStyle ? p?.customStyle : style}
     >
       {children}
     </ReactModal>

@@ -13,7 +13,7 @@ export const LobbyTableStyled = styled.div`
   width: 100%;
   height: 88vh;
   background-color: #f5f7fa;
-  padding: 2%;
+  padding: 2.5rem;
 `
 export const WrapTable = styled.div`
     background-color: white;

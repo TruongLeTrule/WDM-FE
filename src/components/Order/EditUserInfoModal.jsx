@@ -4,6 +4,7 @@ import { Modal, DatePick, TextInput, TextRow } from '..';
 import { editOrderLeft, editOrderRight } from '../../utils/orderRenderArr';
 import { editWedding } from '../../api/wedding.api';
 import Wrapper from '../../assets/wrappers/Order/EditOrderInfoWrapper';
+import { truncateUUID } from '../../utils';
 
 const customStyle = {
   content: {
@@ -105,7 +106,7 @@ const EditUserInfoModal = ({
         <div className="header">
           <h4>
             <div>edit order </div>
-            <div>{orderData?.id}</div>
+            <div>{truncateUUID(orderData?.id)}</div>
           </h4>
         </div>
         <div className="container">

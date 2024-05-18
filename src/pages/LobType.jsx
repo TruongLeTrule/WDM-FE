@@ -1,49 +1,23 @@
 import { useEffect, useState, createContext } from "react";
 import { Header } from "../components";
-import { getLobbyTypes, getLobbies } from "../api/lobby.api";
+import { findLobTypeByName, getLobbyTypes } from "../api/lobby.api";
 import { LobbyBlock, LobbyTableStyled } from "../components/Lobby/Styled";
 import LobbyTypeContent from "../components/Lobby/LobbyTypeContent";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 
 export const LobbyTypeContext = createContext();
 
 const LobType = () => {
-  const [lobTypeData, setLobTypeData] = useState();
-  const [lobTypeInformationData, setLobTypeInformationData] = useState();
-
+  const [lobTypeData, setLobTypeData] = useState([]);
+  const [searchData ,setSearchData] = useState([])
   const [isModalAddLT, setModalAddLT] = useState(false)
-  const [currentLT, setCurrentLT] = useState({})
 
-  // const handleBackBtn = () => {
-  //   // setPageDisplay({
-  //   //   previousPage: "",
-  //   //   currentPage: previous
-  //   // });
-  // };
 
   const fetchLobType = async () => {
     const res = await getLobbyTypes();
     const data = res.data;
     setLobTypeData(data);
   };
-
-  const fetchLobby = async (value) => {
-    const lobTypeId = value[0];
-    const type = value[1];
-    try {
-      const res = await getLobbies("", lobTypeId);
-      const lobbies = res.data;
-      const tempData = lobbies.map((value) => [
-        value.lob_type_id,
-        value.name,
-        type,
-        value.id
-      ]);
-      setLobTypeInformationData(tempData);
-    } catch (error) {
-      console.error("Error fetching lob type information:", error);
-    }
-  }
 
   useEffect(() => {
     fetchLobType();
@@ -53,19 +27,13 @@ const LobType = () => {
     lobTypeData,
     setLobTypeData,
     fetchLobType,
-    fetchLobby,
-    // setPageDisplay,
-    lobTypeInformationData, setLobTypeInformationData,
-    currentLT, setCurrentLT
   };
 
   const handleAddBtnClick = () => {
-    // pageDisplay.currentPage == "LobType" 
     LTmodalOption.open()
-    // : modalOption.open()
   }
 
-  const LTmodalOption = { // lobby type modal 
+  const LTmodalOption = {
     open: () => {
       setModalAddLT(true)
     },
@@ -74,18 +42,32 @@ const LobType = () => {
     }
   }
 
+  const handleSearch = async (value) => {
+    try {
+      const type_name = value
+      const res = await findLobTypeByName(type_name)
+      setSearchData(res.data)
+
+    } catch (error) {
+      toast.error(error.message)
+    }
+  }
+
+  const displayData = searchData.length > 0 ? searchData : lobTypeData;
+
   return (
     <LobbyTypeContext.Provider value={shareValue}>
       <LobbyBlock>
         <Header
-          headerTitle={"Lobby"}
+          headerTitle={"Lobby Type"}
           // handleBackBtn={() => handleBackBtn()}
           // isBack={pageDisplay.previousPage}
           handleAddBtnClick={handleAddBtnClick}
+          handleSearch={handleSearch}
         />
         <LobbyTableStyled>
           <ToastContainer />
-          <LobbyTypeContent data={lobTypeData} isModalAddLT={isModalAddLT} LTmodalOption={LTmodalOption}/>
+          <LobbyTypeContent data={displayData} isModalAddLT={isModalAddLT} LTmodalOption={LTmodalOption}/>
 
         </LobbyTableStyled>
       </LobbyBlock>
