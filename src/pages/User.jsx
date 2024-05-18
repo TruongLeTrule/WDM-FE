@@ -7,6 +7,8 @@ import { getUsers } from "../api/user.api";
 import { getRoles } from "../api/privilege.api";
 import { Icon } from "../assets/icon";
 import { updatePermissionForRole, removePermissionFromRole } from "../api/privilege.api";
+import styled from "styled-components";
+import { Header } from "../components";
 
 const User = () => {
   const [isDisplayInfomationBlock, setIsDisplayInformationBlock] = useState(false);
@@ -139,9 +141,6 @@ const User = () => {
     }
   }
 
-  const updateUserList = (userID, newData) => {
-    setAccountInformation(newData)
-  }
 
   const fetchDataAccountInformation = async () => {
     try {
@@ -196,47 +195,66 @@ const User = () => {
   }, [searchValue, accountInformation]);
 
   return (
-    <UserBlock>
-      <div className="blockTitle">
-        <h4 className="title" onClick={() => console.log(accountInformation)}>
-          Permissions of account groups
-        </h4>
-        <div className="plus">
-          <Icon.plus className="iconPlus" onClick={handlePermissionCreate}></Icon.plus>
-        </div>
-      </div>
-      <StyledPermissionAccountTable data={permissionAccount} action={updateRolePermission} getRoleIdByName={getRoleIdByName} setIsFetch={setIsFetch}/>
-      <Permission setIsFetch={setIsFetch} display={isDisplayPermissionBlock} setIsDisplayPermissionBlock={setIsDisplayPermissionBlock} setPermissionAccount={setPermissionAccount}/>
-      <div className="TitleSearchCombination">
-        <div className="blockTitle">
-          <h4 className="title" onClick={() => console.log(accountInformation)}>
-            Account Information
-          </h4>
-          <div className="plus">
-            <Icon.plus className="iconPlus" onClick={handleInformationCreate}></Icon.plus>
+    <Container>
+      <Header
+        handleAddBtnClick={() =>{}}
+        headerTitle={'User'}
+        handleSearch={() => {}}
+        action={false}
+      />
+
+     <Content>
+        <UserBlock>
+          <div className="blockTitle">
+            <h4 className="title" onClick={() => console.log(accountInformation)}>
+              Permissions of account groups
+            </h4>
+            <div className="plus">
+              <Icon.plus className="iconPlus" onClick={handlePermissionCreate}></Icon.plus>
+            </div>
           </div>
-        </div>
-        <SearchBox handleSearch={handleSearchBox} />
-      </div>
-      <StyledAccountInformationTable
-        data={accountInformationTableFilter}
-        preData={accountInformation}
-        deleteRow={deleteInformation}
-        editRow={editInformation}
-      />
-      <Information
-        display={isDisplayInfomationBlock}
-        setIsDisplayInformationBlock={setIsDisplayInformationBlock}
-        type={boardType}
-        editrow={row}
-        accountInformation={accountInformation}
-        setAccountInformation={setAccountInformation}
-        accountInformationInput={accountInformationInput}
-        getRoleIdByName={getRoleIdByName}
-        roles={roles}
-      />
-    </UserBlock>
+          <StyledPermissionAccountTable data={permissionAccount} action={updateRolePermission} getRoleIdByName={getRoleIdByName} setIsFetch={setIsFetch}/>
+          <Permission setIsFetch={setIsFetch} display={isDisplayPermissionBlock} setIsDisplayPermissionBlock={setIsDisplayPermissionBlock} setPermissionAccount={setPermissionAccount}/>
+          <div className="TitleSearchCombination">
+            <div className="blockTitle">
+              <h4 className="title" onClick={() => console.log(accountInformation)}>
+                Account Information
+              </h4>
+              <div className="plus">
+                <Icon.plus className="iconPlus" onClick={handleInformationCreate}></Icon.plus>
+              </div>
+            </div>
+            <SearchBox handleSearch={handleSearchBox} />
+          </div>
+          <StyledAccountInformationTable
+            data={accountInformationTableFilter}
+            preData={accountInformation}
+            deleteRow={deleteInformation}
+            editRow={editInformation}
+          />
+          <Information
+            display={isDisplayInfomationBlock}
+            setIsDisplayInformationBlock={setIsDisplayInformationBlock}
+            type={boardType}
+            editrow={row}
+            accountInformation={accountInformation}
+            setAccountInformation={setAccountInformation}
+            accountInformationInput={accountInformationInput}
+            getRoleIdByName={getRoleIdByName}
+            roles={roles}
+          />
+        </UserBlock>
+     </Content>
+    </Container>
   );
 };
 
 export default User;
+
+const Container = styled.div`
+  /* height: 100vh;
+  width: 100vw; */
+`
+const Content = styled.div`
+  height: 88vh;
+`

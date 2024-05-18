@@ -7,6 +7,7 @@ import Modal from '../Modal';
 import resolveDate from '../../utils/resolveDate';
 import SpecificOrderTable from './SpecificOrderTable';
 import Wrapper from '../../assets/wrappers/Order/BillWrapper';
+import { truncateUUID } from '../../utils';
 
 const customStyle = {
   content: {
@@ -39,7 +40,7 @@ const BillModal = () => {
       <Wrapper>
         <h4>
           <div>order </div>
-          <div>{orderInfo?.id}</div>
+          <div>{truncateUUID(orderInfo?.id)}</div>
           </h4>
         <div className="container">
           <h5>customer information</h5>

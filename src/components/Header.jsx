@@ -10,6 +10,7 @@ const Header = (p) => {
     isBack,
     handleBackBtn,
     handleSearch,
+    action=true
   } = p
   return (
     <Wrapper>
@@ -22,7 +23,7 @@ const Header = (p) => {
         )}
       </div>
       <h1>{headerTitle}</h1>
-      <div className="right-container">
+      {action && <div className="right-container">
         <SearchBox handleSearch={handleSearch} />
         <button>
           <FaFilter className="icon" />
@@ -30,7 +31,7 @@ const Header = (p) => {
         <button onClick={handleAddBtnClick}>
           <FaPlus className="icon" />
         </button>
-      </div>
+      </div>}
     </Wrapper>
   );
 };

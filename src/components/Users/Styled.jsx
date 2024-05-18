@@ -15,13 +15,12 @@ export const Checkbox = styled.input`
 export const UserBlock = styled.div`
   background-color: white;
   width: 100%;
-  height: 100vh;
+  height: 100%;
   overflow-y: auto;
   padding: 2%;
 
   .blockTitle {
     width: 100%;
-    height: 8vh;
     display: flex;
     align-items: center;
   }
@@ -118,7 +117,6 @@ export const StyledPermissionAccountTable = styled(PermissonAccountTable)`
 export const StyledAccountInformationTable = styled(AccountInformationTable)`
   width: 100%;
   margin-top: 20px;
-  margin-bottom: 20px;
   border-collapse: separate; 
   border-spacing: 10px; 
   border-collapse: collapse;

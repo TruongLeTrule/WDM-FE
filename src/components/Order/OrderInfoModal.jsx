@@ -4,6 +4,7 @@ import { useOrderContext } from '../../pages/Order';
 import { orderInfoLeft, orderInfoRight } from '../../utils/orderRenderArr';
 import TextRow from '../TextRow';
 import Wrapper from '../../assets/wrappers/Order/OrderInfoWrapper';
+import { truncateUUID } from '../../utils';
 
 const style = {
   content: {
@@ -50,7 +51,7 @@ const OrderInfoModal = () => {
         <div className="header">
           <h4>
            <p> order</p>
-           <p> {orderInfo?.id}</p>
+           <p> {truncateUUID(orderInfo?.id)}</p>
           </h4>
           <FaPenToSquare
             className="icon"
