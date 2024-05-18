@@ -1,24 +1,21 @@
-import { shift } from '../../utils/orderRenderArr';
 import { useState, useRef, useEffect, useContext } from 'react';
 import lobImg from '../../assets/images/lobby.jpg';
-import { Icon } from '../../assets/icon.js';
 import styled from 'styled-components';
 import { updateLobby, getLobbyTypes, softDeleteLobby } from "../../api/lobby.api.js" 
-import { TypeInformContext } from './Lobbies.jsx';
+import { LobbyContext } from '../../pages/Lobby.jsx';
 
 
 const LobbyCard = (p) => {
   const {
-    lobby
+    lobby,
+    onClick
   } = p
   const { id, name, lob_type_id } = lobby;
   const cardRef = useRef(null);
 
-  const resolveBusyShift = (shift, bookedShift) => {
-    if (bookedShift.includes(shift)) return 'busy';
-  };
 
   const handleCardClick = () => {
+    onClick()
   };
 
   return (
@@ -35,7 +32,7 @@ const LobbyCard = (p) => {
 
 const NameBox = (p) => {
   const { id, name, lob_type_id } = p
-  const { lobbyList, setLobbyList } = useContext(TypeInformContext)
+  const { lobbyList, setLobbyList } = useContext(LobbyContext)
   const [value, setValue] = useState({name: name, lobTypeID: lob_type_id})
   const [isEdit, setEdit] = useState(false)
   const [saveAble, setSaveAble] = useState(false)
