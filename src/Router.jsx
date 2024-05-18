@@ -9,6 +9,7 @@ import {
   Error,
   Login,
   DashboardLayout,
+  LobType,
   Lobby,
   Order,
   Report,
@@ -18,7 +19,16 @@ import {
 import { AuthContext } from './context/auth.context';
 const getDashboardChildrenRoutes = async (permissionList) => {
   let childrenRoutes = [
-    { page: "lobby", path: 'lobby', element: <Lobby /> },
+    { page: "lobby", path: 'lobType', element: <LobType /> },
+    { page: "lobby", path: 'lobType/:id', element: <Lobby />, children: [
+      {
+        path: 'lobby',
+        element: (
+          <RequireAuth>
+          </RequireAuth>
+        ),
+      }
+    ]},
     { page: "order", path: 'order', element: <Order /> },
     { page: "report", path: 'report', element: <Report /> },
     { page: "food_service", path: 'food-service', element: <FoodAndService /> },

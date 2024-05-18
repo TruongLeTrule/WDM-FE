@@ -5,6 +5,7 @@ export { default as DashboardLayout } from './DashboardLayout';
 export { default as Login } from './Login';
 
 export const Error = React.lazy(() => import('./Error'));
+export const LobType = React.lazy(() => import('./LobType'));
 export const Lobby = React.lazy(() => import('./Lobby'));
 export const Order = React.lazy(() => import('./Order'));
 export const Report = React.lazy(() => import('./Report'));

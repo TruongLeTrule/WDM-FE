@@ -1,28 +1,21 @@
-import { useContext, useEffect, useState } from "react";
-import { createLobType } from "../../api/lobby.api";
+import { useEffect, useState } from "react";
+import { updateLobType, deleteLobType } from "../../api/lobby.api";
 import { EditBlock, TableInput, TypeTableCancelAndSave } from "./Styled";
 import EditLobTypeInput from "./components/CreateTypeEditInput";
 import { ToastContainer, toast } from 'react-toastify';
-import { LobbyContext } from "../../pages/Lobby";
 
-
-const TypeTableAdd = (p) => {
-  const { modalOption } = p;
-
-  const {
-    setLobTypeData,
-    lobTypeData,
-  } = useContext(LobbyContext);
-  
+const LobTypeEdit = (p) => {
+  const { setIsLobTypeEditDisplay, editData, fetchLobType } = p
+  const lobTypeID = editData.id
   const [inputValue, setInputValue] = useState({
-    type_name: "",
-    max_table_count: "",
-    min_table_price: "",
-    deposit_percent: "",
+    type_name: editData.type_name,
+    max_table_count: Number(editData.max_table_count),
+    min_table_price: Number(editData.min_table_price),
+    deposit_percent: Number(editData.deposit_percent),
   });
 
   const handleCancelButton = () => {
-    modalOption.close();
+    setIsLobTypeEditDisplay(false);
   };
 
   const handleInput = (value, name) => {
@@ -41,27 +34,40 @@ const TypeTableAdd = (p) => {
 
   const handleSaveButton = async () => {
     try {
-      // console.log(lobTypeData)
-      const res = await createLobType(inputValue);
-
-      const newLTID = res.data.id
-      const newLTName = res.data.type_name
-      const newData = [newLTID, ...Object.values(inputValue)]
-      setLobTypeData(prev => [newData, ...prev])
-      modalOption.close();
-      
-      toast.success(`${newLTName} created!`)
+      await updateLobType(lobTypeID, inputValue);
+      await fetchLobType();
+      setIsLobTypeEditDisplay(false);
     } catch (error) {
       toast.error(error.message)
     }
   };
 
+  const handleDeleteButton = async () => {
+    try {
+      await deleteLobType(lobTypeID)
+      await fetchLobType();
+      setIsLobTypeEditDisplay(false);
+    } catch (error) {
+      toast.error(error.message)
+    }
+  }
+
+  useEffect(() => {
+    setInputValue({
+      type_name: editData.type_name,
+      max_table_count: Number(editData.max_table_count),
+      min_table_price: Number(editData.min_table_price),
+      deposit_percent: Number(editData.deposit_percent),
+    });
+  }, [editData]);
+
   return (
     <EditBlock>
       <TableInput className="Type">
-        <h4>Add Lobby Type</h4>
+        <h4>Edit Lobby Type</h4>
         <EditLobTypeInput handleInput={handleInput} inputValue={inputValue} />
         <TypeTableCancelAndSave className="Type">
+          <button className="button buttonDelete" onClick={handleDeleteButton}>Delete </button>
           <button className="button buttonCancel" onClick={handleCancelButton}> Cancel </button>
           <button className="button buttonSave" onClick={handleSaveButton}>Save </button>
         </TypeTableCancelAndSave>
@@ -70,4 +76,4 @@ const TypeTableAdd = (p) => {
   );
 };
 
-export default TypeTableAdd;
+export default LobTypeEdit;

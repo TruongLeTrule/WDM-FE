@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { EditTypeInformInput } from "../Styled";
-import { getLobbyTypes } from "../../../api/lobby.api";
+// import { getLobbyTypes } from "../../../api/lobby.api";
 
 const AddLobbiesForm = (p) => {
   const { inputValue, setInputValue } = p
@@ -8,18 +8,18 @@ const AddLobbiesForm = (p) => {
     setInputValue({ ...inputValue, name: value });
   }
 
-  const fetchLobType = async () => {
-    const res = await getLobbyTypes();
-    const data = res.data;
-    const subData = [];
-    data.map(value => {
-      subData.push(value.type_name)
-    })
-  }
+  // const fetchLobType = async () => {
+  //   const res = await getLobbyTypes();
+  //   const data = res.data;
+  //   const subData = [];
+  //   data.map(value => {
+  //     subData.push(value.type_name)
+  //   })
+  // }
 
-  useEffect(() => {
-    fetchLobType();
-  }, [])
+  // useEffect(() => {
+  //   fetchLobType();
+  // }, [])
 
   return (
     <EditTypeInformInput>

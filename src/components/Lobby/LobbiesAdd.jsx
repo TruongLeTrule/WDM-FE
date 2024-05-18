@@ -5,12 +5,10 @@ import { createLobby } from "../../api/lobby.api";
 import { toast } from 'react-toastify';
 import { LobbyContext } from "../../pages/Lobby";
 
-const LobbiesAdd = (p) => {
 
-  const { modalOption, lobTypeID, lobTypeName, setLobbyList } = p
+const LobbiesAdd = () => {
 
-
-  const { setLobTypeInformationData, lobTypeInformationData } = useContext(LobbyContext);
+  const { lobTypeID, setLobbyList, modalOption } = useContext(LobbyContext);
 
   const [inputValue, setInputValue] = useState({
     name: ""
@@ -26,15 +24,7 @@ const LobbiesAdd = (p) => {
         "lob_type_id": lobTypeID
       }
       const res = await createLobby(createData)
-      // fetchLobby([lobTypeID, lobTypeName]);
-      const newDataUpdateUI = {
-        lobbyTypeId: lobTypeID,
-        lobName: inputValue.name.trim(),
-        lobTypeName: lobTypeName,
-        LobbyID: res.data.id
-      }
 
-      console.log("newDataUpdateUI", newDataUpdateUI)
       setLobbyList(prev => ([...prev, res.data]))
       modalOption.close()
 
