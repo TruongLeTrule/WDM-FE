@@ -15,7 +15,8 @@ import {
   Report,
   FoodAndService,
   User,
-  LobbyID
+  LobbyID,
+  OrderID
 } from './pages';
 import { AuthContext } from './context/auth.context';
 const getDashboardChildrenRoutes = async (permissionList) => {
@@ -24,6 +25,7 @@ const getDashboardChildrenRoutes = async (permissionList) => {
     { page: "lobby", path: 'lobType/:id', element: <Lobby />},
     { page: "lobby", path: 'lobType/:id/lobby/:lobID', element: <LobbyID /> },
     { page: "order", path: 'order', element: <Order /> },
+    { page: "order", path: 'order/:id', element: <OrderID /> },
     { page: "report", path: 'report', element: <Report /> },
     { page: "food_service", path: 'food-service', element: <FoodAndService /> },
     { page: "user", path: 'user', element: <User /> },

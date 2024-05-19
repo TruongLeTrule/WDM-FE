@@ -18,6 +18,7 @@ import {
 } from '../components/Order';
 import { allOrdersTableHeader } from '../utils/orderRenderArr';
 import Loading from '../components/Loading';
+import { useNavigate } from 'react-router-dom';
 
 const Wrapper = React.lazy(() => import('../assets/wrappers/OrderWrapper'));
 const OrderContext = createContext();
@@ -32,13 +33,16 @@ const Order = () => {
   const [createOrderModalState, setCreateOrderModalState] = useState({});
   const [editOrderModalState, setEditOrderModalState] = useState({});
 
+  const navigate = useNavigate()
+
   const handleRowClick = (rowData) => {
-    setOrderInfo(rowData);
-    setOrderModalState({
-      ...orderModalState,
-      info: ['deposit', 'pending'].includes(rowData?.status),
-      bill: rowData?.status === 'paid',
-    });
+    navigate(`${rowData.id}`)
+    // setOrderInfo(rowData);
+    // setOrderModalState({
+    //   ...orderModalState,
+    //   info: ['deposit', 'pending'].includes(rowData?.status),
+    //   bill: rowData?.status === 'paid',
+    // });
   };
 
   const handleAddBtnClick = () => {
@@ -142,7 +146,7 @@ const Order = () => {
                 <span className="empty">No order</span>
               )}
             </div>
-            <Suspense fallback={<Loading minsize="35px" />}>
+            {/* <Suspense fallback={<Loading minsize="35px" />}>
               {orderModalState?.info && <OrderInfoModal />}
               {orderModalState?.payRemainder && <PayRemainderModal />}
               {orderModalState?.bill && <BillModal />}
@@ -154,7 +158,7 @@ const Order = () => {
               )}
               <CreateOrderModalContainer />
               <EditOrderModalContainer />
-            </Suspense>
+            </Suspense> */}
           </main>
         </Wrapper>
       )}

@@ -9,6 +9,7 @@ export const LobType = React.lazy(() => import('./LobType'));
 export const Lobby = React.lazy(() => import('./Lobby'));
 export const LobbyID = React.lazy(() => import('./LobbyId'));
 export const Order = React.lazy(() => import('./Order'));
+export const OrderID = React.lazy(() => import('./OrderID'));
 export const Report = React.lazy(() => import('./Report'));
 export const FoodAndService = React.lazy(() => import('./FoodAndService'));
 export const User = React.lazy(() => import('./User'));

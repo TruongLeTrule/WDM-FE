@@ -7,8 +7,9 @@ import { findFoodByName } from "../../api/food.api";
 import { findServiceByName } from "../../api/service.api";
 import { FoodServiceContext } from "../../context/food.context.jsx"
 
+
 const FSheader_Content = (p) => {
-    const { setPage, pageRef } = p
+    const { setPage, pageRef, SeachBox=true } = p
 
     return (
         <div className="fsheader">
@@ -16,9 +17,9 @@ const FSheader_Content = (p) => {
                 <button onClick={() => {setPage("1"); pageRef.current = "food" }} className={`food ${pageRef.current === "food" ? "active":  ""}`}><PiForkKnifeBold /> FOOD</button>
                 <button onClick={() => {setPage("2"); pageRef.current = "service"}} className={`service ${pageRef.current === "service" ? "active":  ""}`}><PiGuitarDuotone /> SERVICE</button>
             </div>
-            <div className="right">
+            {SeachBox && <div className="right">
                 <SearchBox page={pageRef.current}/>
-            </div>
+            </div>}
         </div>
     )
 }
