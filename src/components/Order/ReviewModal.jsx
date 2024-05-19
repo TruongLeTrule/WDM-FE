@@ -3,13 +3,14 @@ import { reviewOrderLeft, reviewOrderRight } from '../../utils/orderRenderArr';
 import Modal from '../Modal';
 import Wrapper from '../../assets/wrappers/Order/ReviewWrapper';
 
-const ReviewModal = ({
-  isOpen,
-  setModalClose,
-  setNextModalOpen,
-  orderData,
-  setOrderData,
-}) => {
+const ReviewModal = (p) => {
+  const {
+    isOpen,
+    setModalClose,
+    setNextModalOpen,
+    orderData,
+    setOrderData,
+  } = p
   const handleNextBtnClick = () => {
     setNextModalOpen();
     setOrderData(null);

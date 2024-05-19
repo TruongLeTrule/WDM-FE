@@ -1,6 +1,20 @@
 import axiosClient from './axiosClient';
 
 /*
+=================== SHIFT ===================
+*/
+export const getShifts = () => {
+  return axiosClient.get('lobby/shifts');
+};
+
+export const createShifts = (name) => {
+  return axiosClient.post('lobby/shifts', {name});
+};
+
+export const deleteShifts = (id) => {
+  return axiosClient.delete(`lobby/shifts/${id}`)
+};
+/*
 =================== LOBBY TYPE ===================
 */
 export const getLobbyTypes = (includeDeleted = false) => {

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getLobbies } from '../../api/lobby.api';
+import { getLobbies, getShifts } from '../../api/lobby.api';
 import Modal from '../Modal';
 import Wrapper from '../../assets/wrappers/Order/LobWrapper';
 import LobCard from './LobCard';
@@ -20,30 +20,50 @@ const customStyle = {
   },
 };
 
-const PickLobbyModal = ({
-  isOpen,
-  setModalClose,
-  setNextModalOpen,
-  setLobbyInfo,
-  editLobby,
-  wedding_date,
-  lob_type_id,
-}) => {
+const PickLobbyModal = (p) => {
+  const {
+    isOpen,
+    setModalClose,
+    setNextModalOpen,
+    setLobbyInfo,
+    editLobby,
+    wedding_date,
+    lob_type_id,
+  } = p
   const [lobbyList, setLobbyList] = useState([]);
+  const [shiftList, setShiftList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchLobbies = async () => {
     try {
       const lobbies = await getLobbies(wedding_date, lob_type_id);
       setLobbyList(lobbies.data);
-      setIsLoading(false);
     } catch (error) {
       alert(error.message);
     }
   };
+  const fetchShifts = async () => {
+    try {
+      const shift = await getShifts();
+      setShiftList(shift.data);
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+  
 
   useEffect(() => {
-    fetchLobbies();
+    const fetchData = async () => {
+      try {
+        await Promise.all([fetchLobbies(), fetchShifts()]);
+      } catch (error) {
+        alert(error.messge)
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
   }, []);
 
   return (
@@ -59,10 +79,11 @@ const PickLobbyModal = ({
           <>
             <h4>choose lobby</h4>
             <div className="container">
-              {lobbyList.map((lobby) => (
+              {lobbyList.map((lobby, idx) => (
                 <LobCard
                   lobby={lobby}
-                  key={lobby.id}
+                  key={idx}
+                  shiftList={shiftList}
                   setLobbyInfo={setLobbyInfo}
                   setNextModalOpen={setNextModalOpen}
                   setPickLobbyModalClose={setModalClose}

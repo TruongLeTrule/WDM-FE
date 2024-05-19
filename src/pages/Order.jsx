@@ -74,6 +74,8 @@ const Order = () => {
       const newData = {
         ...wedding,
         ...Bill,
+        shift: wedding.Shift.name,
+        shift_id: wedding.Shift.id,
         customer_name: wedding.Customer.name,
         phone: wedding.Customer.phone,
         lobby_name: wedding.Lobby.name,

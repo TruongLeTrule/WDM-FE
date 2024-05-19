@@ -34,3 +34,11 @@ export function truncateUUID(id, length = 8) {
   }
   return id
 }
+
+
+export const convertDates = (dateArray) => {
+  return dateArray.map(dateStr => {
+      let date = new Date(dateStr);
+      return date.getFullYear()+'-' + (date.getMonth()+1) + '-'+date.getDate();
+  });
+}

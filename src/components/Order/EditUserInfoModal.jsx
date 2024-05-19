@@ -21,13 +21,14 @@ const customStyle = {
   },
 };
 
-const EditUserInfoModal = ({
-  isOpen,
-  setModalClose,
-  handleEditLobbyClick,
-  orderData,
-  setOrderData,
-}) => {
+const EditUserInfoModal = (p) => {
+  const {
+    isOpen,
+    setModalClose,
+    handleEditLobbyClick,
+    orderData,
+    setOrderData,
+  } = p
   const [formState, setFormState] = useState({
     groom: orderData.groom,
     bride: orderData.bride,
@@ -59,7 +60,7 @@ const EditUserInfoModal = ({
       if (orderData.new_lobby_id) {
         reqBody.lobby_id = orderData.new_lobby_id;
         reqBody.wedding_date = orderData.wedding_date;
-        reqBody.shift = orderData.shift;
+        reqBody.shift_id = orderData.Shift.id;
       }
       await editWedding(orderData.id, reqBody);
       setOrderData({
