@@ -76,7 +76,7 @@ const Order = () => {
         ...Bill,
         shift: wedding.Shift.name,
         shift_id: wedding.Shift.id,
-        customer_name: wedding.Customer.name,
+        customer_name: `${wedding.groom}/${wedding.bride}`,
         phone: wedding.Customer.phone,
         lobby_name: wedding.Lobby.name,
         id: wedding.id,
