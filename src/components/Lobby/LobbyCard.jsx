@@ -176,7 +176,7 @@ const InputBox = styled.div `
   .edit-content {
     width: 100%;
     display: flex;
-    gap: 20px;
+    gap: 10px;
 
   }
   .action-box {

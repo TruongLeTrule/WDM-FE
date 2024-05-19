@@ -8,11 +8,11 @@ export const searchWeddingsByPhone = (phone) => {
   });
 };
 
-export const searchWeddingsByDate = (date) => {
-  return axiosClient.get('wedding/find-by-date?', {
-    params: {
-      date,
-    },
+export const searchWeddingsByDate = (date, shiftList, lobbyId) => {
+  return axiosClient.post('wedding/find-by-date?', {
+    date,
+    shiftList,
+    lobbyId
   });
 };
 

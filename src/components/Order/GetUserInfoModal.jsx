@@ -22,15 +22,16 @@ const customStyle = {
   },
 };
 
-const GetUserInfoModal = ({
-  isOpen,
-  setModalClose,
-  setNextModalOpen,
-  setUserInfo,
-  lobby_id,
-  shift,
-  wedding_date,
-}) => {
+const GetUserInfoModal = (p) => {
+  const {
+    isOpen,
+    setModalClose,
+    setNextModalOpen,
+    setUserInfo,
+    lobby_id,
+    shift,
+    wedding_date,
+  } = p
   const {
     handleSubmit,
     register,
@@ -43,7 +44,7 @@ const GetUserInfoModal = ({
       const { data } = await createWedding({
         ...formResult,
         lobby_id,
-        shift,
+        shift_id: shift.id,
         wedding_date,
         table_count: tableCount,
       });

@@ -15,20 +15,14 @@ import {
   Report,
   FoodAndService,
   User,
+  LobbyID
 } from './pages';
 import { AuthContext } from './context/auth.context';
 const getDashboardChildrenRoutes = async (permissionList) => {
   let childrenRoutes = [
     { page: "lobby", path: 'lobType', element: <LobType /> },
-    { page: "lobby", path: 'lobType/:id', element: <Lobby />, children: [
-      {
-        path: 'lobby',
-        element: (
-          <RequireAuth>
-          </RequireAuth>
-        ),
-      }
-    ]},
+    { page: "lobby", path: 'lobType/:id', element: <Lobby />},
+    { page: "lobby", path: 'lobType/:id/lobby/:lobID', element: <LobbyID /> },
     { page: "order", path: 'order', element: <Order /> },
     { page: "report", path: 'report', element: <Report /> },
     { page: "food_service", path: 'food-service', element: <FoodAndService /> },
