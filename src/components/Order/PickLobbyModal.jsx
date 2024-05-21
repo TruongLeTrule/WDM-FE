@@ -29,7 +29,7 @@ const PickLobbyModal = (p) => {
     editLobby,
     wedding_date,
     lob_type_id,
-  } = p
+  } = p;
   const [lobbyList, setLobbyList] = useState([]);
   const [shiftList, setShiftList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -50,14 +50,13 @@ const PickLobbyModal = (p) => {
       alert(error.message);
     }
   };
-  
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         await Promise.all([fetchLobbies(), fetchShifts()]);
       } catch (error) {
-        alert(error.messge)
+        alert(error.message);
       } finally {
         setIsLoading(false);
       }

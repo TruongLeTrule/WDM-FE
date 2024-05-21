@@ -50,8 +50,8 @@ const OrderInfoModal = () => {
       <Wrapper>
         <div className="header">
           <h4>
-           <p> order</p>
-           <p> {truncateUUID(orderInfo?.id)}</p>
+            <p> order</p>
+            <p> {truncateUUID(orderInfo?.id)}</p>
           </h4>
           <FaPenToSquare
             className="icon"
@@ -77,7 +77,9 @@ const OrderInfoModal = () => {
           {/* Right col */}
           <div>
             <h5>{orderInfo?.lobby_name}</h5>
-            <p className="shift">{orderInfo?.shift}</p>
+            <p className="shift">
+              {orderInfo?.shift?.name || orderInfo?.shift}
+            </p>
             <div className="rows">
               {orderInfoRight.map(({ title, key, openModal }) => (
                 <TextRow

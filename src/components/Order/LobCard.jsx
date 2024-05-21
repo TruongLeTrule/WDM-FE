@@ -1,4 +1,3 @@
-import { shift } from '../../utils/orderRenderArr';
 import { useState, useRef, useEffect, useMemo } from 'react';
 import lobImg from '../../assets/images/lobby.jpg';
 
@@ -9,8 +8,8 @@ const LobCard = (p) => {
     setPickLobbyModalClose,
     setLobbyInfo,
     editLobby,
-    shiftList
-  } = p
+    shiftList,
+  } = p;
   const { id, name, Wedding } = lobby;
   const [showShiftModal, setShowShiftModal] = useState(false);
   const cardRef = useRef(null);
@@ -67,15 +66,16 @@ const LobCard = (p) => {
         {showShiftModal && (
           <div className="choose-shift">
             <h6>choose shift</h6>
-            {shiftList && shiftList.map((shift) => (
-              <span
-                key={shift.id}
-                className={!bookedShift.includes(shift.id) ? 'shift' : ''}
-                onClick={() => handleShiftClick(shift)}
-              >
-                {!bookedShift.includes(shift) && shift.name}
-              </span>
-            ))}
+            {shiftList &&
+              shiftList.map((shift) => (
+                <span
+                  key={shift.id}
+                  className={!bookedShift.includes(shift.id) ? 'shift' : ''}
+                  onClick={() => handleShiftClick(shift)}
+                >
+                  {!bookedShift.includes(shift) && shift.name}
+                </span>
+              ))}
           </div>
         )}
       </div>
