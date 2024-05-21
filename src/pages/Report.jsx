@@ -9,7 +9,7 @@ import Chart, { Interaction } from 'chart.js/auto';
 import { getListRevenue, getTotalRevenue } from "../api/revenue.api"
 import ExportCSVButton from "../components/ExportCSVBtn";
 import Loading from "../components/Loading";
-import { searchWeddingsByDate } from "../api/wedding.api";
+import { searchWeddingsByDateForReport } from "../api/wedding.api";
 import WeddingCard from "../components/Report/ModalWedding";
 import { formatVND } from "../utils";
 import { Header } from "../components";
@@ -248,7 +248,7 @@ const ReportInner = (p) => {
 
   const handleOpenModalList = async (newDate) => {
     try {
-      const res = await searchWeddingsByDate(newDate)
+      const res = await searchWeddingsByDateForReport(newDate)
 
       modalWeddingOption.open(res.data)
     } catch (error) {

@@ -63,6 +63,15 @@ export const getLobbies = (date, lob_type_id) => {
   });
 };
 
+export const findLobByName = (name, lob_type_id) => {
+  return axiosClient.get('lobby/find_lob_by_name/', {
+    params: {
+      name: name,
+      lobType_id: lob_type_id
+    }
+  });
+};
+
 export const getLobbyById = (id, includeDeleted = false) => {
   return axiosClient.get(`lobby/${id}`, {
     params: { includeDeleted },

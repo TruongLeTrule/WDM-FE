@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 
 import { InformationBlock, InformationBoard, SaveButton } from "./Styled";
-import { updateUserDisplayName } from "../../api/user.api";
+import { updateUserInfo } from "../../api/user.api";
 import { register } from "../../api/auth.api";
 import { updateRoleforUser, getRoles } from "../../api/privilege.api";
 import { findUserByUserName } from "../../api/user.api";
@@ -55,12 +55,26 @@ const Information = (p) => {
 
       const roleID = await getRoleIdByName(tempData.Role)
       const userID = newData[editrow][0]
-      const displayName = newData[editrow][1]
+      
+      const updateData = {}
 
+      if(tempData.Password !== accountInformationInput.Password) {
+        updateData.password = tempData.Password
+      }
 
-      await updateRoleforUser(roleID, userID)
+      if(tempData.Role !== accountInformationInput.Role) {
+        updateData.role_id = roleID
+      }
+
+      if(tempData.DisplayName !== accountInformationInput.DisplayName) {
+        updateData.display_name = tempData.DisplayName
+      }
+
+      console.log("newData[editrow]", updateData)
+
+      // await updateRoleforUser(roleID, userID)
+      await updateUserInfo(userID, updateData);
       setIsDisplayInformationBlock(false);
-      await updateUserDisplayName(userID, displayName);
       setAccountInformation(newData)
     } catch (error) {
       toast.error(error.message);
@@ -114,15 +128,41 @@ const Information = (p) => {
   }, [display, accountInformationInput]);
 
   useEffect(() => {
-    if (type === "Edit") {
-      if (tempData.Role === accountInformationInput.Role && tempData.DisplayName === accountInformationInput.DisplayName) {
-        setIsSaveDisabled(true);
-      }
-      else if (tempData.DisplayName === "") setIsSaveDisabled(true)
-      else setIsSaveDisabled(false);
-    } else {
-      setIsSaveDisabled(!(tempData.DisplayName && tempData.Password && tempData.Role && tempData.UserName));
+    const editData = {
+      Password: tempData.Password,
+      Role: tempData.Role,
+      DisplayName: tempData.DisplayName,
     }
+
+    const originalData = {
+      Password: accountInformationInput.Password,
+      Role: accountInformationInput.Role,
+      DisplayName: accountInformationInput.DisplayName,
+    }
+
+    console.log("editData", editData)
+    console.log("originalData", originalData)
+    if(JSON.stringify(editData) === JSON.stringify(originalData)) {
+      setIsSaveDisabled(true);
+    }
+    else {
+      setIsSaveDisabled(false);
+    }
+
+    // if (type === "Edit") {
+    //   if (
+    //     tempData.Role === accountInformationInput.Role && 
+    //     tempData.DisplayName === accountInformationInput.DisplayName
+    //   ) {
+    //     setIsSaveDisabled(true);
+    //   }
+    //   else if (tempData.DisplayName === "") setIsSaveDisabled(true)
+    //   else setIsSaveDisabled(false);
+    // } else {
+    //   setIsSaveDisabled(!(tempData.DisplayName && tempData.Password && tempData.Role && tempData.UserName));
+    // }
+
+    //  code phức tạp vl
   }, [type, tempData, inputValue]);
 
   // useEffect(() => {
@@ -169,7 +209,7 @@ const Information = (p) => {
           </td>
         </tr>
         <tr>
-          <td className="informationTitle"><p>Password :</p> </td>
+          <td className="informationTitle"><p>New Password :</p> </td>
           <td>
             <input
               value={inputValue["Password"]}
@@ -177,7 +217,7 @@ const Information = (p) => {
                 updateInput(e.target.value, "Password");
                 updateTempData("Password", e.target.value);
               }}
-              disabled={type === "Edit"}
+              disabled={false}
             ></input>
           </td>
         </tr>

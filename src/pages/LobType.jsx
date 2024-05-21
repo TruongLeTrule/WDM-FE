@@ -10,8 +10,8 @@ export const LobbyTypeContext = createContext();
 const LobType = () => {
   const [lobTypeData, setLobTypeData] = useState([]);
   const [searchData ,setSearchData] = useState([])
+  const [displayData, setDisplayData] = useState(lobTypeData)
   const [isModalAddLT, setModalAddLT] = useState(false)
-
 
   const fetchLobType = async () => {
     const res = await getLobbyTypes();
@@ -53,7 +53,18 @@ const LobType = () => {
     }
   }
 
-  const displayData = searchData.length > 0 ? searchData : lobTypeData;
+  useEffect(() => {
+    if (searchData.length > 0) {
+      setDisplayData(searchData)
+    }
+    else {
+      setDisplayData(lobTypeData)
+    }
+  }, [searchData, lobTypeData]);
+
+  useEffect(() => {
+    setDisplayData(lobTypeData)
+  }, [lobTypeData]);
 
   return (
     <LobbyTypeContext.Provider value={shareValue}>
