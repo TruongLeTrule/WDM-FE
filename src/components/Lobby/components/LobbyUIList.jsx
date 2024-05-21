@@ -24,7 +24,7 @@ const LobbyUIList = () => {
           <div className="container">
             {lobbyList && lobbyList.map((lobby) => (
               <LobbyCard
-                handleClickLobCard={handleClickLobCard}
+                handleClickLobCard={() =>handleClickLobCard(lobby.id)}
                 lobby={lobby}
                 key={lobby.id}
               />
