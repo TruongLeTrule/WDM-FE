@@ -1,15 +1,18 @@
 import { useEffect, useState, createContext } from "react";
 import { Header } from "../components";
-import { getLobbies } from "../api/lobby.api";
+import { findLobByName, getLobbies } from "../api/lobby.api";
 import { LobbyBlock, LobbyTableStyled } from "../components/Lobby/Styled";
 import LobbyContent from "../components/Lobby/LobbyContent";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
 
 export const LobbyContext = createContext();
 
 const Lobby = () => {
-  const [lobbyList, setLobbyList] = useState();
+  const [lobbyList, setLobbyList] = useState([]);
+  const [searchData ,setSearchData] = useState([])
+  const [displayData, setDisplayData] = useState(lobbyList)
+
   const { id } = useParams()
 
   const [isModalAdd, setModalAdd] = useState(false)
@@ -46,7 +49,8 @@ const Lobby = () => {
 
   const shareValue = {
     fetchLobby,
-    lobbyList, setLobbyList, isLoading,
+    lobbyList: displayData,
+    setLobbyList, isLoading,
     lobTypeID: id,
     modalOption
   };
@@ -59,14 +63,40 @@ const Lobby = () => {
     navigate('/dashboard/lobType', { replace: true });
   }
 
+  const handleSearch = async (value) => {
+    try {
+      const name = value
+      const res = await findLobByName(name, id)
+      setSearchData(res.data)
+
+    } catch (error) {
+      toast.error(error.message)
+    }
+  }
+
+  useEffect(() => {
+    if (searchData.length > 0) {
+      setDisplayData(searchData)
+    }
+    else {
+      setDisplayData(lobbyList)
+    }
+  }, [searchData, lobbyList]);
+
+  useEffect(() => {
+    setDisplayData(lobbyList)
+  }, [lobbyList]);
+
+
   return (
     <LobbyContext.Provider value={shareValue}>
       <LobbyBlock>
         <Header
           headerTitle={"Lobby"}
-          handleBackBtn={() => handleBackBtn()}
+          handleBackBtn={handleBackBtn}
           isBack={true}
           handleAddBtnClick={handleAddBtnClick}
+          handleSearch={handleSearch}
         />
         <LobbyTableStyled>
           <ToastContainer />

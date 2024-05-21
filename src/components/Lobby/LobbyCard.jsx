@@ -8,7 +8,8 @@ import { LobbyContext } from '../../pages/Lobby.jsx';
 const LobbyCard = (p) => {
   const {
     lobby,
-    onClick
+    onClick,
+    handleClickLobCard
   } = p
   const { id, name, lob_type_id } = lobby;
   const cardRef = useRef(null);
@@ -20,7 +21,7 @@ const LobbyCard = (p) => {
 
   return (
     <div className="card" ref={cardRef} onClick={handleCardClick}>
-      <img src={lobImg} alt={name} className="lob-img" />
+      <img src={lobImg} alt={name} className="lob-img" onClick={handleClickLobCard}/>
       <div className="content" style={{marginTop: "10px"}}>
         <NameBox id={id} name={name} lob_type_id={lob_type_id}>
         </NameBox>

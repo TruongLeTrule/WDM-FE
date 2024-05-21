@@ -25,6 +25,7 @@ const FContent = () => {
 
     const { foods, foodSearchList, foodOption } = useContext(FoodServiceContext)
     const [foodlists, setFoodLists] = useState(foods)
+    const [fileList, setFileList] = useState([]);
 
     useEffect(() => {
         setFoodLists(foods)
@@ -90,6 +91,8 @@ const FContent = () => {
             setTempPrice("");
             setInventory()
             setTempStatus("OK");
+            setFileList([]);
+            
 
         } catch(error) {
             console.log(error.message);
@@ -105,6 +108,7 @@ const FContent = () => {
         setTempPrice("");
         setTempStatus("OK");
         isEdit.current = false;
+        setFileList([]);
     };
     
     const showModal = () => {
@@ -112,6 +116,7 @@ const FContent = () => {
         setTempPrice("");
         setTempStatus("OK");
         setModalVisible(true);
+        setFileList([]);
     };
     
     return (
@@ -163,6 +168,9 @@ const FContent = () => {
                         prepareFileUploaded={prepareFileUploaded}
                         setInventory={setInventory}
                         tempInventory={tempInventory}
+                        fileList={fileList}
+                        setFileList={setFileList}
+                        
                     />
                 </Modal>
             </div>
@@ -171,15 +179,18 @@ const FContent = () => {
 };
 
 const FoodModalContent = (p) => {
-    const { tempName, setTempName, tempPrice, setTempPrice, tempStatus, setTempStatus, prepareFileUploaded,tempInventory, setInventory  } = p
+    const { tempName, setTempName, tempPrice, setTempPrice, tempStatus, setTempStatus, prepareFileUploaded,tempInventory, setInventory, fileList, setFileList  } = p
     // const { selectedFood } = useContext(FoodContext);
+
+
 
     return (
         <div>
-            <Upload multiple={false} maxCount={1} onChange={(e) => {
+            <Upload multiple={false} maxCount={1} fileList={fileList} onChange={(e) => {
                 const file = e.file.originFileObj
                 file.filename = file.name
                 prepareFileUploaded(file)
+                setFileList([file]);
             }}>
                 <Button icon={<UploadOutlined />}>Upload</Button>
             </Upload>
