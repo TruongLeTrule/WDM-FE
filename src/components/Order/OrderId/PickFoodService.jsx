@@ -6,10 +6,12 @@ import { FaShoppingCart, FaRegTrashAlt } from 'react-icons/fa';
 import {
   orderFood,
   orderService,
-  getFoodsOrder,
-  getServicesOrder,
+  getFoodsCart,
+  getServicesCart,
   editFoodsOrder,
   editServicesOrder,
+  getFoodsOrder,
+  getServicesOrder,
 } from '../../../api/wedding.api';
 import { FaPlus, FaMinus } from 'react-icons/fa';
 import FoodServiceCard from '../FoodServiceCard';
@@ -19,6 +21,7 @@ import Wrapper from '../../../assets/wrappers/Order/CardGroupWrapper';
 import Loading from '../../Loading';
 import styled from 'styled-components';
 import { PiForkKnifeBold, PiGuitarDuotone } from 'react-icons/pi';
+import { formatVND } from '../../../utils';
 
 
 const PickFoodService = (p) => {
@@ -30,6 +33,7 @@ const PickFoodService = (p) => {
     setFoodData,
     orderId,
     editOrder,
+    
   } = p
   const [Menu, setMenu] = useState("food")
 
@@ -68,31 +72,39 @@ const PickFoodService = (p) => {
     }
   };
 
-  const handleAddBtnClick = async (newItem) => {
+  const handleAddBtnClick = async (newItem, callback) => {
     try {
       const foodId = newItem.id
       const upcomingCount = newItem.count
       Menu === 'food' && await checkInventoryForFood(foodId, upcomingCount)
       // If item existed in picked list, set new quantity
-      toast.success(`${newItem.name} Added successfully!`);
-      if (pickedItem.find((item) => item.id === newItem.id)) {
-        const itemList = pickedItem.map((item) =>
-          item.id === newItem.id ? newItem : item
-        );
-        return setPickedItem(itemList);
+      let msg = "Add successfully!"
+      let isRemove = false
+      if(upcomingCount === 0){
+        msg = "Remove successfully!"
+        isRemove = true
+      } 
+
+      toast.success(`${newItem.name} ${msg}`);
+      const existItemInCart = pickedItem.find((item) => item.id === newItem.id)
+      if (existItemInCart) { // Modify existed item
+        const itemList = isRemove 
+          ? pickedItem.filter((item) => item.id !== existItemInCart.id)
+          : pickedItem.map((item) => item.id === newItem.id ? newItem : item);
+
+        setPickedItem(itemList);
       }
-      return setPickedItem([...pickedItem, newItem]);  
-      
+      else { // Add new item
+        setPickedItem([...pickedItem, newItem]);  
+      }
+      callback()
     } catch (error) {
       toast.warning(error.message);
     }
     
   };
 
-  const handleTrashClick = (id) => {
-    const newItemList = pickedItem.filter((item) => item.id !== id);
-    setPickedItem(newItemList);
-  };
+
 
   const handleOutsideClick = (e) => {
     if (cartRef.current && !cartRef.current.contains(e.target)) {
@@ -102,19 +114,21 @@ const PickFoodService = (p) => {
 
   const fetchData = async (Menu) => {
     try {
-      const data = Menu === 'food' ? await getFoods() : await getServices();
+      setIsLoading(true);
+      const data = Menu === 'food' ? await getFoodsOrder(orderId) : await getServicesOrder(orderId);
       setRenderList(data.data);
       setIsLoading(false);
     } catch (error) {
       toast.warning(error.message);
+      setIsLoading(false)
     }
   };
 
-  const fetchPickedItem = async (Menu) => {
+  const fetchPickedItem = async (type) => {
     try {
       let fetchedItems;
-      if (Menu === 'food') {
-        fetchedItems = await getFoodsOrder(orderId);
+      if (type === 'food') {
+        fetchedItems = await getFoodsCart(orderId);
         // handle array key name
         fetchedItems = fetchedItems.data.map(
           ({ food_id, food_name, food_price, count }) => ({
@@ -126,8 +140,8 @@ const PickFoodService = (p) => {
         );
         setPickedItem(fetchedItems);
       }
-      if (Menu === 'service') {
-        fetchedItems = await getServicesOrder(orderId);
+      if (type === 'service') {
+        fetchedItems = await getServicesCart(orderId);
         // handle array key
         fetchedItems = fetchedItems.data.map(
           ({ service_id, service_name, service_price, count }) => ({
@@ -144,49 +158,9 @@ const PickFoodService = (p) => {
     }
   };
 
-  const handleSaveBtnClick = async (Menu) => {
-    try {
-      let result;
-      if (Menu === 'food') {
-        result = await editFoodsOrder(orderId, pickedItem);
-        editOrder(
-          result.data.foodPrice,
-          result.data.remainPrice,
-          result.data.totalPrice
-        );
-      }
-      if (Menu === 'service') {
-        result = await editServicesOrder(orderId, pickedItem);
-        editOrder(
-          result.data.servicePrice,
-          result.data.remainPrice,
-          result.data.totalPrice
-        );
-      }
-      setModalClose();
-    } catch (error) {
-      toast.warning(error.message);
-    }
-  };
-
-  const handleItemAmountChange = (id, type) => {
-    const newList = pickedItem.map((item) => {
-      if (item.id === id) {
-        if (type === 'increase') return { ...item, count: item.count + 1 };
-        if (type === 'decrease')
-          return item.count - 1 <= 0
-            ? null
-            : { ...item, count: item.count - 1 };
-      }
-      return item;
-    });
-    const removedNullList = newList.filter((item) => item !== null);
-    setPickedItem(removedNullList);
-  };
-
   useEffect(() => {
     fetchData(Menu);
-    if (editOrder) fetchPickedItem(Menu);
+    fetchPickedItem(Menu);
   }, [Menu]);
 
   // Handle outside click event
@@ -226,67 +200,17 @@ const PickFoodService = (p) => {
                   <FaShoppingCart className="icon" />
                   <span className="badge">{pickedItem.length}</span>
                 </>
-              ) : (
-                <>
-                  {/* Picked list */}
-                  <div className="food-list">
-                    <h6>{Menu} list</h6>
-                    {pickedItem.length ? (
-                      <>
-                        <div className="food-container">
-                          {pickedItem.map(({ id, count, name, price }) => (
-                            <div className="food" key={id}>
-                              <img
-                                src={Menu === 'food' ? beefImg : balletImg}
-                                alt={name}
-                              />
-                              <div className="col">
-                                <span>{name}</span>
-                                <div className="quantity-group">
-                                  <FaMinus
-                                    className="pointer"
-                                    onClick={() => handleItemAmountChange(id, 'decrease')}
-                                  />
-                                  <span className="quantity">{count}</span>
-                                  <FaPlus
-                                    className="pointer"
-                                    onClick={() => handleItemAmountChange(id, 'increase')}
-                                  />
-                                </div>
-                              </div>
-                              <span>{price * count}$</span>
-                              <FaRegTrashAlt
-                                className="trash"
-                                onClick={() => handleTrashClick(id)}
-                              />
-                            </div>
-                          ))}
-                        </div>
-                        <strong>total {total}$</strong>
-                        {!editOrder ? (
-                          <button className="btn" onClick={handleNextBtnClick}>
-                            next:
-                            {Menu === 'food' ? 'choose service' : 'payment'}
-                          </button>
-                        ) : (
-                          <button
-                            className="btn"
-                            onClick={() => handleSaveBtnClick(Menu)}
-                          >
-                            Save
-                          </button>
-                        )}
-                      </>
-                    ) : (
-                      <p>please choose some {Menu}s</p>
-                    )}
-                  </div>
-                </>
-              )}
+              )
+              : <Cart
+                    Menu={Menu}
+                    pickedItem={pickedItem}
+                    total={total}
+                    setPickedItem={setPickedItem}
+                />}
             </div>
           </div>
           <div className="container">
-            {renderList.map(({ id, name, price, url, inventory }) =>{
+            {renderList.map(({ id, name, price, url, inventory, quantity }) =>{
               return(
                 <FoodServiceCard
                   img={Menu === 'food' ? (url? url: beefImg) : (url ? url :balletImg)}
@@ -294,7 +218,9 @@ const PickFoodService = (p) => {
                   id={id}
                   name={name}
                   price={price}
+                  quantity={quantity}
                   inventory={inventory}
+                  pickedItem={pickedItem}
                   handleAddBtnClick={handleAddBtnClick}
                 />
               )
@@ -306,6 +232,106 @@ const PickFoodService = (p) => {
     </>
   );
 };
+
+const Cart = (p) => {
+  const { Menu, pickedItem, total, setPickedItem } = p
+
+  const handleItemAmountChange = (id, type) => {
+    const newList = pickedItem.map((item) => {
+      if (item.id === id) {
+        if (type === 'increase') return { ...item, count: item.count + 1 };
+        if (type === 'decrease')
+          return item.count - 1 <= 0
+            ? null
+            : { ...item, count: item.count - 1 };
+      }
+      return item;
+    });
+    const removedNullList = newList.filter((item) => item !== null);
+    setPickedItem(removedNullList);
+  };
+
+  const handleTrashClick = (id) => {
+    const newItemList = pickedItem.filter((item) => item.id !== id);
+    setPickedItem(newItemList);
+  };
+
+  const handleSaveBtnClick = async (Menu) => {
+    try {
+      // let result;
+      // if (Menu === 'food') {
+      //   result = await editFoodsOrder(orderId, pickedItem);
+      //   editOrder(
+      //     result.data.foodPrice,
+      //     result.data.remainPrice,
+      //     result.data.totalPrice
+      //   );
+      // }
+      // if (Menu === 'service') {
+      //   result = await editServicesOrder(orderId, pickedItem);
+      //   editOrder(
+      //     result.data.servicePrice,
+      //     result.data.remainPrice,
+      //     result.data.totalPrice
+      //   );
+      // }
+      // setModalClose();
+    } catch (error) {
+      toast.warning(error.message);
+    }
+  };
+
+  return (
+    <>
+      {/* Picked list */}
+      <div className="food-list">
+        <h6>{Menu} list</h6>
+        {pickedItem && pickedItem.length > 0 ? (
+          <>
+            <div className="food-container">
+              {pickedItem.map(({ id, count, name, price }) => (
+                <div className="food" key={id}>
+                  <img
+                    src={Menu === 'food' ? beefImg : balletImg}
+                    alt={name}
+                  />
+                  <div className="col">
+                    <span>{name}</span>
+                    <div className="quantity-group">
+                      <FaMinus
+                        className="pointer"
+                        onClick={() => handleItemAmountChange(id, 'decrease')}
+                      />
+                      <span className="quantity">{count}</span>
+                      <FaPlus
+                        className="pointer"
+                        onClick={() => handleItemAmountChange(id, 'increase')}
+                      />
+                    </div>
+                  </div>
+                  <span>{formatVND(price * count)}</span>
+                  <FaRegTrashAlt
+                    className="trash"
+                    onClick={() => handleTrashClick(id)}
+                  />
+                </div>
+              ))}
+            </div>
+            <strong>total {formatVND(total)}</strong>
+              {/* <button
+                className="btn"
+                onClick={() => handleSaveBtnClick(Menu)}
+              >
+                Save
+              </button> */}
+          </>
+        ) : (
+          <p>please choose some {Menu}s</p>
+        )}
+      </div>
+    </>
+  )
+}
 
 const FSheaderContainer = (p) => {
   const { setPage, page } = p

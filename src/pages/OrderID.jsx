@@ -1,18 +1,21 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { FaPenToSquare } from 'react-icons/fa6';
 import { Modal, DatePick, TextInput, TextRow } from '../components';
 import { editOrderLeft, editOrderRight } from '../utils/orderRenderArr';
 import { ToastContainer, toast } from 'react-toastify';
-import { getWeddingById } from '../api/wedding.api';
+import { editWedding, getWeddingById } from '../api/wedding.api';
 import { truncateUUID } from '../utils';
 import { useParams } from 'react-router-dom';
 import { Header } from '../components';
 import styled from 'styled-components';
-import { Input, TreeSelect } from 'antd';
 import PickFoodService from '../components/Order/OrderId/PickFoodService';
 
 import Flatpickr from "react-flatpickr";
-import { getLobbyTypes } from '../api/lobby.api';
+import { getLobbyTypes, getShifts } from '../api/lobby.api';
+import { Input, Select, TreeSelect, InputNumber, Button } from 'antd';
+import { Option } from 'antd/es/mentions';
+import Loading from '../components/Loading';
+const { TextArea } = Input;
 
 
 const OrderID = (p) => {
@@ -20,17 +23,25 @@ const OrderID = (p) => {
     handleEditLobbyClick,
   } = p
   const [orderData, setOrderData] = useState({})
+  const [loading, setLoading] = useState({
+    wedding: true,
+    food: true
+  })
+
 
   const { id } = useParams()
-  
+
 
   useEffect(() => {
     const fetchWedding = async (id) =>  {
       try {
+        setLoading(true)
         const res = await getWeddingById(id)
         setOrderData(res.data)
+        setLoading(false)
       } catch (error) {
-        alert(error.message)
+        setLoading(false)
+        toast.message(error.message)
       }
     }
 
@@ -38,7 +49,9 @@ const OrderID = (p) => {
 
   }, [id]);
 
-
+  if(loading) {
+    return <Loading />
+  }
 
   return (
     <Container>
@@ -49,7 +62,7 @@ const OrderID = (p) => {
       />
       <Wrapper>
       <ToastContainer/>
-      {Object.values(orderData).length > 0 && <OrderInfor orderData={orderData}/>}
+      {Object.values(orderData).length > 0 && <OrderInfor orderData={orderData} setOrderData={setOrderData}/>}
 
       <div className="food_service_container">
         <PickFoodService orderId={id}/>
@@ -60,64 +73,81 @@ const OrderID = (p) => {
 };
 
 const OrderInfor = (p) => {
-  const { orderData } = p
+  const { orderData, setOrderData } = p
 
-  const[inforData, setInforData] = useState({})
-  const [formState, setFormState] = useState({
+  const[filterRenderData, setFilterRenderData] = useState({}) // just for filter the data want to render
+
+  const originalOrderData = useMemo(() => ({
     groom: orderData.groom,
     bride: orderData.bride,
     note: orderData.note,
-    phone: orderData.phone,
+    phone: orderData.Customer.phone,
     table_count: Number(orderData.table_count),
-    wedding_date: new Date(orderData.wedding_date)
-  });
+    wedding_date: new Date(orderData.wedding_date),
+    lobby_id: orderData.Lobby.id,
+    shift_id: orderData.Shift.id,
+  }), [
+    orderData.groom,
+    orderData.bride,
+    orderData.note,
+    orderData.Customer.phone,
+    orderData.table_count,
+    orderData.wedding_date,
+    orderData.Lobby.id,
+    orderData.Shift.id
+  ]);
+  const [formState, setFormState] = useState(originalOrderData);
+  const [isDisabled, setIsDisabled] = useState(true);
   const fp = useRef(null);
 
-  const handleChange = (e) => {
-    setFormState({
-      ...formState,
-      [e.target.name]: e.target.value,
-    });
+  const handleChange = (name, value) => {
+    console.log("name", name);
+    console.log("value", value);
+    setFormState(prevState => ({
+      ...prevState,
+      [name]: value,
+    }));
   };
-
   const handleSubmit = async () => {
     try {
-      // const reqBody = {
-      //   ...formState,
-      //   table_count: Number(formState.table_count)
-      // };
-      // if (orderData.new_lobby_id) {
-      //   reqBody.lobby_id = orderData.new_lobby_id;
-      //   reqBody.wedding_date = orderData.wedding_date;
-      //   reqBody.shift_id = orderData.Shift.id;
-      // }
-      // await editWedding(orderData.id, reqBody);
-      // setOrderData({
-      //   ...orderData,
-      //   ...reqBody,
-      // });
-      // setModalClose();
+      const updateData ={}
+
+      const fieldsToUpdate = originalOrderData
+
+      Object.keys(fieldsToUpdate).forEach((key) => {
+        if (formState[key] !== fieldsToUpdate[key]) {
+          updateData[key] = formState[key];
+        }
+      });
+
+      const res = await editWedding(orderData.id, updateData);
+      setOrderData(prev => ({...prev, ...res.data}))
+      setIsDisabled(true)
+      toast.success("Wedding update successful!");
     } catch (error) {
-      alert(error.message);
+      toast.warn(error.message);
     }
   };
 
   const formatDataInput = (data) => {
-    const { bride, groom, note, table_count, Customer: { phone } } = data
+    const { bride, groom } = data
 
-    return { bride, groom, note, table_count, phone}
-  }
-
-  const handleChooseDate = (date) => {
-    // setSearchParam({...searchParam, date: date[0] })
+    return { bride, groom }
   }
 
   useEffect(() => {
     if(orderData) {
-      setInforData(formatDataInput(orderData))
+      setFilterRenderData(formatDataInput(orderData))
     }
   }, [orderData]);
 
+  useEffect(() => {
+    const fieldsToCompare = JSON.stringify(originalOrderData)
+    const currentUpdate = JSON.stringify(formState)
+    
+    setIsDisabled(fieldsToCompare === currentUpdate)
+
+  }, [formState, originalOrderData]);
 
   return (
    <OrderInforContainer>
@@ -131,55 +161,81 @@ const OrderInfor = (p) => {
                   inline: true
               }}
               value={formState.wedding_date}
-              onChange={handleChooseDate}
+              onChange={(date) => handleChange('wedding_date', date[0])}
               />
           </div>
         </div>
+        <InputFieldWrapper>{/*LOBBY*/}
+          <div className="title">Lobby</div>
+          <TreeSelectLob currentValue={formState.lobby_id} onChange={handleChange}/>
+        </InputFieldWrapper>
+
+        <InputFieldWrapper>{/*SHIFT*/}
+          <div className="title">Shift</div>
+          <SelectShift currentValue={formState.shift_id} onChange={handleChange}/>
+        </InputFieldWrapper>
         <div className='customer_info'>
-            {inforData && Object.keys(inforData).map((key, idx) =>{
+            {filterRenderData && Object.keys(filterRenderData).map((key, idx) =>{
               return (
                 <InputFieldWrapper key={idx}>
                   <div className="title">{key}</div>
-                  <Input value={inforData[key]} />
+                  <Input 
+                    name={key}  
+                    value={formState[key]} // use state data on the format array
+                    onChange={(e) => handleChange(key, e.target.value)}
+                  />
                 </InputFieldWrapper>
               )
             }
             )}
+
+            <InputFieldWrapper > {/*TABLE COUNT*/}
+              <div className="title">Tables</div>
+              <InputNumber 
+                value={formState.table_count} 
+                onChange={(value) => handleChange("table_count", value)}
+              />
+
+            </InputFieldWrapper>
+            <InputFieldWrapper > {/*PHONE*/}
+              <div className="title">Phone</div>
+              <Input 
+                name="phone"
+                value={formState.phone} 
+                onChange={(e) => handleChange("phone", e.target.value)}
+              />
+            </InputFieldWrapper>
+
+            <InputFieldWrapper>{/*NOTE*/}
+              <div className="title">Note</div>
+              <TextArea 
+                value={formState.note}
+                placeholder="Wedding note..."
+                name="note"
+                onChange={(e) => handleChange("note", e.target.value)}
+                autoSize={{ minRows: 2, maxRows: 5 }}  
+              />
+            </InputFieldWrapper>
         </div>
-        <InputFieldWrapper>
-          <div className="title">Lobby</div>
-          <Input value={orderData.Lobby.name} />
-          <TreeSelectLob />
-          
-        </InputFieldWrapper>
-
-        <InputFieldWrapper>
-          <div className="title">Shift</div>
-          <Input value={orderData.Shift.name} />
-        </InputFieldWrapper>
-
       </div>
       <div className="btn-wrapper">
-        <button className="btn" onClick={handleSubmit}>
-          save
-        </button>
+      <Button type="primary" disabled={isDisabled} onClick={handleSubmit}>
+        Save
+      </Button>
       </div>
    </OrderInforContainer>
   )
 }
 
-const TreeSelectLob = () => {
+const TreeSelectLob = (p) => {
+  const { currentValue, onChange } = p
   const { TreeNode } = TreeSelect;
-  const [value, setValue] = useState(undefined);
   const [lobTypes, setLobTypes] = useState([])
-
-  const onChange = newValue => {
-    setValue(newValue);
-  };
 
   const fetchLobType = async () => {
     try {
-      const res = await getLobbyTypes();
+      
+      const res = await getLobbyTypes(false, true);
       const data = res.data;
       setLobTypes(data);
     } catch (error) {
@@ -195,12 +251,12 @@ const TreeSelectLob = () => {
     <TreeSelect
       showSearch
       style={{ width: '100%' }}
-      value={value}
+      value={currentValue}
       dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
       placeholder="Please select"
       allowClear
       treeDefaultExpandAll
-      onChange={onChange}
+      onChange={(value) => onChange('lobby_id', value)}
     >
       {lobTypes && 
       lobTypes.map(lobType => {
@@ -217,11 +273,48 @@ const TreeSelectLob = () => {
   );
 }
 
+const SelectShift = (p) => {
+
+  const { currentValue, onChange } = p
+  const [shifts, setShifts] = useState([]);
+
+  useEffect(() => {
+    const fetchShifts = async () => {
+      try{
+        const res = await getShifts()
+        setShifts(res.data)
+      } catch (error) {
+        toast.error(error.message)
+      }
+    }
+
+    fetchShifts()
+  }, [])
+  return (
+    <div style={{  margin: 'auto' }}>
+      <Select
+        value={currentValue}
+        onChange={(value) => onChange("shift_id", value)}
+        style={{ width: '100%' }}
+        placeholder="Please select an option"
+      >
+      {shifts &&
+      shifts.map(shift => {
+        return (
+          <Option key={shift.id} value={shift.id}>{shift.name}</Option>
+        )
+      })}
+      </Select>
+    </div>
+  );
+}
+
 const Container = styled.div`
   height: 100vh;
 
   .food_service_container {
     width: 80%;
+    position: relative;
   }
 
 

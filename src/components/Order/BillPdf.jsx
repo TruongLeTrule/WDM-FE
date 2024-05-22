@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from 'react';
 import { customerInfo, weddingInfo } from '../../utils/billTable';
-import { getFoodsOrder, getServicesOrder } from '../../api/wedding.api';
+import { getFoodsCart, getServicesCart } from '../../api/wedding.api';
 import { Page, Text, View, Document, StyleSheet } from '@react-pdf/renderer';
 import resolveDate from '../../utils/resolveDate';
 import resolveCurrency from '../../utils/resolveCurrency';
@@ -47,7 +47,8 @@ const styles = StyleSheet.create({
   },
 });
 
-const BillPdf = ({ orderInfo, billModalState }) => {
+const BillPdf = (p) => {
+  const { orderInfo, billModalState } = p
   const [food, setFood] = useState();
   const [service, setService] = useState();
 
@@ -70,8 +71,8 @@ const BillPdf = ({ orderInfo, billModalState }) => {
   }, [service]);
 
   const fetchData = async () => {
-    const fetchedFood = await getFoodsOrder(orderInfo.id);
-    const fetchedService = await getServicesOrder(orderInfo.id);
+    const fetchedFood = await getFoodsCart(orderInfo.id);
+    const fetchedService = await getServicesCart(orderInfo.id);
     setFood(fetchedFood.data);
     setService(fetchedService.data);
   };

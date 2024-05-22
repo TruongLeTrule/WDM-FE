@@ -1,6 +1,6 @@
 import { useMemo, useState, useEffect } from 'react';
 import { useOrderContext } from '../../pages/Order';
-import { getFoodsOrder, getServicesOrder } from '../../api/wedding.api';
+import { getFoodsCart, getServicesCart } from '../../api/wedding.api';
 import Modal from '../Modal';
 import Table from '../Table';
 import Loading from '../Loading';
@@ -84,8 +84,8 @@ const ServiceModal = ({ type, title }) => {
   const fetchData = async () => {
     let data;
     try {
-      if (type === 'food') data = await getFoodsOrder(orderInfo.id);
-      if (type === 'service') data = await getServicesOrder(orderInfo.id);
+      if (type === 'food') data = await getFoodsCart(orderInfo.id);
+      if (type === 'service') data = await getServicesCart(orderInfo.id);
       // handle data array
       data = data.data.map((item, index) => ({
         ...item,

@@ -6,8 +6,8 @@ import { FaShoppingCart, FaRegTrashAlt } from 'react-icons/fa';
 import {
   orderFood,
   orderService,
-  getFoodsOrder,
-  getServicesOrder,
+  getFoodsCart,
+  getServicesCart,
   editFoodsOrder,
   editServicesOrder,
 } from '../../api/wedding.api';
@@ -124,7 +124,7 @@ const PickFoodServiceModal = ({
     try {
       let fetchedItems;
       if (type === 'food') {
-        fetchedItems = await getFoodsOrder(orderId);
+        fetchedItems = await getFoodsCart(orderId);
         // handle array key name
         fetchedItems = fetchedItems.data.map(
           ({ food_id, food_name, food_price, count }) => ({
@@ -137,7 +137,7 @@ const PickFoodServiceModal = ({
         setPickedItem(fetchedItems);
       }
       if (type === 'service') {
-        fetchedItems = await getServicesOrder(orderId);
+        fetchedItems = await getServicesCart(orderId);
         // handle array key
         fetchedItems = fetchedItems.data.map(
           ({ service_id, service_name, service_price, count }) => ({

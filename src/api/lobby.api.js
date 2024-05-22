@@ -17,8 +17,8 @@ export const deleteShifts = (id) => {
 /*
 =================== LOBBY TYPE ===================
 */
-export const getLobbyTypes = (includeDeleted = false) => {
-  return axiosClient.get('lobby/types', { params: { includeDeleted } });
+export const getLobbyTypes = (includeDeleted = false, includeLobby=false) => {
+  return axiosClient.get('lobby/types', { params: { includeDeleted, includeLobby } });
 };
 
 export const getLobbyTypeByID = (id) => {

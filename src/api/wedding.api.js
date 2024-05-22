@@ -78,6 +78,16 @@ export const getServicesOrder = (weddingId) => {
   });
 };
 
+export const getFoodsCart = (weddingId) => {
+  return axiosClient.get('wedding/get/food-cart', { params: { weddingId } });
+};
+
+export const getServicesCart = (weddingId) => {
+  return axiosClient.get('wedding/get/service-cart', {
+    params: { weddingId },
+  });
+};
+
 export const getWeddingCurrentTotalDeposit = (weddingId) => {
   return axiosClient.get(`wedding/total-deposit/${weddingId}`);
 };
