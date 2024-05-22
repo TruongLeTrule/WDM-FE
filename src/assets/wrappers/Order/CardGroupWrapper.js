@@ -49,7 +49,7 @@ const Wrapper = styled.div`
 
         .food-container {
           height: 450px;
-          overflow-y:scroll;
+          overflow-y: scroll;
         }
         .food {
           margin-top: 1rem;
@@ -69,7 +69,7 @@ const Wrapper = styled.div`
               display: flex;
 
               svg {
-                user-select: none!important;
+                user-select: none !important;
               }
 
               .quantity {
@@ -131,11 +131,14 @@ const Wrapper = styled.div`
     .content {
       display: flex;
       flex-direction: column;
-      height: 150px;
-
-      h5{
+      min-height: 100px;
+      h5 {
         flex: 1;
       }
+    }
+    .inventory {
+      margin-top: 1rem;
+      font-size: 0.9rem;
     }
   }
   .lob-img {
@@ -157,7 +160,6 @@ const Wrapper = styled.div`
   }
 
   .action-wrapper {
-
   }
 
   .quantity-group {
@@ -180,7 +182,7 @@ const Wrapper = styled.div`
       border-radius: 4px;
       color: white;
       padding: 5.8px 6px;
-      transition: all .2s linear;
+      transition: all 0.2s linear;
     }
     .icon {
       cursor: pointer;

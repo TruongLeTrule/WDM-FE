@@ -2,6 +2,9 @@ import ReactModal from 'react-modal';
 
 const style = {
   content: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
     width: '50vw',
     height: '50vh',
     left: '50%',
@@ -18,7 +21,7 @@ const style = {
 ReactModal.setAppElement('#root');
 
 const Modal = (p) => {
-  const { isOpen, setModalClose, children } = p
+  const { isOpen, setModalClose, children } = p;
   return (
     <ReactModal
       isOpen={isOpen}

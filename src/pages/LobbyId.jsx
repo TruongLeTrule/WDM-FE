@@ -11,7 +11,7 @@ import { FaDeleteLeft } from "react-icons/fa6";
 
 import { Checkbox, Input, Button, Table, Tag } from "antd";
 import useDebounce from "../hook/useDebounce";
-import { searchWeddingsByDate } from "../api/wedding.api";
+import { searchWeddingsByDateForLob } from "../api/wedding.api";
 
 const LobbyID = () => {
 
@@ -266,7 +266,7 @@ const ContentContainer = (p) => {
       try{ 
         const date = searchParam.date
         const shift_list = searchParam.shift_list
-        const res = await searchWeddingsByDate(date, shift_list, lobID)
+        const res = await searchWeddingsByDateForLob(date, shift_list, lobID)
         const result = formatDataWedding(res.data)
         console.log(result)
 

@@ -26,6 +26,8 @@ const PayRemainderModal = () => {
     useOrderContext();
   const [payRemainder, setPayRemainder] = useState(orderInfo.remain_amount);
 
+  console.log(orderInfo);
+
   const handlePenaltyModeChange = async () => {
     try {
       const result = await togglePenalty(orderInfo.id);
@@ -112,8 +114,8 @@ const PayRemainderModal = () => {
           <CheckBox
             title="penalty mode"
             type="checkbox"
-            value="isPenaltyMode"
-            currValue={orderInfo?.is_penalty_mode}
+            keyValue="isPenaltyMode"
+            value={orderInfo?.is_penalty_mode}
             handleChange={handlePenaltyModeChange}
           />
         </div>

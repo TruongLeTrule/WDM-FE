@@ -4,7 +4,7 @@ const Wrapper = styled.div`
   padding: 0 3rem;
   text-transform: capitalize;
   h4 {
-    margin-top: 2.2rem;
+    margin-bottom: 2.2rem;
     text-align: center;
     font-weight: 700;
   }
@@ -43,7 +43,7 @@ const Wrapper = styled.div`
     padding: 0.7rem 1.7rem;
     font-size: 1rem;
     font-weight: 500;
-    margin: 1.2rem auto;
+    margin: 2rem auto 0;
     display: block;
   }
 `;

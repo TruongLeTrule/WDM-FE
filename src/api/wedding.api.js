@@ -8,11 +8,17 @@ export const searchWeddingsByPhone = (phone) => {
   });
 };
 
-export const searchWeddingsByDate = (date, shiftList, lobbyId) => {
-  return axiosClient.post('wedding/find-by-date?', {
+export const searchWeddingsByDateForLob = (date, shiftList, lobbyId) => {
+  return axiosClient.post('wedding/find-by-date-lob?', {
     date,
     shiftList,
     lobbyId
+  });
+};
+
+export const searchWeddingsByDateForReport = (date) => {
+  return axiosClient.post('wedding/find-by-date-report?', {
+    date
   });
 };
 
@@ -85,4 +91,8 @@ export const editServicesOrder = (weddingId, services) => {
     services,
     weddingId,
   });
+};
+
+export const getExtraFee = (weddingId) => {
+  return axiosClient.get(`wedding/extra_fee/${weddingId}`);
 };

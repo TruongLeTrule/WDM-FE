@@ -8,6 +8,9 @@ import { truncateUUID } from '../../utils';
 
 const customStyle = {
   content: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
     width: '45vw',
     height: '78vh',
     left: '50%',
@@ -28,7 +31,7 @@ const EditUserInfoModal = (p) => {
     handleEditLobbyClick,
     orderData,
     setOrderData,
-  } = p
+  } = p;
   const [formState, setFormState] = useState({
     groom: orderData.groom,
     bride: orderData.bride,
@@ -55,7 +58,7 @@ const EditUserInfoModal = (p) => {
     try {
       const reqBody = {
         ...formState,
-        table_count: Number(formState.table_count)
+        table_count: Number(formState.table_count),
       };
       if (orderData.new_lobby_id) {
         reqBody.lobby_id = orderData.new_lobby_id;
@@ -69,7 +72,8 @@ const EditUserInfoModal = (p) => {
       });
       setModalClose();
     } catch (error) {
-      alert(error.message);
+      alert(error.msg);
+      console.log(error);
     }
   };
 
@@ -112,7 +116,7 @@ const EditUserInfoModal = (p) => {
         </div>
         <div className="container">
           {/* Left col */}
-          <div className='customer_info'>
+          <div className="customer_info">
             <div className="rows">
               {editOrderLeft.map(({ title, key, type, openModal, edit }) =>
                 resolveComponent(title, key, type, openModal, edit)
@@ -129,7 +133,9 @@ const EditUserInfoModal = (p) => {
           <div className="right-col">
             <div className="col-header">
               <h5>{orderData?.lobby_name}</h5>
-              <p className="shift">{orderData?.shift}</p>
+              <p className="shift">
+                {orderData?.shift?.name || orderData?.shift}
+              </p>
               <FaPenToSquare className="icon" onClick={handleEditLobbyClick} />
             </div>
             <div className="rows">

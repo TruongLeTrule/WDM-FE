@@ -1,7 +1,14 @@
 import { useState } from 'react';
 import { FaPlus, FaMinus } from 'react-icons/fa';
 
-const FoodServiceCard = ({ img, name, price, id, handleAddBtnClick, inventory }) => {
+const FoodServiceCard = ({
+  img,
+  name,
+  price,
+  id,
+  handleAddBtnClick,
+  inventory,
+}) => {
   const [quantity, setQuantity] = useState(0);
 
   return (
@@ -10,7 +17,7 @@ const FoodServiceCard = ({ img, name, price, id, handleAddBtnClick, inventory })
       <div className="content">
         <h5>{name}</h5>
         <p className="price">{price} VND</p>
-        
+
         <div className="action-wrapper">
           <div className="quantity-group">
             <FaMinus
@@ -18,18 +25,21 @@ const FoodServiceCard = ({ img, name, price, id, handleAddBtnClick, inventory })
               onClick={() => setQuantity(quantity === 0 ? 0 : quantity - 1)}
             />
             <div className="quantity">
-              <input 
+              <input
                 type="number"
                 value={quantity}
-                onInput={(e) =>  setQuantity(Number(e.currentTarget.value))}
+                onInput={(e) => setQuantity(Number(e.currentTarget.value))}
                 style={{
-                  width: "100%",
-                  textAlign: "center",
-                  padding: "3px",
+                  width: '100%',
+                  textAlign: 'center',
+                  padding: '3px',
                 }}
-                />
+              />
             </div>
-            <FaPlus className="icon" onClick={() => setQuantity(quantity + 1)} />
+            <FaPlus
+              className="icon"
+              onClick={() => setQuantity(quantity + 1)}
+            />
           </div>
           <div className="btn-group">
             <div className="btn reset" onClick={() => setQuantity(0)}>
@@ -48,10 +58,9 @@ const FoodServiceCard = ({ img, name, price, id, handleAddBtnClick, inventory })
             </div>
           </div>
         </div>
-        <p className="inventory" style={{ 
-          marginTop: "10px",
-          fontSize: "0.9rem"
-        }}><strong>Remain:</strong> {inventory}</p>
+        <p className="inventory">
+          <strong>Remain:</strong> {inventory}
+        </p>
       </div>
     </div>
   );

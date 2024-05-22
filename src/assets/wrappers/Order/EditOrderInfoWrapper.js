@@ -6,7 +6,7 @@ const Wrapper = styled.div`
   h4 {
     font-size: 1.6rem;
     text-align: center;
-    margin-top: 3rem;
+    margin-bottom: 3rem;
     font-weight: 700;
   }
   .container {
@@ -48,7 +48,6 @@ const Wrapper = styled.div`
     .rows {
       width: max-content;
       margin: 0 auto;
-
     }
     .icon {
       position: absolute;

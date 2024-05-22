@@ -7,6 +7,9 @@ import Table from '../Table';
 
 const customStyle = {
   content: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
     width: '70vw',
     height: '87vh',
     left: '50%',

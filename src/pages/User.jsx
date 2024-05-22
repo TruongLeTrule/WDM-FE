@@ -155,7 +155,7 @@ const User = () => {
             value["id"],
             value["display_name"],
             value["username"],
-            value["password"],
+            "",
             value["role"],
           );
           tempAccountInformation.push(subArray);
