@@ -1,6 +1,6 @@
 import { getFoods, checkInventoryForFood } from '../../../api/food.api';
 import { getServices } from '../../../api/service.api';
-import { useState, useRef, useEffect, useMemo } from 'react';
+import { useState, useRef, useEffect, useMemo, Suspense } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import { FaShoppingCart, FaRegTrashAlt } from 'react-icons/fa';
 import {
@@ -22,6 +22,7 @@ import Loading from '../../Loading';
 import styled from 'styled-components';
 import { PiForkKnifeBold, PiGuitarDuotone } from 'react-icons/pi';
 import { formatVND } from '../../../utils';
+import { Button } from 'antd';
 
 
 const PickFoodService = (p) => {
@@ -37,42 +38,24 @@ const PickFoodService = (p) => {
   } = p
   const [Menu, setMenu] = useState("food")
 
-  const [renderList, setRenderList] = useState([]);
+  const [dataRenderList, setDataRenderList] = useState([]);
   const cartRef = useRef(null);
-  const [pickedItem, setPickedItem] = useState([]);
+  const [pickedFoods, setPickedFoods] = useState([]);
+  const [pickedServices, setPickedServices] = useState([]);
   const [showPickedItemList, setShowPickedItemList] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const total = useMemo(
-    () => pickedItem.reduce((acc, item) => acc + item.count * item.price, 0),
-    [pickedItem]
+  const foodTotal = useMemo(
+    () => pickedFoods.reduce((acc, item) => acc + item.count * item.price, 0),
+    [pickedFoods]
+  );
+  const serviceTotal = useMemo(
+    () => pickedServices.reduce((acc, item) => acc + item.count * item.price, 0),
+    [pickedServices]
   );
   const [page, setPage] = useState("food")
 
-  const handleNextBtnClick = async () => {
-    let itemTotalPrice;
-    const handledList = pickedItem.map(({ id, count }) => ({
-      id,
-      count: count,
-    }));
-    try {
-      if (Menu === 'food') {
-        itemTotalPrice = await orderFood(orderId, handledList);
-        setFoodData(itemTotalPrice.data.totalPrice);
-      }
-      if (Menu === 'service') {
-        itemTotalPrice = await orderService(orderId, handledList);
-        setServiceData(
-          itemTotalPrice.data.totalPrice,
-          itemTotalPrice.data.service.servicePrice
-        );
-      }
-      setNextModalOpen();
-    } catch (error) {
-      toast.warning(error.message);
-    }
-  };
 
-  const handleAddBtnClick = async (newItem, callback) => {
+  const handleAddBtnClick = async (newItem) => {
     try {
       const foodId = newItem.id
       const upcomingCount = newItem.count
@@ -85,26 +68,60 @@ const PickFoodService = (p) => {
         isRemove = true
       } 
 
-      toast.success(`${newItem.name} ${msg}`);
-      const existItemInCart = pickedItem.find((item) => item.id === newItem.id)
-      if (existItemInCart) { // Modify existed item
-        const itemList = isRemove 
-          ? pickedItem.filter((item) => item.id !== existItemInCart.id)
-          : pickedItem.map((item) => item.id === newItem.id ? newItem : item);
+      // toast.success(`${newItem.name} ${msg}`);
 
-        setPickedItem(itemList);
+      // update Cart
+      let newCartList = []
+      const existItemInCart = Menu === 'food'
+        ? pickedFoods.find((item) => item.id === newItem.id)
+        : pickedServices.find((item) => item.id === newItem.id)
+
+      if (existItemInCart) { // Modify existed item
+        if(Menu === "food") {
+          newCartList = isRemove 
+            ? pickedFoods.filter((item) => item.id !== existItemInCart.id)
+            : pickedFoods.map((item) => item.id === newItem.id ? newItem : item);
+  
+          setPickedFoods(newCartList);
+        }
+        else {
+          newCartList = isRemove 
+            ? pickedServices.filter((item) => item.id !== existItemInCart.id)
+            : pickedServices.map((item) => item.id === newItem.id ? newItem : item);
+
+          setPickedServices(newCartList);
+        }
       }
       else { // Add new item
-        setPickedItem([...pickedItem, newItem]);  
+        if(Menu === "food") {
+          newCartList=[...pickedFoods, newItem]
+          setPickedFoods(newCartList);  
+        }
+        else {
+          newCartList=[...pickedServices, newItem]
+          setPickedServices(newCartList);  
+        }
       }
-      callback()
+
+      // update food list
+      setDataRenderList(prev => {
+        const index = prev.findIndex(food => food.id === newItem.id);
+        if (index >= 0) {
+          const updatedList = [...prev];
+          updatedList[index] = {
+            ...updatedList[index],
+            quantity: newItem.count
+          };
+          return updatedList;
+        }
+        return prev;
+      });
+
     } catch (error) {
       toast.warning(error.message);
     }
     
   };
-
-
 
   const handleOutsideClick = (e) => {
     if (cartRef.current && !cartRef.current.contains(e.target)) {
@@ -116,7 +133,7 @@ const PickFoodService = (p) => {
     try {
       setIsLoading(true);
       const data = Menu === 'food' ? await getFoodsOrder(orderId) : await getServicesOrder(orderId);
-      setRenderList(data.data);
+      setDataRenderList(data.data);
       setIsLoading(false);
     } catch (error) {
       toast.warning(error.message);
@@ -138,7 +155,7 @@ const PickFoodService = (p) => {
             count,
           })
         );
-        setPickedItem(fetchedItems);
+        setPickedFoods(fetchedItems);
       }
       if (type === 'service') {
         fetchedItems = await getServicesCart(orderId);
@@ -151,16 +168,44 @@ const PickFoodService = (p) => {
             count,
           })
         );
-        setPickedItem(fetchedItems);
+        setPickedServices(fetchedItems);
       }
     } catch (error) {
       toast.warning(error.message);
     }
   };
 
+  const handleSaveBtnClick = async () => {
+    try {
+
+      if(Menu ==="food" ) {
+        await editFoodsOrder(orderId, formatDataUpdateFood(pickedFoods)),
+        toast.success("Foods update success !")
+      } else {
+        await editServicesOrder(orderId, formatDataUpdateFood(pickedServices))
+        toast.success("Services update success !")
+      }
+
+      
+    } catch (error) {
+      toast.warning(error.message);
+    }
+  };
+
+  const formatDataUpdateFood = (dataRenderList) => {
+    const result = dataRenderList.map(food => {
+      return {
+        id: food.id,
+        count: food.count
+      }
+    })
+    return result
+  }
+
   useEffect(() => {
     fetchData(Menu);
-    fetchPickedItem(Menu);
+    fetchPickedItem("food");
+    fetchPickedItem("service");
   }, [Menu]);
 
   // Handle outside click event
@@ -178,163 +223,71 @@ const PickFoodService = (p) => {
 
   return (
     <>
-       {/* <ToastContainer /> */}
-      {isLoading ? (
-        <Loading />
-      ) : (
-        <Wrapper>
-          <div className="header">
-          <FSheaderContainer setPage={setPage} page={page} SeachBox={false}/>
-            <div
-              className={
-                showPickedItemList ? 'cart-wrapper' : 'cart-wrapper pointer'
-              }
-              ref={cartRef}
-              onClick={() => {
-                setShowPickedItemList(true);
-              }}
-            >
-
-              {!showPickedItemList ? (
-                <>
-                  <FaShoppingCart className="icon" />
-                  <span className="badge">{pickedItem.length}</span>
-                </>
-              )
-              : <Cart
-                    Menu={Menu}
-                    pickedItem={pickedItem}
-                    total={total}
-                    setPickedItem={setPickedItem}
-                />}
+        <Suspense fallback={<div>Loading...</div>}>
+          <Wrapper>
+            <div className="header">
+              <FSheaderContainer setPage={setPage} page={page} SeachBox={false} handleSaveBtnClick={handleSaveBtnClick} />
+              <div
+                className={showPickedItemList ? 'cart-wrapper' : 'cart-wrapper pointer'}
+                ref={cartRef}
+                onClick={() => {
+                  setShowPickedItemList(true);
+                }}
+              >
+                {/* {!showPickedItemList ? (
+                  <>
+                    <FaShoppingCart className="icon" />
+                    <span className="badge">{Menu === 'food' ? pickedFoods.length : pickedServices.length}</span>
+                  </>
+                )
+                : <Cart
+                      Menu={Menu}
+                      pickedItem={pickedItem}
+                      total={total}
+                      setPickedItem={setPickedItem}
+                      orderId={orderId}
+                  />} */}
+              </div>
             </div>
-          </div>
-          <div className="container">
-            {renderList.map(({ id, name, price, url, inventory, quantity }) =>{
-              return(
-                <FoodServiceCard
-                  img={Menu === 'food' ? (url? url: beefImg) : (url ? url :balletImg)}
-                  key={id}
-                  id={id}
-                  name={name}
-                  price={price}
-                  quantity={quantity}
-                  inventory={inventory}
-                  pickedItem={pickedItem}
-                  handleAddBtnClick={handleAddBtnClick}
-                />
-              )
-            } 
-            )}
-          </div>
-        </Wrapper>
-      )}
-    </>
-  );
+            <div className="container">
+              {dataRenderList.map(({ id, name, price, url, inventory, quantity }) => {
+                return (
+                  <FoodServiceCard
+                    img={Menu === 'food' ? (url ? url : beefImg) : (url ? url : balletImg)}
+                    key={id}
+                    id={id}
+                    name={name}
+                    price={price}
+                    quantity={quantity}
+                    inventory={inventory}
+                    handleAddBtnClick={handleAddBtnClick}
+                  />
+                );
+              })}
+            </div>
+            <div className="total">
+              <div className="info">
+                <span className="title">Food Total: </span>
+                <span className="value">{formatVND(foodTotal)} </span>
+              </div>
+              <div className="info">
+                <span className="title">Service Total: </span>
+                <span className="value">{formatVND(serviceTotal)} </span>
+              </div>
+              <div className="info">
+                <span className="title">Total: </span>
+                <span className="value">{formatVND(foodTotal + serviceTotal)} </span>
+              </div>
+            </div>
+          </Wrapper>
+        </Suspense>
+    </>)
 };
 
-const Cart = (p) => {
-  const { Menu, pickedItem, total, setPickedItem } = p
 
-  const handleItemAmountChange = (id, type) => {
-    const newList = pickedItem.map((item) => {
-      if (item.id === id) {
-        if (type === 'increase') return { ...item, count: item.count + 1 };
-        if (type === 'decrease')
-          return item.count - 1 <= 0
-            ? null
-            : { ...item, count: item.count - 1 };
-      }
-      return item;
-    });
-    const removedNullList = newList.filter((item) => item !== null);
-    setPickedItem(removedNullList);
-  };
-
-  const handleTrashClick = (id) => {
-    const newItemList = pickedItem.filter((item) => item.id !== id);
-    setPickedItem(newItemList);
-  };
-
-  const handleSaveBtnClick = async (Menu) => {
-    try {
-      // let result;
-      // if (Menu === 'food') {
-      //   result = await editFoodsOrder(orderId, pickedItem);
-      //   editOrder(
-      //     result.data.foodPrice,
-      //     result.data.remainPrice,
-      //     result.data.totalPrice
-      //   );
-      // }
-      // if (Menu === 'service') {
-      //   result = await editServicesOrder(orderId, pickedItem);
-      //   editOrder(
-      //     result.data.servicePrice,
-      //     result.data.remainPrice,
-      //     result.data.totalPrice
-      //   );
-      // }
-      // setModalClose();
-    } catch (error) {
-      toast.warning(error.message);
-    }
-  };
-
-  return (
-    <>
-      {/* Picked list */}
-      <div className="food-list">
-        <h6>{Menu} list</h6>
-        {pickedItem && pickedItem.length > 0 ? (
-          <>
-            <div className="food-container">
-              {pickedItem.map(({ id, count, name, price }) => (
-                <div className="food" key={id}>
-                  <img
-                    src={Menu === 'food' ? beefImg : balletImg}
-                    alt={name}
-                  />
-                  <div className="col">
-                    <span>{name}</span>
-                    <div className="quantity-group">
-                      <FaMinus
-                        className="pointer"
-                        onClick={() => handleItemAmountChange(id, 'decrease')}
-                      />
-                      <span className="quantity">{count}</span>
-                      <FaPlus
-                        className="pointer"
-                        onClick={() => handleItemAmountChange(id, 'increase')}
-                      />
-                    </div>
-                  </div>
-                  <span>{formatVND(price * count)}</span>
-                  <FaRegTrashAlt
-                    className="trash"
-                    onClick={() => handleTrashClick(id)}
-                  />
-                </div>
-              ))}
-            </div>
-            <strong>total {formatVND(total)}</strong>
-              {/* <button
-                className="btn"
-                onClick={() => handleSaveBtnClick(Menu)}
-              >
-                Save
-              </button> */}
-          </>
-        ) : (
-          <p>please choose some {Menu}s</p>
-        )}
-      </div>
-    </>
-  )
-}
 
 const FSheaderContainer = (p) => {
-  const { setPage, page } = p
+  const { setPage, page, handleSaveBtnClick } = p
 
   return (
       <FSheader>
@@ -342,17 +295,20 @@ const FSheaderContainer = (p) => {
               <button onClick={() => {setPage("food")}} className={`food ${page === "food" ? "active":  ""}`}><PiForkKnifeBold /> FOOD</button>
               <button onClick={() => {setPage("service")}} className={`service ${page === "service" ? "active":  ""}`}><PiGuitarDuotone /> SERVICE</button>
           </div>
+          <div className="right">
+          <Button type="primary" onClick={handleSaveBtnClick} >Save</Button>
+          </div>
       </FSheader>
   )
 }
 
 const FSheader = styled.div`
     height: 100%;
-    padding-right: 4rem;
+    /* padding-right: 4rem; */
     display: flex;
+    width: 100%;
     justify-content: space-between;
     align-items: center;
-    // background-color: black;
     .left {
         // border: 1px solid red;
         display: flex;
@@ -426,3 +382,98 @@ const FSheader = styled.div`
 
 `
 export default PickFoodService;
+// const Cart = (p) => {
+//   const { Menu, pickedItem, total, setPickedItem, orderId } = p
+
+//   const handleItemAmountChange = (id, type) => {
+//     const newList = pickedItem.map((item) => {
+//       if (item.id === id) {
+//         if (type === 'increase') return { ...item, count: item.count + 1 };
+//         if (type === 'decrease')
+//           return item.count - 1 <= 0
+//             ? null
+//             : { ...item, count: item.count - 1 };
+//       }
+//       return item;
+//     });
+//     const removedNullList = newList.filter((item) => item !== null);
+//     setPickedItem(removedNullList);
+//   };
+
+//   const handleTrashClick = (id) => {
+//     const newItemList = pickedItem.filter((item) => item.id !== id);
+//     setPickedItem(newItemList);
+//   };
+
+//   const handleSaveBtnClick = async (Menu) => {
+//     try {
+
+//       await editFoodsOrder(orderId, formatDataUpdateFood(pickedItem))
+//       toast.success("Foods update successfull!")
+//     } catch (error) {
+//       toast.warning(error.message);
+//     }
+//   };
+
+//   const formatDataUpdateFood = (dataRenderList) => {
+//     const result = dataRenderList.map(food => {
+//       return {
+//         id: food.id,
+//         count: food.count
+//       }
+//     })
+
+//     return result
+//   }
+
+//   return (
+//     <>
+//       {/* Picked list */}
+//       <div className="food-list">
+//         <h6>{Menu} list</h6>
+//         {pickedItem && pickedItem.length > 0 ? (
+//           <>
+//             <div className="food-container">
+//               {pickedItem.map(({ id, count, name, price }) => (
+//                 <div className="food" key={id}>
+//                   <img
+//                     src={Menu === 'food' ? beefImg : balletImg}
+//                     alt={name}
+//                   />
+//                   <div className="col">
+//                     <span>{name}</span>
+//                     {/* <div className="quantity-group">
+//                       <FaMinus
+//                         className="pointer"
+//                         onClick={() => handleItemAmountChange(id, 'decrease')}
+//                       />
+//                       <span className="quantity">{count}</span>
+//                       <FaPlus
+//                         className="pointer"
+//                         onClick={() => handleItemAmountChange(id, 'increase')}
+//                       />
+//                     </div> */}
+//                   </div>
+//                   <span>{formatVND(price * count)}</span>
+//                   <FaRegTrashAlt
+//                     className="trash"
+//                     onClick={() => handleTrashClick(id)}
+//                   />
+//                 </div>
+//               ))}
+//             </div>
+//             <strong>total {formatVND(total)}</strong>
+//               <button
+//                 className="btn"
+//                 onClick={() => handleSaveBtnClick(Menu)}
+//               >
+//                 Save
+//               </button>
+//           </>
+//         ) : (
+//           <p>please choose some {Menu}s</p>
+//         )}
+//       </div>
+//     </>
+//   )
+// }

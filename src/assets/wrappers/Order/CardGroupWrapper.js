@@ -114,12 +114,25 @@ const Wrapper = styled.div`
   }
   .container {
     overflow-y: scroll;
-    height: 95%;
+    height: 80%;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
     gap: 10px;
     padding: 10px;
+  }
+  .total {
+    margin-top: 20px;
+    border-top: 1px solid #e3dede;
+    .info {
+      margin-top: 20px;
+      text-align: right;
+      .title {
+        font-weight: 600;
+      }
+      .value {
+      }
+    }
   }
   .card {
     z-index: 1;

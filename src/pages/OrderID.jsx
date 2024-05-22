@@ -5,7 +5,7 @@ import { editOrderLeft, editOrderRight } from '../utils/orderRenderArr';
 import { ToastContainer, toast } from 'react-toastify';
 import { editWedding, getWeddingById } from '../api/wedding.api';
 import { truncateUUID } from '../utils';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Header } from '../components';
 import styled from 'styled-components';
 import PickFoodService from '../components/Order/OrderId/PickFoodService';
@@ -30,7 +30,7 @@ const OrderID = (p) => {
 
 
   const { id } = useParams()
-
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchWedding = async (id) =>  {
@@ -49,6 +49,10 @@ const OrderID = (p) => {
 
   }, [id]);
 
+  const handleBackBtn =() => {
+    navigate('/dashboard/order', { replace: true });
+  }
+
   if(loading) {
     return <Loading />
   }
@@ -59,9 +63,15 @@ const OrderID = (p) => {
         handleAddBtnClick={() => {}}
         headerTitle={`Order ${truncateUUID(id)}`}
         action={false}
+        isBack={true}
+        handleBackBtn={handleBackBtn}
+        isNext={true}
       />
       <Wrapper>
-      <ToastContainer/>
+      <ToastContainer 
+        position="bottom-center"
+        autoClose={1000}
+        />
       {Object.values(orderData).length > 0 && <OrderInfor orderData={orderData} setOrderData={setOrderData}/>}
 
       <div className="food_service_container">

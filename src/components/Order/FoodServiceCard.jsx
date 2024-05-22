@@ -10,7 +10,6 @@ const FoodServiceCard = (p) => {
     id,
     quantity:orderedQty,
     handleAddBtnClick,
-    pickedItem,
     inventory,
   } = p
   const [quantity, setQuantity] = useState(orderedQty);
@@ -18,15 +17,10 @@ const FoodServiceCard = (p) => {
 
 
   useEffect(() => {
-    const pickItemQty = pickedItem.find(item => item.id === id)
-    if(pickItemQty){
-      if(quantity === pickItemQty.count) setIsValidApply(false)
-      else if(quantity !== pickItemQty.count) setIsValidApply(true)
-    }
-    else {
-      setIsValidApply(false)
-    }
-  }, [quantity, id, pickedItem]);
+      if(quantity === orderedQty) setIsValidApply(false)
+      else if(quantity !== orderedQty) setIsValidApply(true)
+
+  }, [quantity, orderedQty]);
 
   return (
     <div className="card">
