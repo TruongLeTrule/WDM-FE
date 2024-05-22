@@ -34,7 +34,6 @@ const Bill = () => {
         navigate(`/dashboard/order/${id}`, { replace: true });
     };
 
-    
 
     useEffect(() => {
         const fetchOrderData = async () => {
@@ -118,7 +117,11 @@ const Content = (p) => {
   
     const handlePaymentSubmit = async (values) => {
         try {
-            await fullPayOrder(orderData.id, values.amount, values.paymentDate.$d)
+            const res = await depositOrder(orderData.id, values.amount, values.paymentDate.$d)
+            setBillInfo(prev => ({
+                ...prev,
+                remain_amount: res.data.remainPrice
+            }))
             setVisible(false);
         } catch (error) {
             toast.warning(error.message)

@@ -27,7 +27,7 @@ const NewOrder = () => {
     navigate('/dashboard/order', { replace: true });
   }
   const handleNextBtn =() => {
-    navigate('payment');
+    navigate(`/dashboard/order/${orderData.id}/bill`);
   }
 
   return (
