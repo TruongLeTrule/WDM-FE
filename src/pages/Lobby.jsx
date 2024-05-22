@@ -5,6 +5,7 @@ import { LobbyBlock, LobbyTableStyled } from "../components/Lobby/Styled";
 import LobbyContent from "../components/Lobby/LobbyContent";
 import { ToastContainer, toast } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
+import Loading from "../components/Loading";
 
 export const LobbyContext = createContext();
 
@@ -87,6 +88,9 @@ const Lobby = () => {
     setDisplayData(lobbyList)
   }, [lobbyList]);
 
+  if (isLoading) {
+    return <Loading></Loading>;
+  }
 
   return (
     <LobbyContext.Provider value={shareValue}>
