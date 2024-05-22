@@ -24,6 +24,7 @@
     "axios": "^1.6.8",
     "babel-plugin-styled-components": "^2.1.4",
     "chart.js": "^4.4.2",
+    "date-fns": "^3.6.0",
     "dayjs": "^1.11.10",
     "faker": "^6.6.6",
     "jwt-decode": "^4.0.0",

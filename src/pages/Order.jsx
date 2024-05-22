@@ -46,10 +46,7 @@ const Order = () => {
   };
 
   const handleAddBtnClick = () => {
-    setCreateOrderModalState({
-      ...createOrderModalState,
-      pickDate: true,
-    });
+    navigate('new-order')
   };
 
   const fetchWeddings = async () => {

@@ -42,6 +42,7 @@ const Wrapper = styled.header`
     column-gap: 1rem;
     .title {
       font-weight: 700;
+      text-wrap: nowrap;
       font-size: 1.4rem;
     }
   }

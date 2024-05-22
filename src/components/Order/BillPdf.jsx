@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
 });
 
 const BillPdf = (p) => {
-  const { orderInfo, billModalState } = p
+  const { orderInfo, customerData, weddingData } = p
   const [food, setFood] = useState();
   const [service, setService] = useState();
 
@@ -78,8 +78,8 @@ const BillPdf = (p) => {
   };
 
   useEffect(() => {
-    if (billModalState) fetchData();
-  }, [billModalState]);
+    fetchData();
+  }, []);
 
   return (
     <Document>
@@ -94,9 +94,7 @@ const BillPdf = (p) => {
                 <Text style={styles.cell}>{index + 1}</Text>
                 <Text style={styles.cell}>{title}</Text>
                 <Text style={styles.cell}>
-                  {type === 'date'
-                    ? resolveDate(orderInfo[key])
-                    : orderInfo[key]}
+                  {customerData[key]}
                 </Text>
               </View>
             ))}
@@ -111,9 +109,7 @@ const BillPdf = (p) => {
                 <Text style={styles.cell}>{index + 1}</Text>
                 <Text style={styles.cell}>{title}</Text>
                 <Text style={styles.cell}>
-                  {type === 'date'
-                    ? resolveDate(orderInfo[key])
-                    : orderInfo[key]}
+                    {weddingData[key]}
                   {resolveCurrency(key)}
                 </Text>
               </View>

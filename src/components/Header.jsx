@@ -10,7 +10,8 @@ const Header = (p) => {
   const {
     handleAddBtnClick,
     headerTitle,
-    isBack,
+    headerRightTitle="Next",
+    isBack=false,
     handleBackBtn,
     handleSearch,
     action=true,
@@ -39,7 +40,7 @@ const Header = (p) => {
         </button>
       </div>}
       {isNext && <div className="next-action">
-        <p className='title'>Next</p>
+        <p className='title'>{headerRightTitle}</p>
         <div>
             <Button 
               style={{ width: '50px' }}

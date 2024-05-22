@@ -3,7 +3,7 @@ import { FaPenToSquare } from 'react-icons/fa6';
 import { Modal, DatePick, TextInput, TextRow } from '../components';
 import { editOrderLeft, editOrderRight } from '../utils/orderRenderArr';
 import { ToastContainer, toast } from 'react-toastify';
-import { editWedding, getWeddingById } from '../api/wedding.api';
+import { createWedding, editWedding, getWeddingById } from '../api/wedding.api';
 import { truncateUUID } from '../utils';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Header } from '../components';
@@ -14,73 +14,42 @@ import Flatpickr from "react-flatpickr";
 import { getLobbyTypes, getShifts } from '../api/lobby.api';
 import { Input, Select, TreeSelect, InputNumber, Button } from 'antd';
 import { Option } from 'antd/es/mentions';
-import Loading from '../components/Loading';
 const { TextArea } = Input;
 
 
-const OrderID = (p) => {
-  const {
-    handleEditLobbyClick,
-  } = p
-  const [orderData, setOrderData] = useState({})
-  const [loading, setLoading] = useState({
-    wedding: true,
-    food: true
-  })
+const NewOrder = () => {
+  const [orderData, setOrderData] = useState({id : null})
 
 
-  const { id } = useParams()
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const fetchWedding = async (id) =>  {
-      try {
-        setLoading(true)
-        const res = await getWeddingById(id)
-        setOrderData(res.data)
-        setLoading(false)
-      } catch (error) {
-        setLoading(false)
-        toast.message(error.message)
-      }
-    }
-
-    fetchWedding(id)
-
-  }, [id]);
 
   const handleBackBtn =() => {
     navigate('/dashboard/order', { replace: true });
   }
   const handleNextBtn =() => {
-    navigate('bill');
-  }
-
-  if(loading) {
-    return <Loading />
+    navigate('payment');
   }
 
   return (
     <Container>
       <Header
         handleAddBtnClick={() => {}}
-        headerTitle={`Order ${truncateUUID(id)}`}
+        headerTitle={`New Order`}
         action={false}
         isBack={true}
         handleBackBtn={handleBackBtn}
         isNext={true}
         handleNextBtn={handleNextBtn}
-        headerRightTitle={"View Bill"}
       />
       <Wrapper>
       <ToastContainer 
         position="bottom-center"
-        autoClose={2000}
+        autoClose={1000}
         />
       {Object.values(orderData).length > 0 && <OrderInfor orderData={orderData} setOrderData={setOrderData}/>}
 
       <div className="food_service_container">
-        <PickFoodService orderId={id}/>
+       {orderData?.id && <PickFoodService orderId={orderData?.id}/>}
       </div>
       </Wrapper>
     </Container>
@@ -88,29 +57,18 @@ const OrderID = (p) => {
 };
 
 const OrderInfor = (p) => {
-  const { orderData, setOrderData } = p
-
-  const[filterRenderData, setFilterRenderData] = useState({}) // just for filter the data want to render
+  const {setOrderData} = p
 
   const originalOrderData = useMemo(() => ({
-    groom: orderData.groom,
-    bride: orderData.bride,
-    note: orderData.note,
-    phone: orderData.Customer.phone,
-    table_count: Number(orderData.table_count),
-    wedding_date: new Date(orderData.wedding_date),
-    lobby_id: orderData.Lobby.id,
-    shift_id: orderData.Shift.id,
-  }), [
-    orderData.groom,
-    orderData.bride,
-    orderData.note,
-    orderData.Customer.phone,
-    orderData.table_count,
-    orderData.wedding_date,
-    orderData.Lobby.id,
-    orderData.Shift.id
-  ]);
+    groom: "",
+    bride: "",
+    note: "",
+    phone: "",
+    table_count: 0,
+    wedding_date: new Date(),
+    lobby_id: "",
+    shift_id: "",
+  }), []);
   const [formState, setFormState] = useState(originalOrderData);
   const [isDisabled, setIsDisabled] = useState(true);
   const fp = useRef(null);
@@ -125,36 +83,30 @@ const OrderInfor = (p) => {
   };
   const handleSubmit = async () => {
     try {
-      const updateData ={}
+      const createData ={}
 
       const fieldsToUpdate = originalOrderData
 
       Object.keys(fieldsToUpdate).forEach((key) => {
         if (formState[key] !== fieldsToUpdate[key]) {
-          updateData[key] = formState[key];
+          createData[key] = formState[key];
         }
       });
 
-      const res = await editWedding(orderData.id, updateData);
+      const res = await createWedding(createData);
       setOrderData(prev => ({...prev, ...res.data}))
       setIsDisabled(true)
       toast.success("Wedding update successful!");
     } catch (error) {
-      toast.warn(error.message);
+      toast.warning(error.message);
     }
   };
 
-  const formatDataInput = (data) => {
-    const { bride, groom } = data
-
-    return { bride, groom }
-  }
-
-  useEffect(() => {
-    if(orderData) {
-      setFilterRenderData(formatDataInput(orderData))
-    }
-  }, [orderData]);
+  // useEffect(() => {
+  //   if(orderData) {
+  //     setFilterRenderData(formatDataInput(orderData))
+  //   }
+  // }, [orderData]);
 
   useEffect(() => {
     const fieldsToCompare = JSON.stringify(originalOrderData)
@@ -189,20 +141,24 @@ const OrderInfor = (p) => {
           <div className="title">Shift</div>
           <SelectShift currentValue={formState.shift_id} onChange={handleChange}/>
         </InputFieldWrapper>
-        <div className='customer_info'>
-            {filterRenderData && Object.keys(filterRenderData).map((key, idx) =>{
-              return (
-                <InputFieldWrapper key={idx}>
-                  <div className="title">{key}</div>
-                  <Input 
-                    name={key}  
-                    value={formState[key]} // use state data on the format array
-                    onChange={(e) => handleChange(key, e.target.value)}
-                  />
-                </InputFieldWrapper>
-              )
-            }
-            )}
+        
+          <div className='customer_info'>
+            <InputFieldWrapper>{/*Groom*/}
+              <div className="title">Groom</div>
+              <Input 
+                name="groom"  
+                value={formState["groom"]} // use state data on the format array
+                onChange={(e) => handleChange("groom", e.target.value)}
+              />
+            </InputFieldWrapper>
+            <InputFieldWrapper> {/*Bride*/}
+              <div className="title">Bride</div>
+              <Input 
+                name="bride"  
+                value={formState["bride"]} // use state data on the format array
+                onChange={(e) => handleChange("bride", e.target.value)}
+              />
+            </InputFieldWrapper>
 
             <InputFieldWrapper > {/*TABLE COUNT*/}
               <div className="title">Tables</div>
@@ -380,4 +336,4 @@ display: flex;
  
 `;
 
-export default OrderID;
+export default NewOrder;
