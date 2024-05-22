@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 const Wrapper = styled.div`
   h4 {
-    margin-top: 2rem;
+    margin-bottom: 3rem;
     text-transform: capitalize;
     text-align: center;
     font-weight: 600;

@@ -3,6 +3,9 @@ import Modal from '../Modal';
 
 const customStyle = {
   content: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
     width: '25vw',
     height: '43vh',
     left: '50%',

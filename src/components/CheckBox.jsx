@@ -1,16 +1,16 @@
 import Wrapper from '../assets/wrappers/CheckBoxWrapper';
 
-const CheckBox = ({ title, currValue, value, handleChange }) => {
+const CheckBox = ({ title, value, keyValue, handleChange }) => {
   return (
     <Wrapper className="checkbox-wrapper">
       <input
         type="checkbox"
-        id={value}
-        name={value}
-        checked={currValue}
+        id={keyValue}
+        name={keyValue}
+        checked={value}
         onChange={handleChange}
       />
-      <label htmlFor={value} className={currValue ? 'checked' : ''}>
+      <label htmlFor={keyValue} className={value ? 'checked' : ''}>
         {title}
       </label>
     </Wrapper>

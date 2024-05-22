@@ -8,6 +8,9 @@ import { truncateUUID } from '../../utils';
 
 const customStyle = {
   content: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
     width: '45vw',
     height: '78vh',
     left: '50%',

@@ -10,6 +10,9 @@ const style = {
   content: {
     width: '50vw',
     height: '55vh',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
     left: '50%',
     top: '50%',
     padding: 0,
