@@ -92,3 +92,7 @@ export const editServicesOrder = (weddingId, services) => {
     weddingId,
   });
 };
+
+export const getExtraFee = (weddingId) => {
+  return axiosClient.get(`wedding/extra_fee/${weddingId}`);
+};
