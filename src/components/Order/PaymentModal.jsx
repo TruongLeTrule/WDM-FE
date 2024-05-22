@@ -7,6 +7,9 @@ import Wrapper from '../../assets/wrappers/Order/PaymentWrapper';
 
 const customStyle = {
   content: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
     width: '30vw',
     height: '70vh',
     left: '50%',
