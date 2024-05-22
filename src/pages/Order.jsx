@@ -55,9 +55,9 @@ const Order = () => {
   const fetchWeddings = async () => {
     try {
       const { data } = await getWeddings(true);
-      const renderData = handleRenderData(data)
+      // const renderData = handleRenderData(data)
 
-      setOrderList(renderData);
+      setOrderList(data);
       setIsLoading(false);
     } catch (error) {
       alert(error.message);
@@ -96,8 +96,8 @@ const Order = () => {
         return await fetchWeddings();
       }
       const { data } = await searchWeddingsByPhone(inputValue);
-      const renderData = handleRenderData(data)
-      setOrderList(renderData);
+      // const renderData = handleRenderData(data)
+      setOrderList(data);
     } catch (error) {
       alert(error.message);
     }
@@ -120,6 +120,7 @@ const Order = () => {
         setNewOrder,
         editOrderModalState,
         setEditOrderModalState,
+        fetchWeddings
       }}
     >
       {isLoading ? (

@@ -5,6 +5,7 @@ const Wrapper = styled.div`
   height: 100%;
   width: 100%;
   padding: 0 20px;
+  position: relative;
   h4 {
     text-transform: capitalize;
     font-weight: 600;
@@ -20,6 +21,10 @@ const Wrapper = styled.div`
 
     .cart-wrapper {
       z-index: 999;
+      top: 100px;
+      position: absolute;
+      top: 0;
+      right: 0;
 
       .food-list {
         text-transform: capitalize;
@@ -112,7 +117,8 @@ const Wrapper = styled.div`
     height: 95%;
     display: flex;
     flex-wrap: wrap;
-    gap: 1.5rem;
+    justify-content: space-around;
+    gap: 10px;
     padding: 10px;
   }
   .card {

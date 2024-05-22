@@ -1,5 +1,5 @@
-import { getFoods, checkInventoryForFood } from '../../api/food.api';
-import { getServices } from '../../api/service.api';
+import { getFoods, checkInventoryForFood } from '../../../api/food.api';
+import { getServices } from '../../../api/service.api';
 import { useState, useRef, useEffect, useMemo } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import { FaShoppingCart, FaRegTrashAlt } from 'react-icons/fa';
@@ -10,21 +10,20 @@ import {
   getServicesOrder,
   editFoodsOrder,
   editServicesOrder,
-} from '../../api/wedding.api';
+} from '../../../api/wedding.api';
 import { FaPlus, FaMinus } from 'react-icons/fa';
-import FoodServiceCard from './FoodServiceCard';
-import beefImg from '../../assets/images/beef.png';
-import balletImg from '../../assets/images/ballet.jpg';
-import Wrapper from '../../assets/wrappers/Order/CardGroupWrapper';
-import Loading from '../Loading';
+import FoodServiceCard from '../FoodServiceCard';
+import beefImg from '../../../assets/images/beef.png';
+import balletImg from '../../../assets/images/ballet.jpg';
+import Wrapper from '../../../assets/wrappers/Order/CardGroupWrapper';
+import Loading from '../../Loading';
 import styled from 'styled-components';
 import { PiForkKnifeBold, PiGuitarDuotone } from 'react-icons/pi';
 
 
-const PickFoodServiceModal = (p) => {
+const PickFoodService = (p) => {
 
   const {
-    type,
     setModalClose,
     setNextModalOpen,
     setServiceData,
@@ -32,7 +31,7 @@ const PickFoodServiceModal = (p) => {
     orderId,
     editOrder,
   } = p
-  const [Menu, setMenu] = useState(type)
+  const [Menu, setMenu] = useState("food")
 
   const [renderList, setRenderList] = useState([]);
   const cartRef = useRef(null);
@@ -45,7 +44,6 @@ const PickFoodServiceModal = (p) => {
   );
   const [page, setPage] = useState("food")
 
-  const pageRef = useRef("food")
   const handleNextBtnClick = async () => {
     let itemTotalPrice;
     const handledList = pickedItem.map(({ id, count }) => ({
@@ -189,7 +187,7 @@ const PickFoodServiceModal = (p) => {
   useEffect(() => {
     fetchData(Menu);
     if (editOrder) fetchPickedItem(Menu);
-  }, []);
+  }, [Menu]);
 
   // Handle outside click event
   useEffect(() => {
@@ -212,7 +210,7 @@ const PickFoodServiceModal = (p) => {
       ) : (
         <Wrapper>
           <div className="header">
-          <FSheaderContainer setPage={setPage} pageRef={pageRef} SeachBox={false}/>
+          <FSheaderContainer setPage={setPage} page={page} SeachBox={false}/>
             <div
               className={
                 showPickedItemList ? 'cart-wrapper' : 'cart-wrapper pointer'
@@ -247,22 +245,12 @@ const PickFoodServiceModal = (p) => {
                                 <div className="quantity-group">
                                   <FaMinus
                                     className="pointer"
-                                    onClick={() =>
-                                      handleItemAmountChange(
-                                        id,
-                                        (type = 'decrease')
-                                      )
-                                    }
+                                    onClick={() => handleItemAmountChange(id, 'decrease')}
                                   />
                                   <span className="quantity">{count}</span>
                                   <FaPlus
                                     className="pointer"
-                                    onClick={() =>
-                                      handleItemAmountChange(
-                                        id,
-                                        (type = 'increase')
-                                      )
-                                    }
+                                    onClick={() => handleItemAmountChange(id, 'increase')}
                                   />
                                 </div>
                               </div>
@@ -278,19 +266,19 @@ const PickFoodServiceModal = (p) => {
                         {!editOrder ? (
                           <button className="btn" onClick={handleNextBtnClick}>
                             next:
-                            {type === 'food' ? 'choose service' : 'payment'}
+                            {Menu === 'food' ? 'choose service' : 'payment'}
                           </button>
                         ) : (
                           <button
                             className="btn"
-                            onClick={() => handleSaveBtnClick(type)}
+                            onClick={() => handleSaveBtnClick(Menu)}
                           >
                             Save
                           </button>
                         )}
                       </>
                     ) : (
-                      <p>please choose some {type}s</p>
+                      <p>please choose some {Menu}s</p>
                     )}
                   </div>
                 </>
@@ -301,7 +289,7 @@ const PickFoodServiceModal = (p) => {
             {renderList.map(({ id, name, price, url, inventory }) =>{
               return(
                 <FoodServiceCard
-                  img={type === 'food' ? (url? url: beefImg) : (url ? url :balletImg)}
+                  img={Menu === 'food' ? (url? url: beefImg) : (url ? url :balletImg)}
                   key={id}
                   id={id}
                   name={name}
@@ -320,13 +308,13 @@ const PickFoodServiceModal = (p) => {
 };
 
 const FSheaderContainer = (p) => {
-  const { setPage, pageRef } = p
+  const { setPage, page } = p
 
   return (
       <FSheader>
           <div className="left">
-              <button onClick={() => {setPage("food"); pageRef.current = "food" }} className={`food ${pageRef.current === "food" ? "active":  ""}`}><PiForkKnifeBold /> FOOD</button>
-              <button onClick={() => {setPage("service"); pageRef.current = "service"}} className={`service ${pageRef.current === "service" ? "active":  ""}`}><PiGuitarDuotone /> SERVICE</button>
+              <button onClick={() => {setPage("food")}} className={`food ${page === "food" ? "active":  ""}`}><PiForkKnifeBold /> FOOD</button>
+              <button onClick={() => {setPage("service")}} className={`service ${page === "service" ? "active":  ""}`}><PiGuitarDuotone /> SERVICE</button>
           </div>
       </FSheader>
   )
@@ -411,4 +399,4 @@ const FSheader = styled.div`
     
 
 `
-export default PickFoodServiceModal;
+export default PickFoodService;
