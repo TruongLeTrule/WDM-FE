@@ -23,13 +23,14 @@ const customStyle = {
   },
 };
 
-const PaymentModal = ({
-  isOpen,
-  setModalClose,
-  setNextModalOpen,
-  orderData,
-  setOrderData,
-}) => {
+const PaymentModal = (p) => {
+  const {
+    isOpen,
+    setModalClose,
+    setNextModalOpen,
+    orderData,
+    setOrderData,
+  } = p
   const [payValue, setPayValue] = useState(orderData.requiredDeposit);
   const [payOption, setPayOption] = useState('deposit');
 

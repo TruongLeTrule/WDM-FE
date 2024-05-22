@@ -1,7 +1,9 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
+
   .table {
+    width: 100%;
     margin-top: 0.5rem;
     border-top: 1px solid var(--grey-400);
     border-left: 1px solid var(--grey-400);

@@ -53,14 +53,15 @@ export const orderService = (weddingId, services) => {
   });
 };
 
-export const depositOrder = (weddingId, transaction_amount) => {
-  return axiosClient.post('wedding/deposit', { weddingId, transaction_amount });
+export const depositOrder = (weddingId, transaction_amount, payment_date) => {
+  return axiosClient.post('wedding/deposit', { weddingId, transaction_amount, payment_date });
 };
 
-export const fullPayOrder = (weddingId, transaction_amount) => {
+export const fullPayOrder = (weddingId, transaction_amount, payment_date) => {
   return axiosClient.post('wedding/full-pay', {
     weddingId,
     transaction_amount,
+    payment_date
   });
 };
 
@@ -74,6 +75,16 @@ export const getFoodsOrder = (weddingId) => {
 
 export const getServicesOrder = (weddingId) => {
   return axiosClient.get('wedding/get/service-order', {
+    params: { weddingId },
+  });
+};
+
+export const getFoodsCart = (weddingId) => {
+  return axiosClient.get('wedding/get/food-cart', { params: { weddingId } });
+};
+
+export const getServicesCart = (weddingId) => {
+  return axiosClient.get('wedding/get/service-cart', {
     params: { weddingId },
   });
 };
@@ -95,4 +106,8 @@ export const editServicesOrder = (weddingId, services) => {
 
 export const getExtraFee = (weddingId) => {
   return axiosClient.get(`wedding/extra_fee/${weddingId}`);
+};
+
+export const getBill = (weddingId) => {
+  return axiosClient.get(`wedding/bill_page/${weddingId}`);
 };

@@ -1,22 +1,33 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaPlus, FaMinus } from 'react-icons/fa';
+import { formatVND } from '../../utils';
 
-const FoodServiceCard = ({
-  img,
-  name,
-  price,
-  id,
-  handleAddBtnClick,
-  inventory,
-}) => {
-  const [quantity, setQuantity] = useState(0);
+const FoodServiceCard = (p) => {
+  const {
+    img,
+    name,
+    price,
+    id,
+    quantity:orderedQty,
+    handleAddBtnClick,
+    inventory,
+  } = p
+  const [quantity, setQuantity] = useState(orderedQty);
+  const [isValidApply, setIsValidApply] = useState(false)
+
+
+  useEffect(() => {
+      if(quantity === orderedQty) setIsValidApply(false)
+      else if(quantity !== orderedQty) setIsValidApply(true)
+
+  }, [quantity, orderedQty]);
 
   return (
     <div className="card">
       <img src={img} alt={name} className="lob-img" />
       <div className="content">
         <h5>{name}</h5>
-        <p className="price">{price} VND</p>
+        <p className="price">{formatVND(price)}</p>
 
         <div className="action-wrapper">
           <div className="quantity-group">
@@ -45,17 +56,14 @@ const FoodServiceCard = ({
             <div className="btn reset" onClick={() => setQuantity(0)}>
               reset
             </div>
-            <div
+            {isValidApply && <div
               className="btn"
               onClick={() => {
-                if (quantity > 0) {
-                  handleAddBtnClick({ id, count: quantity, name, price });
-                  setQuantity(0);
-                }
+                handleAddBtnClick({ id, count: quantity, name, price }, () => {});
               }}
             >
-              Apply
-            </div>
+              Save
+            </div>}
           </div>
         </div>
         <p className="inventory">

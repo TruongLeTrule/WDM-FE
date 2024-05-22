@@ -18,6 +18,7 @@ import {
 } from '../components/Order';
 import { allOrdersTableHeader } from '../utils/orderRenderArr';
 import Loading from '../components/Loading';
+import { useNavigate } from 'react-router-dom';
 
 const Wrapper = React.lazy(() => import('../assets/wrappers/OrderWrapper'));
 const OrderContext = createContext();
@@ -32,28 +33,28 @@ const Order = () => {
   const [createOrderModalState, setCreateOrderModalState] = useState({});
   const [editOrderModalState, setEditOrderModalState] = useState({});
 
+  const navigate = useNavigate()
+
   const handleRowClick = (rowData) => {
-    setOrderInfo(rowData);
-    setOrderModalState({
-      ...orderModalState,
-      info: ['deposit', 'pending'].includes(rowData?.status),
-      bill: rowData?.status === 'paid',
-    });
+    navigate(`${rowData.id}`)
+    // setOrderInfo(rowData);
+    // setOrderModalState({
+    //   ...orderModalState,
+    //   info: ['deposit', 'pending'].includes(rowData?.status),
+    //   bill: rowData?.status === 'paid',
+    // });
   };
 
   const handleAddBtnClick = () => {
-    setCreateOrderModalState({
-      ...createOrderModalState,
-      pickDate: true,
-    });
+    navigate('new-order')
   };
 
   const fetchWeddings = async () => {
     try {
       const { data } = await getWeddings(true);
-      const renderData = handleRenderData(data)
+      // const renderData = handleRenderData(data)
 
-      setOrderList(renderData);
+      setOrderList(data);
       setIsLoading(false);
     } catch (error) {
       alert(error.message);
@@ -92,8 +93,8 @@ const Order = () => {
         return await fetchWeddings();
       }
       const { data } = await searchWeddingsByPhone(inputValue);
-      const renderData = handleRenderData(data)
-      setOrderList(renderData);
+      // const renderData = handleRenderData(data)
+      setOrderList(data);
     } catch (error) {
       alert(error.message);
     }
@@ -116,6 +117,7 @@ const Order = () => {
         setNewOrder,
         editOrderModalState,
         setEditOrderModalState,
+        fetchWeddings
       }}
     >
       {isLoading ? (
@@ -142,7 +144,7 @@ const Order = () => {
                 <span className="empty">No order</span>
               )}
             </div>
-            <Suspense fallback={<Loading minsize="35px" />}>
+            {/* <Suspense fallback={<Loading minsize="35px" />}>
               {orderModalState?.info && <OrderInfoModal />}
               {orderModalState?.payRemainder && <PayRemainderModal />}
               {orderModalState?.bill && <BillModal />}
@@ -154,7 +156,7 @@ const Order = () => {
               )}
               <CreateOrderModalContainer />
               <EditOrderModalContainer />
-            </Suspense>
+            </Suspense> */}
           </main>
         </Wrapper>
       )}

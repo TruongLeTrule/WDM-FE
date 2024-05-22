@@ -12,21 +12,19 @@ export const customerInfo = [
     key: 'phone',
   },
   {
-    title: 'Order date',
-    key: 'created_at',
-    type: 'date',
+    title: 'Note',
+    key: 'note',
   },
 ];
 
 export const weddingInfo = [
   {
     title: 'Lobby',
-    key: 'lobby_name',
+    key: 'lobby',
   },
   {
     title: 'Occur date',
     key: 'wedding_date',
-    type: 'date',
   },
   {
     title: 'Shift',

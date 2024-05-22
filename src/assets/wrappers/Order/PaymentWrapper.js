@@ -1,11 +1,12 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
-  padding: 0 3rem;
+  padding: 1rem;
   text-transform: capitalize;
+  background-color: white;
+  border-radius: 10px;
   h4 {
     text-align: center;
-    margin-top: 2.5rem;
     font-weight: 700;
   }
   p {
@@ -15,6 +16,11 @@ const Wrapper = styled.div`
   .container {
     width: max-content;
     margin: 3rem auto 0 auto;
+
+    .more-info {
+      display: flex;
+      justify-content: space-between;
+    }
   }
   h5 {
     font-weight: 600;

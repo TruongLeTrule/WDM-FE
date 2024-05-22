@@ -2,26 +2,33 @@ import { FaFilter, FaPlus } from 'react-icons/fa6';
 import Wrapper from '../assets/wrappers/HeaderWrapper';
 import SearchBox from './SearchBox';
 import { Icon } from '../assets/icon';
+import { Button } from 'antd';
+import { FaArrowLeft } from "react-icons/fa";
+import { FaArrowRight } from "react-icons/fa";
 
 const Header = (p) => {
   const {
     handleAddBtnClick,
     headerTitle,
-    isBack,
+    headerRightTitle="Next",
+    isBack=false,
     handleBackBtn,
     handleSearch,
-    action=true
+    action=true,
+    handleNextBtn=() => {},
+    isNext=false
   } = p
   return (
     <Wrapper>
-      <div className="backBtn">
         {isBack && (
-          <Icon.leffcirclefilled
-            className="canClickIcon"
-            onClick={handleBackBtn}
-          />
+          <div style={{marginRight: "10px"}}>
+            <Button 
+              style={{ width: '50px' }}
+              icon={<FaArrowLeft />}
+              onClick={handleBackBtn}>
+            </Button>
+          </div>
         )}
-      </div>
       <h1>{headerTitle}</h1>
       {action && <div className="right-container">
         <SearchBox handleSearch={handleSearch} />
@@ -32,6 +39,17 @@ const Header = (p) => {
           <FaPlus className="icon" />
         </button>
       </div>}
+      {isNext && <div className="next-action">
+        <p className='title'>{headerRightTitle}</p>
+        <div>
+            <Button 
+              style={{ width: '50px' }}
+              icon={<FaArrowRight />}
+              onClick={handleNextBtn}>
+            </Button>
+          </div>
+      </div>}
+
     </Wrapper>
   );
 };

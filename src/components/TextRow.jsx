@@ -5,7 +5,7 @@ import resolveCurrency from '../utils/resolveCurrency';
 import Wrapper from '../assets/wrappers/TextRowWrapper';
 
 const TextRow = ({ title, keyValue, value, openModal, type, edit }) => {
-  const { setOrderModalState, setEditOrderModalState } = useOrderContext();
+  // const { setOrderModalState, setEditOrderModalState } = useOrderContext();
 
   const resolveClass = () => {
     switch (keyValue) {
@@ -24,12 +24,12 @@ const TextRow = ({ title, keyValue, value, openModal, type, edit }) => {
         <span className="title">{title}</span>
         <div
           onClick={() => {
-            if (edit)
-              return setEditOrderModalState({
-                [openModal]: true,
-                userInfo: true,
-              });
-            setOrderModalState({ [openModal]: true, info: true });
+            // if (edit)
+              // return setEditOrderModalState({
+              //   [openModal]: true,
+              //   userInfo: true,
+              // });
+            // setOrderModalState({ [openModal]: true, info: true });
           }}
           className="open-modal"
         >

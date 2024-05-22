@@ -3,6 +3,9 @@ import styled from 'styled-components';
 const Wrapper = styled.div`
   text-align: center;
   height: 100%;
+  width: 100%;
+  padding: 0 20px;
+  position: relative;
   h4 {
     text-transform: capitalize;
     font-weight: 600;
@@ -11,21 +14,22 @@ const Wrapper = styled.div`
     cursor: pointer;
   }
   .header {
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    padding: 30px;
+    justify-content: space-between;
     display: flex;
-    height: 10%;
+    height: 5%;
+    align-items: center;
+
     .cart-wrapper {
       z-index: 999;
+      top: 100px;
       position: absolute;
-      left: 30px;
-      top: 50%;
+      top: 0;
+      right: 0;
+
       .food-list {
         text-transform: capitalize;
+        padding: 10px;
         border-radius: 6px;
-        padding: 1rem;
         background-color: var(--white);
         box-shadow: 0px 4px 31px -5px rgba(0, 0, 0, 0.75);
         -webkit-box-shadow: 0px 4px 31px -5px rgba(0, 0, 0, 0.75);
@@ -110,20 +114,33 @@ const Wrapper = styled.div`
   }
   .container {
     overflow-y: scroll;
-    height: 90%;
-    padding: 2rem;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1.5rem;
+    height: 80%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    gap: 10px;
+    padding: 10px;
+  }
+  .total {
+    margin-top: 20px;
+    border-top: 1px solid #e3dede;
+    .info {
+      margin-top: 20px;
+      text-align: right;
+      .title {
+        font-weight: 600;
+      }
+      .value {
+      }
+    }
   }
   .card {
     z-index: 1;
     position: relative;
     padding: 1rem;
     border-radius: 8px;
-    box-shadow: 0px 2px 8px 0px rgba(78, 78, 78, 0.2);
-    -webkit-box-shadow: 0px 2px 8px 0px rgba(78, 78, 78, 0.2);
-    -moz-box-shadow: 0px 2px 8px 0px rgba(78, 78, 78, 0.2);
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+
     .content {
       display: flex;
       flex-direction: column;
