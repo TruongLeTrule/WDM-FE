@@ -30,8 +30,8 @@ export const getWeddings = (bill = false) => {
   });
 };
 
-export const getWeddingById = (id, includedBill = false) => {
-  return axiosClient.get(`wedding/${id}`, { params: { bill: includedBill } });
+export const getWeddingById = (id, includedBill = false, status) => {
+  return axiosClient.get(`wedding/${id}`, { params: { bill: includedBill, status } });
 };
 
 export const deleteWedding = (id) => {

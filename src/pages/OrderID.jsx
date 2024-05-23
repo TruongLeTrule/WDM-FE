@@ -25,7 +25,7 @@ const OrderID = (p) => {
   const [orderData, setOrderData] = useState({})
   
   const [loading, setLoading] = useState(true)
-
+  const [restrictedMode, setRestricted] = useState(false)
 
   const { id } = useParams()
   const navigate = useNavigate();
@@ -34,9 +34,12 @@ const OrderID = (p) => {
     const fetchWedding = async (id) =>  {
       try {
         setLoading(true)
-        const res = await getWeddingById(id)
+        const res = await getWeddingById(id, null, true)
         setOrderData(res.data)
         setLoading(false)
+        const status = res.data.status
+        console.log("status", res.data)
+        if(status === "paid") setRestricted(true)
       } catch (error) {
         setLoading(false)
         toast.message(error.message)
@@ -75,10 +78,14 @@ const OrderID = (p) => {
         position="bottom-center"
         autoClose={2000}
         />
-      {Object.values(orderData).length > 0 && <OrderInfor orderData={orderData} setOrderData={setOrderData}/>}
+      {Object.values(orderData).length > 0 && <OrderInfor 
+        orderData={orderData} 
+        setOrderData={setOrderData}
+        restrictedMode={restrictedMode}
+        />}
 
       <div className="food_service_container">
-        <PickFoodService orderId={id}/>
+        <PickFoodService orderId={id} restrictedMode={restrictedMode}/>
       </div>
       </Wrapper>
     </Container>
@@ -86,7 +93,7 @@ const OrderID = (p) => {
 };
 
 const OrderInfor = (p) => {
-  const { orderData, setOrderData } = p
+  const { orderData, setOrderData, restrictedMode } = p
 
   const[filterRenderData, setFilterRenderData] = useState({}) // just for filter the data want to render
 
@@ -170,22 +177,29 @@ const OrderInfor = (p) => {
             <Flatpickr
               ref={fp}
               options={{
-                  mode: "single",
-                  inline: true
+                mode: "single",
+                inline: true,
+                disable: [
+                  restrictedMode && function(date) {
+                    // Enable only the wedding_date
+                    return date.getTime() !== new Date(formState.wedding_date).getTime();
+                  }
+                ],
+                allowInput: false, // Prevents manual input
               }}
               value={formState.wedding_date}
               onChange={(date) => handleChange('wedding_date', date[0])}
-              />
+            />
           </div>
         </div>
         <InputFieldWrapper>{/*LOBBY*/}
           <div className="title">Lobby</div>
-          <TreeSelectLob currentValue={formState.lobby_id} onChange={handleChange}/>
+          <TreeSelectLob currentValue={formState.lobby_id} onChange={handleChange} restrictedMode={restrictedMode}/>
         </InputFieldWrapper>
 
         <InputFieldWrapper>{/*SHIFT*/}
           <div className="title">Shift</div>
-          <SelectShift currentValue={formState.shift_id} onChange={handleChange}/>
+          <SelectShift currentValue={formState.shift_id} onChange={handleChange} restrictedMode={restrictedMode}/>
         </InputFieldWrapper>
         <div className='customer_info'>
             {filterRenderData && Object.keys(filterRenderData).map((key, idx) =>{
@@ -242,7 +256,7 @@ const OrderInfor = (p) => {
 }
 
 const TreeSelectLob = (p) => {
-  const { currentValue, onChange } = p
+  const { currentValue, onChange, restrictedMode } = p
   const { TreeNode } = TreeSelect;
   const [lobTypes, setLobTypes] = useState([])
 
@@ -271,6 +285,7 @@ const TreeSelectLob = (p) => {
       allowClear
       treeDefaultExpandAll
       onChange={(value) => onChange('lobby_id', value)}
+      disabled={restrictedMode}
     >
       {lobTypes && 
       lobTypes.map(lobType => {
@@ -289,7 +304,7 @@ const TreeSelectLob = (p) => {
 
 const SelectShift = (p) => {
 
-  const { currentValue, onChange } = p
+  const { currentValue, onChange, restrictedMode } = p
   const [shifts, setShifts] = useState([]);
 
   useEffect(() => {
@@ -311,6 +326,7 @@ const SelectShift = (p) => {
         onChange={(value) => onChange("shift_id", value)}
         style={{ width: '100%' }}
         placeholder="Please select an option"
+        disabled={restrictedMode}
       >
       {shifts &&
       shifts.map(shift => {

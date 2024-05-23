@@ -60,7 +60,7 @@ const NewOrder = () => {
         action={false}
         isBack={true}
         handleBackBtn={handleBackBtn}
-        isNext={true}
+        isNext={id}
         handleNextBtn={handleNextBtn}
       />
       <Wrapper>

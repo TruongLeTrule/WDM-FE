@@ -114,10 +114,10 @@ const Wrapper = styled.div`
   }
   .container {
     overflow-y: scroll;
-    height: 80%;
+    max-height: 80%;
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-around;
+    justify-content: flex-start;
     gap: 10px;
     padding: 10px;
   }
