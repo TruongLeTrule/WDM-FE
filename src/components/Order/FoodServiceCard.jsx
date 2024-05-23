@@ -11,6 +11,7 @@ const FoodServiceCard = (p) => {
     quantity:orderedQty,
     handleAddBtnClick,
     inventory,
+    restrictedMode
   } = p
   const [quantity, setQuantity] = useState(orderedQty);
   const [isValidApply, setIsValidApply] = useState(false)
@@ -26,10 +27,10 @@ const FoodServiceCard = (p) => {
     <div className="card">
       <img src={img} alt={name} className="lob-img" />
       <div className="content">
-        <h5>{name}</h5>
-        <p className="price">{formatVND(price)}</p>
+        <h5>{name} ({orderedQty})</h5>
+        <p className="price">{restrictedMode ? formatVND(Number(price) * orderedQty) :formatVND(price)}</p>
 
-        <div className="action-wrapper">
+        {!restrictedMode && <div className="action-wrapper">
           <div className="quantity-group">
             <FaMinus
               className={quantity === 0 ? 'disable icon' : 'icon'}
@@ -65,7 +66,7 @@ const FoodServiceCard = (p) => {
               Save
             </div>}
           </div>
-        </div>
+        </div>}
         <p className="inventory">
           <strong>Remain:</strong> {inventory}
         </p>
