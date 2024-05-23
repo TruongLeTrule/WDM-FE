@@ -15,6 +15,7 @@ import { getLobbyTypes, getShifts } from '../api/lobby.api';
 import { Input, Select, TreeSelect, InputNumber, Button } from 'antd';
 import { Option } from 'antd/es/mentions';
 import Loading from '../components/Loading';
+import { InputField } from './NewOrder';
 const { TextArea } = Input;
 
 
@@ -192,58 +193,30 @@ const OrderInfor = (p) => {
             />
           </div>
         </div>
-        <InputFieldWrapper>{/*LOBBY*/}
-          <div className="title">Lobby</div>
-          <TreeSelectLob currentValue={formState.lobby_id} onChange={handleChange} restrictedMode={restrictedMode}/>
-        </InputFieldWrapper>
-
-        <InputFieldWrapper>{/*SHIFT*/}
-          <div className="title">Shift</div>
-          <SelectShift currentValue={formState.shift_id} onChange={handleChange} restrictedMode={restrictedMode}/>
-        </InputFieldWrapper>
+        <InputField 
+          title="Lobby" 
+          type="custom" 
+          value={formState.lobby_id} 
+          onChange={(value) => handleChange('lobby_id', value)}
+          options={{ 
+            customComponent: <TreeSelectLob currentValue={formState.lobby_id} onChange={(value) => handleChange('lobby_id', value)} restrictedMode={restrictedMode} /> 
+          }} 
+          restrictedMode={restrictedMode}/>
+        <InputField 
+          title="Shift" 
+          type="custom" 
+          value={formState.shift_id}
+          onChange={(value) => handleChange('shift_id', value)} 
+          options={{ 
+            customComponent: <SelectShift currentValue={formState.shift_id} onChange={(value) => handleChange('shift_id', value)} restrictedMode={restrictedMode}/>
+          }} 
+          restrictedMode={restrictedMode}/>
         <div className='customer_info'>
-            {filterRenderData && Object.keys(filterRenderData).map((key, idx) =>{
-              return (
-                <InputFieldWrapper key={idx}>
-                  <div className="title">{key}</div>
-                  <Input 
-                    name={key}  
-                    value={formState[key]} // use state data on the format array
-                    onChange={(e) => handleChange(key, e.target.value)}
-                  />
-                </InputFieldWrapper>
-              )
-            }
-            )}
-
-            <InputFieldWrapper > {/*TABLE COUNT*/}
-              <div className="title">Tables</div>
-              <InputNumber 
-                value={formState.table_count} 
-                onChange={(value) => handleChange("table_count", value)}
-                min={0}
-              />
-
-            </InputFieldWrapper>
-            <InputFieldWrapper > {/*PHONE*/}
-              <div className="title">Phone</div>
-              <Input 
-                name="phone"
-                value={formState.phone} 
-                onChange={(e) => handleChange("phone", e.target.value)}
-              />
-            </InputFieldWrapper>
-
-            <InputFieldWrapper>{/*NOTE*/}
-              <div className="title">Note</div>
-              <TextArea 
-                value={formState.note}
-                placeholder="Wedding note..."
-                name="note"
-                onChange={(e) => handleChange("note", e.target.value)}
-                autoSize={{ minRows: 2, maxRows: 5 }}  
-              />
-            </InputFieldWrapper>
+          <InputField title="Groom" type="text" value={formState.groom} onChange={(value) => handleChange("groom", value)} />
+          <InputField title="Bride" type="text" value={formState.bride} onChange={(value) => handleChange("bride", value)}/>
+          <InputField title="Phone" type="text" value={formState.phone} onChange={(value) => handleChange("phone", value)}/>
+          <InputField title="Tables" type="number" value={formState.table_count} onChange={(value) => handleChange("table_count", value)} restrictedMode={restrictedMode}/>
+          <InputField title="Note" type="textarea" value={formState.note} onChange={(value) => handleChange("note", value)}/>
         </div>
       </div>
       <div className="btn-wrapper">
@@ -284,7 +257,7 @@ const TreeSelectLob = (p) => {
       placeholder="Please select"
       allowClear
       treeDefaultExpandAll
-      onChange={(value) => onChange('lobby_id', value)}
+      onChange={onChange}
       disabled={restrictedMode}
     >
       {lobTypes && 
@@ -323,7 +296,7 @@ const SelectShift = (p) => {
     <div style={{  margin: 'auto' }}>
       <Select
         value={currentValue}
-        onChange={(value) => onChange("shift_id", value)}
+        onChange={onChange}
         style={{ width: '100%' }}
         placeholder="Please select an option"
         disabled={restrictedMode}
@@ -379,6 +352,9 @@ const OrderInforContainer = styled.div`
 const InputFieldWrapper = styled.div`
   width: 100%;
   padding: 10px 0;
+  &:last-child {
+    grid-column: span 2; /* Make the last item span all 4 columns */
+  }
 
   .title { 
     margin-bottom: 5px;
