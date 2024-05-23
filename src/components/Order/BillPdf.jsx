@@ -3,7 +3,7 @@ import { customerInfo, weddingInfo } from '../../utils/billTable';
 import { getFoodsCart, getServicesCart } from '../../api/wedding.api';
 import { Page, Text, View, Document, StyleSheet } from '@react-pdf/renderer';
 import resolveDate from '../../utils/resolveDate';
-import resolveCurrency from '../../utils/resolveCurrency';
+import { formatVND } from '../../utils';
 
 const styles = StyleSheet.create({
   page: {
@@ -104,16 +104,16 @@ const BillPdf = (p) => {
         <View style={styles.section}>
           <Text style={styles.h2}>Wedding Information</Text>
           <View style={styles.table}>
-            {weddingInfo.map(({ title, key, type }, index) => (
+            {weddingInfo.map(({ title, key, type }, index) => {
+            return (
               <View style={styles.row} key={index}>
                 <Text style={styles.cell}>{index + 1}</Text>
                 <Text style={styles.cell}>{title}</Text>
                 <Text style={styles.cell}>
-                    {weddingData[key]}
-                  {resolveCurrency(key)}
+                  {type === "concurrency"? formatVND(weddingData[key]) : weddingData[key]}
                 </Text>
               </View>
-            ))}
+            )})}
           </View>
         </View>
 
@@ -137,13 +137,13 @@ const BillPdf = (p) => {
                 <View style={styles.row} key={index}>
                   <Text style={styles.cell}>{index + 1}</Text>
                   <Text style={styles.cell}>{food_name}</Text>
-                  <Text style={styles.cell}>{food_price}$</Text>
+                  <Text style={styles.cell}>{formatVND(food_price)}</Text>
                   <Text style={styles.cell}>{count}</Text>
                 </View>
               ))}
           </View>
         </View>
-        <Text style={styles.totalPrice}>Total: {foodTotalPrice}$</Text>
+        <Text style={styles.totalPrice}>Total: {formatVND(foodTotalPrice)}</Text>
       </Page>
 
       <Page size="A4" style={styles.page}>
@@ -161,13 +161,13 @@ const BillPdf = (p) => {
                 <View style={styles.row} key={index}>
                   <Text style={styles.cell}>{index + 1}</Text>
                   <Text style={styles.cell}>{service_name}</Text>
-                  <Text style={styles.cell}>{service_price}$</Text>
+                  <Text style={styles.cell}>{formatVND(service_price)}</Text>
                   <Text style={styles.cell}>{count}</Text>
                 </View>
               ))}
           </View>
         </View>
-        <Text style={styles.totalPrice}>Total: {serviceTotalPrice}$</Text>
+        <Text style={styles.totalPrice}>Total: {formatVND(serviceTotalPrice)}</Text>
       </Page>
     </Document>
   );

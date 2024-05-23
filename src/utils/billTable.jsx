@@ -25,6 +25,7 @@ export const weddingInfo = [
   {
     title: 'Occur date',
     key: 'wedding_date',
+    type: 'date'
   },
   {
     title: 'Shift',
@@ -38,18 +39,27 @@ export const weddingInfo = [
     title: 'Total food price',
     key: 'food_total_price',
     openModal: 'food',
+    type: 'concurrency'
   },
   {
     title: 'Total service price',
     key: 'service_total_price',
     openModal: 'service',
+    type: 'concurrency'
   },
   {
     title: 'Extra fee',
     key: 'extra_fee',
+    type: 'concurrency'
   },
   {
     title: 'Total',
     key: 'total_price',
+    type: 'concurrency'
+  },
+  {
+    title: 'Remain',
+    key: 'remain_amount',
+    type: 'concurrency'
   },
 ];

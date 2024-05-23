@@ -9,6 +9,8 @@ import resolveDate from '../utils/resolveDate';
 import Wrapper from '../assets/wrappers/TableWrapper';
 import resolveCurrency from '../utils/resolveCurrency';
 import { truncateUUID } from '../utils';
+import { Button } from 'antd';
+import { EditOutlined } from '@ant-design/icons';
 
 const Table = (p) => {
   const { columns, data, handleRowClick, pagination } = p
@@ -41,14 +43,28 @@ const Table = (p) => {
     }
   };
 
+  const formatRenderDate = (date) => {
+    const inputDate = new Date(date);
+    const formattedDate = inputDate.toLocaleDateString();
+  
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Set the time to midnight for accurate comparison
+  
+    const isPastDate = inputDate < today;
+  
+    return {
+      formattedDate,
+      isPastDate,
+    };
+  }
   return (
     <Wrapper>
       <table {...getTableBodyProps()}>
         <thead>
-          {headerGroups.map((headerGroup) => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column) => (
-                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+          {headerGroups.map((headerGroup, idx) => (
+            <tr {...headerGroup.getHeaderGroupProps()} key={idx}>
+              {headerGroup.headers.map((column, idx) => (
+                <th {...column.getHeaderProps(column.getSortByToggleProps())} key={idx}>
                   {column.render('Header')}
                   {column.isSorted && (
                     <span className="sort-icon">
@@ -63,17 +79,21 @@ const Table = (p) => {
         <tbody {...getTableProps()}>
           {page.map((row) => {
             prepareRow(row);
+            console.log(row.values.status)
             return (
               <tr
                 {...row.getRowProps()}
                 className={handleRowClick && 'can-click'}
-                onClick={() => handleRowClick(row.original)}
                 key={row.id}  // It's better to use a unique identifier for the row if available
               >
                 {row.cells.map((cell, idx) => {
                   let renderData = cell.value
+                  let isPast = false
                   if(cell.column.id.includes('date')) {
-                    renderData = resolveDate(cell.value)
+                    const {formattedDate, isPastDate} = formatRenderDate(cell.value)
+                    renderData = formattedDate
+                    isPast = isPastDate
+
                   } else if(cell.column.id === "id" ) {
                     renderData = truncateUUID(cell.value)
                   }
@@ -84,11 +104,17 @@ const Table = (p) => {
                     className={resolveCellClass(cell.value)}
                     title={cell.column.id === 'customerName' ? cell.value : ''}
                     key={idx}  // Adding the key here
+                    style={isPast && row.values.status!=="paid" ? {color: "red"} : {}}
                   >
                     {renderData}
                     {resolveCurrency(cell.column.id)}
                   </td>
                 )})}
+                <td>
+                  <Button type="primary" icon={<EditOutlined />} onClick={() => handleRowClick(row.original)}>
+                    Edit
+                  </Button>
+                </td>
               </tr>
             );
           })}

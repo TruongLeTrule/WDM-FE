@@ -61,10 +61,8 @@ const PickFoodService = (p) => {
       const upcomingCount = newItem.count
       Menu === 'food' && await checkInventoryForFood(foodId, upcomingCount)
       // If item existed in picked list, set new quantity
-      let msg = "Add successfully!"
       let isRemove = false
       if(upcomingCount === 0){
-        msg = "Remove successfully!"
         isRemove = true
       } 
 
@@ -181,6 +179,8 @@ const PickFoodService = (p) => {
       if(Menu ==="food" ) {
         await editFoodsOrder(orderId, formatDataUpdateFood(pickedFoods)),
         toast.success("Foods update success !")
+        setMenu("service")
+        setPage("service")
       } else {
         await editServicesOrder(orderId, formatDataUpdateFood(pickedServices))
         toast.success("Services update success !")
