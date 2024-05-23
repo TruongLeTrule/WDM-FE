@@ -14,13 +14,14 @@ const { Option } = Select;
 
 import { depositOrder, fullPayOrder, getBill, getExtraFee, getWeddingById, togglePenalty } from '../api/wedding.api';
 import Wrapper from '../assets/wrappers/Order/PaymentWrapper';
-import { truncateUUID } from '../utils';
+import { formatVND, truncateUUID } from '../utils';
 import { FaFilePdf } from 'react-icons/fa';
 import BillPdf from '../components/Order/BillPdf';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import SpecificOrderTable from '../components/Order/SpecificOrderTable';
 import Loading from '../components/Loading';
 import { PlusOutlined } from '@ant-design/icons';
+import { customerInfo, weddingInfo } from '../utils/billTable';
 
 const Bill = () => {
     const navigate = useNavigate();
@@ -82,7 +83,7 @@ const Bill = () => {
 const Content = (p) => {
     const { orderData, bill } = p
 
-    const [customerInfo] = useState({
+    const [customerData] = useState({
         groom: orderData.groom,
         bride: orderData.bride,
         note: orderData.note,
@@ -91,7 +92,7 @@ const Content = (p) => {
 
     const [billInfo, setBillInfo] = useState({
         table_count: Number(orderData.table_count),
-        wedding_date: format(new Date(orderData.wedding_date), 'MM/dd/yyyy'),
+        wedding_date: orderData.wedding_date,
         lobby: orderData.Lobby.name,
         shift: orderData.Shift.name,
         payment_date: orderData.Bill.length > 0 ? (orderData.Bill[0].payment_date ): null,
@@ -101,6 +102,7 @@ const Content = (p) => {
         total_price: bill.totalPrice,
         remain_amount: bill.remainPrice,
     })
+
 
     const [checked, setChecked] = useState(orderData.is_penalty_mode);
 
@@ -170,18 +172,18 @@ const Content = (p) => {
             </h4>
             <div className="container">
                 <h5>Customer Information</h5>
-                {customerInfo && <SpecificOrderTable orderData={customerInfo} />}
+                {customerData && <SpecificOrderTable orderData={customerData} renderData={customerInfo} />}
                 <h5>Wedding Information</h5>
-                {billInfo && <SpecificOrderTable orderData={billInfo} />}
+                {billInfo && <SpecificOrderTable orderData={billInfo} renderData={weddingInfo} />}
                 <div className="more-info">
                     {/* <div className={`paid-date ${orderData?.extra_fee > 0 && 'red'}`}>
                         <span className="title">Paid Date:</span> 
                          <span>{billInfo?.payment_date}</span>
                     </div> */}
-                    {orderData && customerInfo && billInfo && 
+                    {orderData && customerData && billInfo && 
                     <PDFDownloadLink
                         className="pdf-export"
-                        document={<BillPdf orderInfo={orderData} customerData={customerInfo} weddingData={billInfo} />}
+                        document={<BillPdf orderInfo={orderData} customerData={customerData} weddingData={billInfo} />}
                         fileName={`${orderData.groom}-${orderData.bride}.pdf`}
                     >
                         {({ loading }) =>
@@ -198,9 +200,9 @@ const Content = (p) => {
                         Penalty
                     </Checkbox>
                 </div>
-                <button className="btn" onClick={showModal}>
+               {Number(billInfo.remain_amount) > 0 && <button className="btn" onClick={showModal}>
                     Pay
-                </button>
+                </button>}
             </div>
         </Wrapper>
     );

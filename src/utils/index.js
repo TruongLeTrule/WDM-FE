@@ -10,7 +10,7 @@ export function getFileBlobUrl(file) {
 }
 
 export function formatVND(number) {
-  let result = number
+  let result = Number(number)
   if (!result) {
     result = 0
   }
