@@ -14,21 +14,43 @@ import Flatpickr from "react-flatpickr";
 import { getLobbyTypes, getShifts } from '../api/lobby.api';
 import { Input, Select, TreeSelect, InputNumber, Button } from 'antd';
 import { Option } from 'antd/es/mentions';
+import Loading from '../components/Loading';
 const { TextArea } = Input;
 
 
 const NewOrder = () => {
   const [orderData, setOrderData] = useState({id : null})
-
-
+  const [id, setId] = useState(null)
+  const [loading, setLoading] = useState(false)
   const navigate = useNavigate();
 
   const handleBackBtn =() => {
     navigate('/dashboard/order', { replace: true });
   }
   const handleNextBtn =() => {
-    navigate(`/dashboard/order/${orderData.id}/bill`);
+    navigate(`/dashboard/order/${id}/bill`);
   }
+
+  useEffect(() => {
+    const fetchWedding = async (id) =>  {
+      try {
+        setLoading(true)
+        const res = await getWeddingById(id)
+        setOrderData(res.data)
+        setLoading(false)
+      } catch (error) {
+        setLoading(false)
+        toast.message(error.message)
+      }
+    }
+
+    fetchWedding(id)
+  }, [id]);
+
+  // if(loading) {
+  //   return <Loading />
+  // }
+
 
   return (
     <Container>
@@ -46,10 +68,15 @@ const NewOrder = () => {
         position="bottom-center"
         autoClose={1000}
         />
-      {Object.values(orderData).length > 0 && <OrderInfor orderData={orderData} setOrderData={setOrderData}/>}
+       <OrderInfor
+        orderData={orderData}
+        setOrderData={setOrderData}
+        setId={setId}
+        id={id}
+        />
 
       <div className="food_service_container">
-       {orderData?.id && <PickFoodService orderId={orderData?.id}/>}
+       {id && <PickFoodService orderId={id}/>}
       </div>
       </Wrapper>
     </Container>
@@ -57,25 +84,32 @@ const NewOrder = () => {
 };
 
 const OrderInfor = (p) => {
-  const {setOrderData} = p
+  const {orderData, setOrderData, setId ,id} = p
 
   const originalOrderData = useMemo(() => ({
-    groom: "",
-    bride: "",
-    note: "",
-    phone: "",
-    table_count: 0,
-    wedding_date: new Date(),
-    lobby_id: "",
-    shift_id: "",
-  }), []);
+    groom: orderData?.groom,
+    bride: orderData?.bride,
+    note: orderData?.note || undefined,
+    phone: orderData?.Customer?.phone,
+    table_count: Number(orderData?.table_count),
+    wedding_date: new Date(orderData?.wedding_date),
+    lobby_id: orderData?.Lobby?.id,
+    shift_id: orderData?.Shift?.id,
+  }), [
+    orderData?.groom,
+    orderData?.bride,
+    orderData?.note,
+    orderData?.Customer?.phone,
+    orderData?.table_count,
+    orderData?.wedding_date,
+    orderData?.Lobby?.id,
+    orderData?.Shift?.id
+  ]);
   const [formState, setFormState] = useState(originalOrderData);
   const [isDisabled, setIsDisabled] = useState(true);
   const fp = useRef(null);
 
   const handleChange = (name, value) => {
-    console.log("name", name);
-    console.log("value", value);
     setFormState(prevState => ({
       ...prevState,
       [name]: value,
@@ -86,15 +120,30 @@ const OrderInfor = (p) => {
       const createData ={}
 
       const fieldsToUpdate = originalOrderData
-
+      console.log("originalOrderData", originalOrderData)
+      console.log("formState", formState)
       Object.keys(fieldsToUpdate).forEach((key) => {
-        if (formState[key] !== fieldsToUpdate[key]) {
+        if (key === "wedding_date") {
+          const date1 = new Date(formState[key]).getTime();
+          const date2 = new Date(fieldsToUpdate[key]).getTime();
+        
+          if (date1 !== date2) {
+            createData[key] = formState[key];
+          }
+        } else if (formState[key] !== fieldsToUpdate[key]) {
           createData[key] = formState[key];
+   
         }
       });
-
-      const res = await createWedding(createData);
-      setOrderData(prev => ({...prev, ...res.data}))
+      let res = {}
+      if(id) {
+        res = await editWedding(id, createData)
+        setOrderData(prev => ({...prev, ...res.data}))
+      }
+      else {
+        res = await createWedding(createData)
+        setId(res.data.id)
+      }
       setIsDisabled(true)
       toast.success("Wedding update successful!");
     } catch (error) {
@@ -102,11 +151,11 @@ const OrderInfor = (p) => {
     }
   };
 
-  // useEffect(() => {
-  //   if(orderData) {
-  //     setFilterRenderData(formatDataInput(orderData))
-  //   }
-  // }, [orderData]);
+  useEffect(() => {
+    if(orderData) {
+      // setFilterRenderData(formatDataInput(orderData))
+    }
+  }, [orderData]);
 
   useEffect(() => {
     const fieldsToCompare = JSON.stringify(originalOrderData)

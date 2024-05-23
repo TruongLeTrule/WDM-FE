@@ -23,10 +23,8 @@ const OrderID = (p) => {
     handleEditLobbyClick,
   } = p
   const [orderData, setOrderData] = useState({})
-  const [loading, setLoading] = useState({
-    wedding: true,
-    food: true
-  })
+  
+  const [loading, setLoading] = useState(true)
 
 
   const { id } = useParams()
@@ -209,6 +207,7 @@ const OrderInfor = (p) => {
               <InputNumber 
                 value={formState.table_count} 
                 onChange={(value) => handleChange("table_count", value)}
+                min={0}
               />
 
             </InputFieldWrapper>
