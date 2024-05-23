@@ -9,11 +9,13 @@ import resolveDate from '../utils/resolveDate';
 import Wrapper from '../assets/wrappers/TableWrapper';
 import resolveCurrency from '../utils/resolveCurrency';
 import { truncateUUID } from '../utils';
-import { Button } from 'antd';
-import { EditOutlined } from '@ant-design/icons';
+import { Button, Popconfirm } from 'antd';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { toast } from 'react-toastify';
+import { deleteWedding } from '../api/wedding.api';
 
 const Table = (p) => {
-  const { columns, data, handleRowClick, pagination } = p
+  const { columns, data, handleRowClick, pagination, setOrderList } = p
   const {
     getTableProps,
     getTableBodyProps,
@@ -57,6 +59,33 @@ const Table = (p) => {
       isPastDate,
     };
   }
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteWedding(id)
+      setOrderList(prev => prev.filter(order => order.id !== id));
+    } catch (error) {
+      toast.error(error.message)
+    }
+  }
+
+  const DeleteButton = (p) => {
+    const { id } = p
+    return (
+<Popconfirm
+      title="Are you sure you want to delete this item?"
+      onConfirm={() => handleDelete(id)}
+      okText="Yes"
+      cancelText="No"
+    >
+      <Button type="primary" danger icon={<DeleteOutlined />}>
+        Delete
+      </Button>
+    </Popconfirm>
+    )
+  }
+  
+
   return (
     <Wrapper>
       <table {...getTableBodyProps()}>
@@ -115,6 +144,9 @@ const Table = (p) => {
                     Edit
                   </Button>
                 </td>
+                <td>
+                  <DeleteButton id={row.values.id}/>
+                </td>
               </tr>
             );
           })}
@@ -137,4 +169,7 @@ const Table = (p) => {
     </Wrapper>
   );
 };
+
+
+
 export default Table;

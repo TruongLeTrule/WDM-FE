@@ -34,6 +34,10 @@ export const getWeddingById = (id, includedBill = false) => {
   return axiosClient.get(`wedding/${id}`, { params: { bill: includedBill } });
 };
 
+export const deleteWedding = (id) => {
+  return axiosClient.delete(`wedding/delete/${id}`);
+};
+
 export const createWedding = (dataCreate) => {
   return axiosClient.post('wedding/create/wedding', dataCreate);
 };

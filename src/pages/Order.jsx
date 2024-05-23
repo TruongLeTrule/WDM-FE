@@ -136,6 +136,7 @@ const Order = () => {
               {orderList.length ? (
                 <Table
                   data={orderList}
+                  setOrderList={setOrderList}
                   columns={columns}
                   handleRowClick={handleRowClick}
                   pagination
