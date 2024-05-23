@@ -48,11 +48,6 @@ export const weddingInfo = [
     type: 'concurrency'
   },
   {
-    title: 'Extra fee',
-    key: 'extra_fee',
-    type: 'concurrency'
-  },
-  {
     title: 'Total',
     key: 'total_price',
     type: 'concurrency'
@@ -60,6 +55,16 @@ export const weddingInfo = [
   {
     title: 'Remain',
     key: 'remain_amount',
+    type: 'concurrency'
+  },
+  {
+    title: 'Minimum Deposit',
+    key: 'depositRequire',
+    type: 'concurrency'
+  },
+  {
+    title: 'Extra fee',
+    key: 'extra_fee',
     type: 'concurrency'
   },
 ];

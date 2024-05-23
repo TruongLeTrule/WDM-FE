@@ -81,7 +81,7 @@ const Bill = () => {
 };
 
 const Content = (p) => {
-    const { orderData, bill } = p
+    const { orderData, bill, setOrderData } = p
 
     const [customerData] = useState({
         groom: orderData.groom,
@@ -101,6 +101,7 @@ const Content = (p) => {
         extra_fee: bill.extraFee,
         total_price: bill.totalPrice,
         remain_amount: bill.remainPrice,
+        depositRequire: bill.depositRequire
     })
 
 
@@ -140,6 +141,7 @@ const Content = (p) => {
                 extra_fee: res.data.extraFee,
                 remain_amount: res.data.remainPrice,
             }))
+            setOrderData(prev => ({...prev, is_penalty_mode: e.target.checked}))
         } catch (error) {
             toast.error(error.message)
         }
@@ -174,7 +176,7 @@ const Content = (p) => {
                 <h5>Customer Information</h5>
                 {customerData && <SpecificOrderTable orderData={customerData} renderData={customerInfo} />}
                 <h5>Wedding Information</h5>
-                {billInfo && <SpecificOrderTable orderData={billInfo} renderData={weddingInfo} />}
+                {billInfo && <SpecificOrderTable orderData={billInfo} renderData={weddingInfo} isPenalty={orderData.is_penalty_mode}/>}
                 <div className="more-info">
                     {/* <div className={`paid-date ${orderData?.extra_fee > 0 && 'red'}`}>
                         <span className="title">Paid Date:</span> 
@@ -220,7 +222,7 @@ const PaymentForm = (p) => {
       setLoading(false);
       message.success('Payment processed successfully');
       onPaymentSubmit(values); // Pass payment details to parent component
-    }, 2000);
+    }, 1000);
   };
 
   return (

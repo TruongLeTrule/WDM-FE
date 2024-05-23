@@ -6,11 +6,11 @@ import Wrapper from '../../assets/wrappers/Order/SpecificOrderTableWrapper';
 import { weddingInfo } from '../../utils/billTable';
 import { formatVND } from '../../utils';
 import { format } from 'date-fns';
+import { useState } from 'react';
 
 const SpecificOrderTable = (p) => {
-  const { orderData, renderData } = p
+  const { orderData, renderData, isPenalty=true } = p
   console.log(orderData)
-
   const calculateLateFee = (totalPrice, weddingDate, paymentDate=new Date() ) => {
     const wedding = new Date(weddingDate);
     const payment = new Date(paymentDate);
@@ -30,7 +30,9 @@ const SpecificOrderTable = (p) => {
   return (
     <Wrapper>
       <table className="table">
-        {renderData.map(({title, key, type}, index) => (
+        {renderData.map(({title, key, type}, index) => {
+        if(!isPenalty && key==="extra_fee") return null
+        return (
           <tr 
             className="row" key={index} 
             style={
@@ -52,7 +54,9 @@ const SpecificOrderTable = (p) => {
             </td>
             
           </tr>
-        ))}
+        )
+        }
+        )}
       </table>
     </Wrapper>
   );

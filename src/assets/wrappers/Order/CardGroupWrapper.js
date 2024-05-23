@@ -140,7 +140,8 @@ const Wrapper = styled.div`
     padding: 1rem;
     border-radius: 8px;
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-
+    max-width: 32%;
+    flex-grow: 1;
     .content {
       display: flex;
       flex-direction: column;

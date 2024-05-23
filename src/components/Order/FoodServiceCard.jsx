@@ -27,7 +27,9 @@ const FoodServiceCard = (p) => {
     <div className="card">
       <img src={img} alt={name} className="lob-img" />
       <div className="content">
-        <h5>{name} ({orderedQty})</h5>
+        <h5>{name} 
+        {restrictedMode && <span>({orderedQty})</span>}
+        </h5>
         <p className="price">{restrictedMode ? formatVND(Number(price) * orderedQty) :formatVND(price)}</p>
 
         {!restrictedMode && <div className="action-wrapper">

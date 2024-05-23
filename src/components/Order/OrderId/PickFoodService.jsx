@@ -220,12 +220,12 @@ const PickFoodService = (p) => {
 
 
   if (isLoading) {
-    return <div>Loading...</div>; // Show loading spinner or fallback UI
+    return <Loading/>; // Show loading spinner or fallback UI
   }
 
   return (
     <>
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<Loading/>}>
           <Wrapper>
             <div className="header">
               <FSheaderContainer setPage={setPage} page={page} SeachBox={false} handleSaveBtnClick={handleSaveBtnClick} />
